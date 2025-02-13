@@ -1,33 +1,40 @@
 import BreadcrumbHeader from "@/components/breadcrumb-header";
-import DesktopSidebar from "@/components/sidebars/desktop-sidebar";
-import MobileSidebar from "@/components/sidebars/mobile-sidebar";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
+import { cookies } from "next/headers";
 import { ReactNode } from "react";
+import { Separator } from "@/components/ui/separator";
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
+import AppSidebar from "@/components/sidebar/sidebar";
 
 type Props = {
   children: ReactNode;
 };
 
 export default function DashboardLayout({ children }: Props) {
+  const cookieStore = cookies();
+  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
+
   return (
-    <div className="flex min-h-screen">
-      <DesktopSidebar />
-      <div className="flex size-full flex-col">
-        <header className="container flex h-[50px] items-center justify-between border-b px-6 py-4">
-          <div className="flex items-center gap-2">
-            <MobileSidebar />
-            <BreadcrumbHeader />
-          </div>
-          <div className="flex items-center gap-1">
+    <SidebarProvider defaultOpen={defaultOpen}>
+      <AppSidebar />
+      <SidebarInset className="border">
+        <header className="flex h-16 shrink-0 items-center gap-2 px-4 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+          <div className="flex w-full items-center justify-between">
+            <div className="flex w-full items-center gap-2">
+              <SidebarTrigger />
+              <Separator orientation="vertical" className="mr-2 h-4" />
+              <BreadcrumbHeader />
+            </div>
             <ThemeToggle />
           </div>
         </header>
-        <div className="overflow-auto">
-          <div className="container size-full py-4 text-accent-foreground">
-            {children}
-          </div>
-        </div>
-      </div>
-    </div>
+        <Separator orientation="horizontal" />
+        <div className="container size-full py-4">{children}</div>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }
