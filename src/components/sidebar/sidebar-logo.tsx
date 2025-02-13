@@ -12,7 +12,7 @@ export default function SidebarLogo() {
       <SidebarMenuItem>
         <SidebarMenuButton asChild size="lg" className="hover:bg-sidebar">
           <Link href="/" aria-label="navigate to home page">
-            <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+            <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-gradient-to-r from-blue-700 via-blue-600 to-blue-500 text-sidebar-primary-foreground">
               <Bot className="size-4" />
             </div>
             <div className="text-left text-2xl font-extrabold leading-tight">

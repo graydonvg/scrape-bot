@@ -276,18 +276,22 @@ const SidebarTrigger = React.forwardRef<
   return (
     <Button
       ref={ref}
+      aria-label="Toggle Sidebar"
       data-sidebar="trigger"
       variant="ghost"
       size="icon"
-      className={cn("size-7", className)}
+      className={cn(
+        "p-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:size-7",
+        className,
+      )}
       onClick={(event) => {
         onClick?.(event);
         toggleSidebar();
       }}
       {...props}
+      asChild
     >
       <PanelLeft />
-      <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );
 });
