@@ -15,6 +15,7 @@ export function NavMain() {
   const parts = pathname.split("/");
   const activeRoute =
     routes.find((route) => route.href.length && parts.includes(route.href)) ||
+    // fix!
     routes[0];
 
   return (
