@@ -15,27 +15,28 @@ export function NavMain() {
   const parts = pathname.split("/");
   const activeRoute =
     routes.find((route) => route.href.length && parts.includes(route.href)) ||
-    // fix!
-    routes[0];
+    routes.find((route) => !route.href.length);
 
   return (
     <SidebarGroup>
-      <SidebarMenu>
-        {routes.map((route) => (
-          <SidebarMenuItem key={route.label}>
-            <SidebarMenuButton
-              asChild
-              tooltip={route.label}
-              isActive={route.href === activeRoute.href}
-            >
-              <Link href={route.href}>
-                <route.icon />
-                <span>{route.label}</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        ))}
-      </SidebarMenu>
+      <nav>
+        <SidebarMenu>
+          {routes.map((route) => (
+            <SidebarMenuItem key={route.label}>
+              <SidebarMenuButton
+                asChild
+                tooltip={route.label}
+                isActive={activeRoute && activeRoute.href === route.href}
+              >
+                <Link href={route.href}>
+                  <route.icon />
+                  <span>{route.label}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+      </nav>
     </SidebarGroup>
   );
 }
