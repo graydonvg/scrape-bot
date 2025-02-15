@@ -16,7 +16,7 @@ export function ThemeMenu() {
     <DropdownMenu>
       <DropdownMenuTrigger
         id="theme-menu-trigger"
-        className="rounded-md ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        className="rounded-md ring-offset-background focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       >
         <ThemeButton />
       </DropdownMenuTrigger>

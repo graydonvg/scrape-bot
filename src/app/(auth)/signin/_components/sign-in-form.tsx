@@ -2,11 +2,9 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { signinAction } from "@/app/(auth)/actions";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signinSchema } from "@/lib/types";
 import { z } from "zod";
 import {
   Form,
@@ -16,47 +14,31 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useFormState } from "react-dom";
-import { useRef } from "react";
-import { X } from "lucide-react";
+import { useAction } from "next-safe-action/hooks";
+import signInAction from "@/app/(auth)/signin/_actions/sign-in-action";
+import { signInSchema } from "@/schemas/auth";
+import { toast } from "sonner";
 
-export function SigninForm() {
-  const formRef = useRef<HTMLFormElement>(null);
-  const [state, formAction] = useFormState(signinAction, {
-    message: "",
-    fields: { email: "", password: "" },
+export function SignInForm() {
+  const { execute, isPending, result } = useAction(signInAction, {
+    onError: async ({ error, input }) => {
+      toast.error("Failed to sign in");
+    },
   });
-  const form = useForm<z.infer<typeof signinSchema>>({
-    resolver: zodResolver(signinSchema),
+  const form = useForm<z.infer<typeof signInSchema>>({
+    resolver: zodResolver(signInSchema),
     defaultValues: {
-      email: state?.fields?.email || "",
+      email: "",
       password: "",
     },
   });
 
   return (
     <Form {...form}>
-      {state.issues && (
-        <div className="text-destructive">
-          <ul>
-            {state.issues.map((issue) => (
-              <li key={issue} className="flex gap-1">
-                <X />
-                {issue}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-      <form
-        ref={formRef}
-        action={formAction}
-        onSubmit={form.handleSubmit(() => formRef.current?.submit())}
-        className="space-y-6"
-      >
+      <form onSubmit={form.handleSubmit(execute)} className="space-y-6">
         <div className="space-y-2 text-center">
           <h1 className="text-2xl font-bold">Sign in to your account</h1>
-          <p className="text-pretty text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm text-pretty">
             Enter your email address and password to sign in to your account
           </p>
         </div>
@@ -87,11 +69,15 @@ export function SigninForm() {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full uppercase">
-            Sign in
+          <Button
+            type="submit"
+            disabled={isPending}
+            className="w-full capitalize"
+          >
+            {isPending ? "Signing in..." : "Sign in"}
           </Button>
-          <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
-            <span className="relative z-10 bg-background px-2 text-muted-foreground">
+          <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
+            <span className="bg-background text-muted-foreground relative z-10 px-2">
               Or continue with
             </span>
           </div>

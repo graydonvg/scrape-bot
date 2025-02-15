@@ -2,7 +2,7 @@ import { CreditCard, Home, Layers2, ShieldCheck } from "lucide-react";
 
 export const routes = [
   {
-    href: "",
+    href: "/",
     label: "Home",
     icon: Home,
   },

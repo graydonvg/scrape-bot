@@ -1,8 +1,8 @@
 "use client";
 
-import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabase/supabase-browser";
+import { Button } from "./ui/button";
 
 export default function SignOutButton() {
   const supabase = createSupabaseBrowserClient();
@@ -19,7 +19,7 @@ export default function SignOutButton() {
   }
 
   return (
-    <Button onClick={handleSignOut} className="uppercase">
+    <Button onClick={handleSignOut} className="capitalize">
       sign out
     </Button>
   );

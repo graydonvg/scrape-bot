@@ -101,7 +101,7 @@ export default function ThemeButton() {
     <Button
       variant="ghost"
       size="icon"
-      className="p-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:size-7"
+      className="p-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:size-7"
       asChild
     >
       <m.svg

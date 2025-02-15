@@ -7,8 +7,8 @@ import {
 import { ComponentProps } from "react";
 import { NavMain } from "./nav-main";
 import SidebarLogo from "./sidebar-logo";
-import SignOutButton from "../auth/sign-out-button";
 import { NavUser } from "./nav-user";
+import SignOutButton from "../sign-out-button";
 
 export default function AppSidebar({
   ...props

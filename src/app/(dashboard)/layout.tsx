@@ -14,15 +14,15 @@ type Props = {
   children: ReactNode;
 };
 
-export default function DashboardLayout({ children }: Props) {
-  const cookieStore = cookies();
+export default async function DashboardLayout({ children }: Props) {
+  const cookieStore = await cookies();
   const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
 
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
       <AppSidebar />
       <SidebarInset className="border">
-        <header className="flex h-16 shrink-0 items-center px-4 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+        <header className="flex h-16 shrink-0 items-center px-4 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <div className="flex w-full items-center justify-between">
             <div className="flex w-full items-center gap-2">
               <SidebarTrigger />

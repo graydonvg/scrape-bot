@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { ComponentPropsWithoutRef } from "react";
 
-export function SignupForm({
+export function SignUpForm({
   className,
   ...props
 }: ComponentPropsWithoutRef<"form">) {
@@ -41,7 +41,7 @@ export function SignupForm({
             required
           />
         </div>
-        <Button className="w-full uppercase">sign up</Button>
+        <Button className="w-full capitalize">sign up</Button>
       </div>
       <div className="text-center text-sm">
         Already have an account?{" "}

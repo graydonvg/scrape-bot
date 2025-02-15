@@ -12,10 +12,8 @@ import { usePathname } from "next/navigation";
 
 export function NavMain() {
   const pathname = usePathname();
-  const parts = pathname.split("/");
-  const activeRoute =
-    routes.find((route) => route.href.length && parts.includes(route.href)) ||
-    routes.find((route) => !route.href.length);
+  const paths = pathname === "/" ? ["/"] : pathname.split("/");
+  const activeRoute = routes.find((route) => paths.includes(route.href));
 
   return (
     <SidebarGroup>

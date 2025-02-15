@@ -1,4 +1,4 @@
-import { SignupForm } from "@/components/auth/signup-form";
+import { SignUpForm } from "@/app/(auth)/signup/_components/sign-up-form";
 import Logo from "@/components/logo";
 
 export default function SignUpPage() {
@@ -10,11 +10,11 @@ export default function SignUpPage() {
         </div>
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
-            <SignupForm />
+            <SignUpForm />
           </div>
         </div>
       </div>
-      <div className="relative hidden bg-muted lg:block">
+      <div className="bg-muted relative hidden lg:block">
         {/* <img
           src="/placeholder.svg"
           alt="Image"
