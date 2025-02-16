@@ -1,16 +1,10 @@
-"use server";
-
 import createSupabaseServerClient from "@/lib/supabase/supabase-server";
 
-export default async function getWorkflowsAction() {
+export default async function getWorkflows() {
   const supabase = await createSupabaseServerClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
-  if (!user) {
-    throw new Error("Unauthenticated");
-  }
 
   const { data, error } = await supabase
     .from("workflows")
@@ -19,9 +13,8 @@ export default async function getWorkflowsAction() {
     .order("createdAt", { ascending: true });
 
   if (error) {
-    throw new Error("Failed to get workflows");
+    return null;
   }
 
-  // revalidatePath("/workflows", "page");
   return data;
 }

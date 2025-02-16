@@ -6,7 +6,7 @@ import CreateWorkflowDialog from "./_components/create-workflow-dialog";
 export default function WorkflowsPage() {
   return (
     <div className="flex h-full flex-col">
-      <div className="flex justify-between">
+      <div className="mb-8 flex justify-between">
         <div className="flex flex-col">
           <h1 className="text-3xl font-bold">Workflows</h1>
           <p className="text-muted-foreground">Manage your workflows</p>
@@ -14,7 +14,7 @@ export default function WorkflowsPage() {
         <CreateWorkflowDialog />
       </div>
 
-      <div className="h-full py-6">
+      <div className="h-full">
         <Suspense fallback={<WorkflowsSkeleton />}>
           <Workflows />
         </Suspense>

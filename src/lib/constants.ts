@@ -1,24 +1,29 @@
-import { CreditCard, Home, Layers2, ShieldCheck } from "lucide-react";
+import {
+  CreditCardIcon,
+  HomeIcon,
+  Layers2Icon,
+  ShieldCheckIcon,
+} from "lucide-react";
 
 export const routes = [
   {
     href: "/",
     label: "Home",
-    icon: Home,
+    icon: HomeIcon,
   },
   {
     href: "workflows",
     label: "Workflows",
-    icon: Layers2,
+    icon: Layers2Icon,
   },
   {
     href: "credentials",
     label: "Credentials",
-    icon: ShieldCheck,
+    icon: ShieldCheckIcon,
   },
   {
     href: "billing",
     label: "Billing",
-    icon: CreditCard,
+    icon: CreditCardIcon,
   },
 ];

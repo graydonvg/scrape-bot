@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import {
   Form,
   FormControl,
@@ -16,20 +15,17 @@ import {
 } from "@/components/ui/form";
 import { useAction } from "next-safe-action/hooks";
 import signInAction from "@/app/(auth)/signin/_actions/sign-in-action";
-import { signInSchema } from "@/schemas/auth";
+import { signInSchema, SignInSchemaType } from "@/lib/schemas/auth";
 import { toast } from "sonner";
 
 export function SignInForm() {
-  const { execute, isPending, result } = useAction(signInAction, {
-    onError: async ({ error, input }) => {
-      toast.error("Failed to sign in");
-    },
-  });
-  const form = useForm<z.infer<typeof signInSchema>>({
+  const form = useForm<SignInSchemaType>({
     resolver: zodResolver(signInSchema),
-    defaultValues: {
-      email: "",
-      password: "",
+    defaultValues: { email: "", password: "" },
+  });
+  const { execute, isPending } = useAction(signInAction, {
+    onError: () => {
+      toast.error("Failed to sign in");
     },
   });
 

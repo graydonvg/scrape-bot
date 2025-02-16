@@ -1,15 +1,16 @@
-import getWorkflowsAction from "@/app/(dashboard)/workflows/_actions/get-workflows-action";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, Inbox } from "lucide-react";
+import { AlertCircleIcon, InboxIcon } from "lucide-react";
 import CreateWorkflowDialog from "./create-workflow-dialog";
+import getWorkflows from "../_services/get-workkflows";
+import WorkflowCard from "./workflow-card";
 
 export default async function Workflows() {
-  const workflows = await getWorkflowsAction();
+  const workflows = await getWorkflows();
 
   if (!workflows) {
     return (
       <Alert variant="destructive">
-        <AlertCircle className="size-4" />
+        <AlertCircleIcon className="size-4" />
         <AlertTitle>Error</AlertTitle>
         <AlertDescription>
           Something went wrong. Please try again later.
@@ -22,7 +23,7 @@ export default async function Workflows() {
     return (
       <div className="flex-center h-full flex-col gap-4">
         <div className="bg-accent flex-center size-20 rounded-full">
-          <Inbox className="stroke-primary size-10" />
+          <InboxIcon className="stroke-primary size-10" />
         </div>
 
         <div className="flex flex-col gap-1 text-center">
@@ -36,21 +37,11 @@ export default async function Workflows() {
     );
   }
 
-  return <div></div>;
+  return (
+    <div className="flex flex-col gap-4">
+      {workflows.map((workflow) => (
+        <WorkflowCard key={workflow.id} workflow={workflow} />
+      ))}
+    </div>
+  );
 }
-
-// try {
-
-// 	const workflows = await getWorkflowsAction();
-// 	return <div></div>;
-// } catch (error) {
-// 	return (
-// 		<Alert variant="destructive">
-// 			<AlertCircle className="size-4" />
-// 			<AlertTitle>Error</AlertTitle>
-// 			<AlertDescription>
-// 				Something went wrong. Please try again later.
-// 			</AlertDescription>
-// 		</Alert>
-// 	);
-// }

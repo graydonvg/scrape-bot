@@ -2,14 +2,8 @@
 
 import CustomDialogHeader from "@/components/custom-dialog-header";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Separator } from "@/components/ui/separator";
-import { Layers2 } from "lucide-react";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Layers2Icon } from "lucide-react";
 import { useState } from "react";
 import CreateWorkflowForm from "./create-workflow-form";
 
@@ -28,7 +22,7 @@ export default function CreateWorkflowDialog({ triggerLabel }: Props) {
         <CustomDialogHeader
           title="Create workflow"
           subtitle="Start building your workflow"
-          icon={Layers2}
+          icon={Layers2Icon}
         />
         <div className="p-6">
           <CreateWorkflowForm />

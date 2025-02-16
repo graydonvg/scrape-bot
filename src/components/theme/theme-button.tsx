@@ -69,30 +69,26 @@ export default function ThemeButton() {
 
   useGSAP(
     () => {
-      gsap
-        .timeline()
-        .fromTo(
-          mainPathRef.current,
-          {
-            fillOpacity: 0,
-            strokeOpacity: 0,
-            rotate: 0,
-            scale: 1,
+      gsap.timeline().fromTo(
+        mainPathRef.current,
+        {
+          fillOpacity: 0,
+          strokeOpacity: 0,
+          rotate: 0,
+          scale: 1,
+        },
+        {
+          fillOpacity: 0.35,
+          strokeOpacity: 1,
+          rotate: 360,
+          stroke: isDarkMode ? "#2563eb" : "#ca8a04",
+          fill: isDarkMode ? "#2563eb" : "#ca8a04",
+          scale: isDarkMode ? 2 : 1,
+          attr: {
+            d: isDarkMode ? moonPath : sunPath,
           },
-          {
-            fillOpacity: 0.35,
-            strokeOpacity: 1,
-            rotate: 360,
-            stroke: isDarkMode ? "#2563eb" : "#ca8a04",
-            fill: isDarkMode ? "#2563eb" : "#ca8a04",
-            scale: isDarkMode ? 2 : 1,
-            attr: {
-              d: isDarkMode ? moonPath : sunPath,
-            },
-          },
-        )
-        .to("#theme-menu-trigger", { scale: 1.2 }, ">")
-        .to("#theme-menu-trigger", { scale: 1 }, ">");
+        },
+      );
     },
     { dependencies: [currentTheme] },
   );

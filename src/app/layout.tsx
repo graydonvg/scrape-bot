@@ -6,8 +6,9 @@ import Providers from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({
-  variable: "--inter",
+  variable: "--font-inter",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -24,7 +25,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={cn("font-inter antialiased", inter.variable)}>
         <Providers>{children}</Providers>
-			<Toaster richColors />
+        <Toaster richColors />
       </body>
     </html>
   );

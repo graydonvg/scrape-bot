@@ -3,7 +3,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --font-inter: var(--inter);
+  --font-inter: var(--font-inter);
 
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
@@ -55,30 +55,12 @@
 
 @utility container {
   margin-inline: auto;
-  padding-inline: 2rem;
+  padding: 2rem;
   @media (width >= --theme(--breakpoint-sm)) {
     max-width: none;
   }
   @media (width >= 1400px) {
     max-width: 1400px;
-  }
-}
-
-/*
-  The default border color has changed to `currentColor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
-@layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentColor);
   }
 }
 
@@ -109,16 +91,16 @@
     --popover-foreground: 240 5.3% 26.1%;
     --primary: 224.3 76.3% 48%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 240 4.8% 95.9%;
+    --secondary: 240 5.9% 90%;
     --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
+    --muted: 240 5.9% 90%;
     --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
+    --accent: 240 5.9% 90%;
     --accent-foreground: 240 5.9% 10%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
+    --input: 240 5% 64.9%;
     --ring: 217.2 91.2% 59.8%;
     --radius: 0.5rem;
     --chart-1: 12 76% 61%;
@@ -130,7 +112,7 @@
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 224.3 76.3% 48%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent: 240 5.9% 90%;
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 240 5.9% 90%;
     --sidebar-ring: 217.2 91.2% 59.8%;
@@ -151,10 +133,10 @@
     --muted-foreground: 240 5% 64.9%;
     --accent: 240 3.7% 15.9%;
     --accent-foreground: 240 4.8% 95.9%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 85.7% 97.3%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
     --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
+    --input: 240 5.3% 26.1%;
     --ring: 217.2 91.2% 59.8%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
@@ -178,5 +160,8 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+  button {
+    @apply cursor-pointer;
   }
 }

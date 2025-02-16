@@ -33,7 +33,7 @@ export default async function DashboardLayout({ children }: Props) {
           </div>
         </header>
         <Separator orientation="horizontal" />
-        <div className="container size-full py-4">{children}</div>
+        <div className="container size-full">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );

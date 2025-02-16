@@ -1,21 +1,21 @@
 "use server";
 
 import createSupabaseServerClient from "@/lib/supabase/supabase-server";
-import { redirect } from "next/navigation";
 import { actionClient } from "@/lib/safe-action";
 import {
-  createWorkflowSchema,
-  CreateWorkflowSchemaType,
+  deleteWorkflowSchema,
+  DeleteWorkflowSchemaType,
 } from "@/lib/schemas/workflows";
+import { revalidatePath } from "next/cache";
 
-const createWorkflowAction = actionClient
-  .metadata({ actionName: "createWorkflowAction" })
-  .schema(createWorkflowSchema)
+const deleteWorkflowAction = actionClient
+  .metadata({ actionName: "deleteWorkflowAction" })
+  .schema(deleteWorkflowSchema)
   .action(
     async ({
       parsedInput: formData,
     }: {
-      parsedInput: CreateWorkflowSchemaType;
+      parsedInput: DeleteWorkflowSchemaType;
     }) => {
       try {
         const supabase = await createSupabaseServerClient();
@@ -27,24 +27,23 @@ const createWorkflowAction = actionClient
           throw new Error("Unauthenticated");
         }
 
-        const { data, error } = await supabase
+        const { error } = await supabase
           .from("workflows")
-          .insert({
-            ...formData,
-            status: "DRAFT",
-            definition: "TODO",
-          })
-          .select("id");
+          .delete()
+          .eq("id", formData.id)
+          .eq("userId", user.id);
 
         if (error) {
-          throw new Error("Failed to insert workflow into database");
+          throw new Error("Failed to delete workflow from database");
         }
 
-        redirect(`/workflows/editor/${data[0].id}`);
+        return true;
       } catch (error) {
         throw error;
+      } finally {
+        revalidatePath("/workflows");
       }
     },
   );
 
-export default createWorkflowAction;
+export default deleteWorkflowAction;

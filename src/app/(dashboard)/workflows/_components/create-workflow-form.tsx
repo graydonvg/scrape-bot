@@ -16,30 +16,28 @@ import {
 import {
   createWorkflowSchema,
   CreateWorkflowSchemaType,
-} from "@/schemas/workflows";
+} from "@/lib/schemas/workflows";
 import { Textarea } from "@/components/ui/textarea";
 import createWorkflowAction from "../_actions/create-workflow-action";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2Icon } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 
 export default function CreateWorkflowForm() {
-  const { execute, isPending } = useAction(createWorkflowAction, {
-    onSuccess: () => {
-      toast.success("Workflow created", { id: "create-workflow" });
-    },
-    onError: () => {
-      toast.error("Failed to create workflow", { id: "create-workflow" });
-    },
-    onExecute: () => {
-      toast.loading("Creating workflow...", { id: "create-workflow" });
-    },
-  });
+  const toastId = "create-workflow";
   const form = useForm<CreateWorkflowSchemaType>({
     resolver: zodResolver(createWorkflowSchema),
-    defaultValues: {
-      name: "",
-      description: "",
+    defaultValues: { name: "", description: "" },
+  });
+  const { execute, isPending } = useAction(createWorkflowAction, {
+    onSuccess: () => {
+      toast.success("Workflow created", { id: toastId });
+    },
+    onError: () => {
+      toast.error("Failed to create workflow", { id: toastId });
+    },
+    onExecute: () => {
+      toast.loading("Creating workflow...", { id: toastId });
     },
   });
 
@@ -99,7 +97,7 @@ export default function CreateWorkflowForm() {
             disabled={isPending}
             className="w-full capitalize"
           >
-            {!isPending ? "Proceed" : <Loader2 className="animate-spin" />}
+            {!isPending ? "Proceed" : <Loader2Icon className="animate-spin" />}
           </Button>
         </div>
       </form>

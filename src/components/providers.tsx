@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 import { ThemeProvider } from "./theme/theme-provider";
 
 type Props = {
