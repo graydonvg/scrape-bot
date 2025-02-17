@@ -63,7 +63,7 @@ export default function DeleteWorkflowDialog({
           </AlertDialogDescription>
           <Alert variant="destructive">
             <AlertCircleIcon />
-            <AlertTitle>Warning:</AlertTitle>
+            <AlertTitle>Warning!</AlertTitle>
             <AlertDescription>
               This action is not reversible. Please be certain.
             </AlertDescription>

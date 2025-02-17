@@ -7,8 +7,8 @@ const nextConfig = {
       // The dynamic property is used when the page is neither statically generated nor fully prefetched (e.g. with prefetch={true}).
       // Default: 0 seconds (not cached)
 
-      // cache page segments in the client-side router cache for 1 year.
-      dynamic: 31536000,
+      // cache page segments in the client-side router cache for 1 hour.
+      dynamic: 3600,
 
       // The static property is used for statically generated pages, or when the prefetch prop on Link is set to true, or when calling router.prefetch.
       // Default: 5 minutes

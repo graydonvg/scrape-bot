@@ -1,12 +1,14 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircleIcon, InboxIcon } from "lucide-react";
 import CreateWorkflowDialog from "./create-workflow-dialog";
-import getWorkflows from "../_services/get-workkflows";
 import WorkflowCard from "./workflow-card";
+import { Database } from "@/lib/supabase/database.types";
 
-export default async function Workflows() {
-  const workflows = await getWorkflows();
+type Props = {
+  workflows: Database["public"]["Tables"]["workflows"]["Row"][] | null;
+};
 
+export default async function Workflows({ workflows }: Props) {
   if (!workflows) {
     return (
       <Alert variant="destructive">

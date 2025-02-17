@@ -9,10 +9,15 @@ import CreateWorkflowForm from "./create-workflow-form";
 
 type Props = {
   triggerLabel?: string;
+  existingWorkflowNames?: string[];
 };
 
-export default function CreateWorkflowDialog({ triggerLabel }: Props) {
+export default function CreateWorkflowDialog({
+  triggerLabel,
+  existingWorkflowNames,
+}: Props) {
   const [open, setOpen] = useState(false);
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -25,7 +30,7 @@ export default function CreateWorkflowDialog({ triggerLabel }: Props) {
           icon={Layers2Icon}
         />
         <div className="p-6">
-          <CreateWorkflowForm />
+          <CreateWorkflowForm existingWorkflowNames={existingWorkflowNames} />
         </div>
       </DialogContent>
     </Dialog>

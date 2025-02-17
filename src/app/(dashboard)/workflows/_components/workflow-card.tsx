@@ -14,7 +14,7 @@ const statusColors: Record<
   Database["public"]["Enums"]["workflow_status"],
   string
 > = {
-  DRAFT: "bg-violet-400 text-violet-600",
+  DRAFT: "bg-yellow-400 text-yellow-600",
   PUBLISHED: "bg-primary",
 };
 
@@ -45,7 +45,7 @@ export default function WorkflowCard({ workflow }: Props) {
                 {workflow.name}
               </Link>
               {isDraft && (
-                <span className="ml-2 rounded-full bg-violet-100 px-2 py-0.5 text-xs font-medium text-violet-800">
+                <span className="ml-2 rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-800">
                   Draft
                 </span>
               )}
