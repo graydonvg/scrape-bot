@@ -23,7 +23,7 @@ export default async function Workflows() {
     return (
       <div className="flex-center h-full flex-col gap-4">
         <div className="bg-accent flex-center size-20 rounded-full">
-          <InboxIcon className="stroke-primary size-10" />
+          <InboxIcon className="stroke-primary size-10 dark:stroke-blue-500" />
         </div>
 
         <div className="flex flex-col gap-1 text-center">

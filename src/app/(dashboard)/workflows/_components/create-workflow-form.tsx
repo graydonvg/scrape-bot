@@ -22,8 +22,10 @@ import createWorkflowAction from "../_actions/create-workflow-action";
 import { toast } from "sonner";
 import { Loader2Icon } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
+import { useRouter } from "next/navigation";
 
 export default function CreateWorkflowForm() {
+  const router = useRouter();
   const toastId = "create-workflow";
   const form = useForm<CreateWorkflowSchemaType>({
     resolver: zodResolver(createWorkflowSchema),
@@ -32,6 +34,7 @@ export default function CreateWorkflowForm() {
   const { execute, isPending } = useAction(createWorkflowAction, {
     onSuccess: () => {
       toast.success("Workflow created", { id: toastId });
+      router.refresh();
     },
     onError: () => {
       toast.error("Failed to create workflow", { id: toastId });
@@ -51,7 +54,10 @@ export default function CreateWorkflowForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="flex items-center gap-1">
-                  Name<span className="text-primary text-xs">(required)</span>
+                  Name
+                  <span className="text-primary text-xs dark:text-blue-500">
+                    (required)
+                  </span>
                 </FormLabel>
                 <FormControl>
                   <Input

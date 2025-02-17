@@ -19,15 +19,12 @@ export default function CustomDialogHeader(props: Props) {
     <DialogHeader>
       <DialogTitle
         className={cn(
-          "text-primary flex flex-col items-center gap-2 text-xl",
+          "text-primary flex flex-col items-center gap-2 text-xl dark:text-blue-500",
           props.titleClassName,
         )}
       >
         {props.icon && (
-          <props.icon
-            size={30}
-            className={cn("stroke-primary", props.iconClassName)}
-          />
+          <props.icon size={30} className={cn(props.iconClassName)} />
         )}
         {props.title && props.title}
       </DialogTitle>

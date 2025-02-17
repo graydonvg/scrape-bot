@@ -6,7 +6,6 @@ import {
   deleteWorkflowSchema,
   DeleteWorkflowSchemaType,
 } from "@/lib/schemas/workflows";
-import { revalidatePath } from "next/cache";
 
 const deleteWorkflowAction = actionClient
   .metadata({ actionName: "deleteWorkflowAction" })
@@ -40,8 +39,6 @@ const deleteWorkflowAction = actionClient
         return true;
       } catch (error) {
         throw error;
-      } finally {
-        revalidatePath("/workflows");
       }
     },
   );

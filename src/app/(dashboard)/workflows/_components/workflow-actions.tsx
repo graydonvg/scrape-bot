@@ -42,7 +42,7 @@ export default function WorkflowActionsMenu({
             onClick={() => setOpenDeleteDialog(true)}
             className="text-destructive focus:text-destructive flex items-center gap-2"
           >
-            <TrashIcon size={16} />
+            <TrashIcon size={16} className="stroke-destructive" />
             Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
