@@ -1,4 +1,3 @@
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,7 +10,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { AlertCircleIcon } from "lucide-react";
 import { useState } from "react";
 import deleteWorkflowAction from "../_actions/delete-workflow-action";
 import { useAction } from "next-safe-action/hooks";
@@ -19,6 +17,8 @@ import { toast } from "sonner";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import { USER_ERROR_MESSAGES } from "@/lib/constants";
+import CustomAlert from "@/components/custom-alert";
 
 type Props = {
   open: boolean;
@@ -37,21 +37,28 @@ export default function DeleteWorkflowDialog({
   const toastId = `workflow-${workflowId}`;
   const [confirmText, setConfirmText] = useState("");
   const { execute, isPending } = useAction(deleteWorkflowAction, {
-    onSuccess: () => {
-      toast.success("Workflow deleted", { id: toastId });
+    onExecute: () => {
+      toast.loading("Deleting workflow...", { id: toastId });
+    },
+    onSuccess: ({ data }) => {
       setConfirmText("");
+
+      if (data && !data.success) {
+        return toast.error(data.message, { id: toastId });
+      }
+
+      setOpen(false);
+      toast.success("Workflow deleted", { id: toastId });
       router.refresh();
     },
     onError: () => {
-      toast.error("Failed to delete workflow", { id: toastId });
-    },
-    onExecute: () => {
-      toast.loading("Deleting workflow...", { id: toastId });
+      setConfirmText("");
+      toast.error(USER_ERROR_MESSAGES.Unexpected, { id: toastId });
     },
   });
 
   return (
-    <AlertDialog open={open || isPending} onOpenChange={setOpen}>
+    <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogContent className="gap-0 p-0">
         <AlertDialogHeader className="grid gap-4 p-6">
           <AlertDialogTitle className="mb-0 text-2xl">
@@ -61,13 +68,10 @@ export default function DeleteWorkflowDialog({
             This will permanently delete your workflow and remove your data from
             our servers.
           </AlertDialogDescription>
-          <Alert variant="destructive">
-            <AlertCircleIcon />
-            <AlertTitle>Warning!</AlertTitle>
-            <AlertDescription>
-              This action is not reversible. Please be certain.
-            </AlertDescription>
-          </Alert>
+          <CustomAlert
+            title="Warning!"
+            description="This action is not reversible. Please be certain."
+          />
         </AlertDialogHeader>
         <div className="bg-muted dark:bg-card grid gap-2 p-6">
           <Label className="text-muted-foreground font-normal">
@@ -83,7 +87,7 @@ export default function DeleteWorkflowDialog({
             className="bg-background"
           />
         </div>
-        <AlertDialogFooter className="flex flex-row items-center justify-between p-4">
+        <AlertDialogFooter className="p-4">
           <AlertDialogCancel
             onClick={() => {
               setConfirmText("");
@@ -100,7 +104,10 @@ export default function DeleteWorkflowDialog({
               }),
             )}
             disabled={confirmText !== workflowName || isPending}
-            onClick={() => execute({ id: workflowId })}
+            onClick={(e) => {
+              e.preventDefault();
+              execute({ workflowId });
+            }}
           >
             Delete
           </AlertDialogAction>

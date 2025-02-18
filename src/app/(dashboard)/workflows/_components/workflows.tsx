@@ -1,8 +1,8 @@
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircleIcon, InboxIcon } from "lucide-react";
+import { InboxIcon } from "lucide-react";
 import CreateWorkflowDialog from "./create-workflow-dialog";
 import WorkflowCard from "./workflow-card";
 import { Database } from "@/lib/supabase/database.types";
+import CustomAlert from "@/components/custom-alert";
 
 type Props = {
   workflows: Database["public"]["Tables"]["workflows"]["Row"][] | null;
@@ -11,13 +11,10 @@ type Props = {
 export default async function Workflows({ workflows }: Props) {
   if (!workflows) {
     return (
-      <Alert variant="destructive">
-        <AlertCircleIcon className="size-4" />
-        <AlertTitle>Error</AlertTitle>
-        <AlertDescription>
-          Something went wrong. Please try again later.
-        </AlertDescription>
-      </Alert>
+      <CustomAlert
+        title="Error"
+        description="Something went wrong. Please try again later."
+      />
     );
   }
 
@@ -42,7 +39,7 @@ export default async function Workflows({ workflows }: Props) {
   return (
     <div className="flex flex-col gap-4">
       {workflows.map((workflow) => (
-        <WorkflowCard key={workflow.id} workflow={workflow} />
+        <WorkflowCard key={workflow.workflowId} workflow={workflow} />
       ))}
     </div>
   );

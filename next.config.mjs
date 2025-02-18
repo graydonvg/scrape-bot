@@ -1,4 +1,7 @@
 /** @type {import('next').NextConfig} */
+
+import { withAxiom } from "next-axiom";
+
 const nextConfig = {
   experimental: {
     staleTimes: {
@@ -23,4 +26,4 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+export default withAxiom(nextConfig);

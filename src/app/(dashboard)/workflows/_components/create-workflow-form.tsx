@@ -22,6 +22,7 @@ import createWorkflowAction from "../_actions/create-workflow-action";
 import { toast } from "sonner";
 import { Loader2Icon } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
+import { USER_ERROR_MESSAGES } from "@/lib/constants";
 
 const initialState = {
   name: "",
@@ -82,7 +83,7 @@ export default function CreateWorkflowForm({ existingWorkflowNames }: Props) {
         });
       }
 
-      toast.error("Failed to create workflow", { id: toastId });
+      toast.error(USER_ERROR_MESSAGES.Unexpected, { id: toastId });
     },
   });
 

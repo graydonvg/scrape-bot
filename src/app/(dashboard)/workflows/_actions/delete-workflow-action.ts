@@ -6,6 +6,9 @@ import {
   deleteWorkflowSchema,
   DeleteWorkflowSchemaType,
 } from "@/lib/schemas/workflows";
+import { ActionReturn } from "@/lib/types";
+import { Logger } from "next-axiom";
+import { LOGGER_ERROR_MESSAGES, USER_ERROR_MESSAGES } from "@/lib/constants";
 
 const deleteWorkflowAction = actionClient
   .metadata({ actionName: "deleteWorkflowAction" })
@@ -15,7 +18,10 @@ const deleteWorkflowAction = actionClient
       parsedInput: formData,
     }: {
       parsedInput: DeleteWorkflowSchemaType;
-    }) => {
+    }): Promise<ActionReturn> => {
+      let log = new Logger();
+      log = log.with({ context: "deleteWorkflowAction" });
+
       try {
         const supabase = await createSupabaseServerClient();
         const {
@@ -23,22 +29,42 @@ const deleteWorkflowAction = actionClient
         } = await supabase.auth.getUser();
 
         if (!user) {
-          throw new Error("Unauthenticated");
+          log.warn(LOGGER_ERROR_MESSAGES.Unauthorized, { formData });
+          return {
+            success: false,
+            message: USER_ERROR_MESSAGES.Unauthorized,
+          };
         }
+
+        log = log.with({ userId: user.id });
 
         const { error } = await supabase
           .from("workflows")
           .delete()
-          .eq("id", formData.id)
+          .eq("workflowId", formData.workflowId)
           .eq("userId", user.id);
 
         if (error) {
-          throw new Error("Failed to delete workflow from database");
+          log.error(LOGGER_ERROR_MESSAGES.Delete, {
+            error,
+            formData,
+          });
+          return {
+            success: false,
+            message: USER_ERROR_MESSAGES.Unexpected,
+          };
         }
 
-        return true;
+        return {
+          success: true,
+          message: "Workflow deleted",
+        };
       } catch (error) {
-        throw error;
+        log.error(LOGGER_ERROR_MESSAGES.Unexpected, { error });
+        return {
+          success: false,
+          message: USER_ERROR_MESSAGES.Unexpected,
+        };
       }
     },
   );

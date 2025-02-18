@@ -9,13 +9,9 @@ import {
 } from "@/lib/schemas/workflows";
 import { revalidatePath } from "next/cache";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
-
-type ActionReturn = {
-  success: boolean;
-  field?: keyof CreateWorkflowSchemaType;
-  type?: string;
-  message: string;
-};
+import { ActionReturn } from "@/lib/types";
+import { Logger } from "next-axiom";
+import { LOGGER_ERROR_MESSAGES, USER_ERROR_MESSAGES } from "@/lib/constants";
 
 const createWorkflowAction = actionClient
   .metadata({ actionName: "createWorkflowAction" })
@@ -25,18 +21,25 @@ const createWorkflowAction = actionClient
       parsedInput: formData,
     }: {
       parsedInput: CreateWorkflowSchemaType;
-    }): Promise<ActionReturn> => {
+    }): Promise<ActionReturn<keyof CreateWorkflowSchemaType>> => {
+      let log = new Logger();
+      log = log.with({ context: "createWorkflowAction" });
+
       try {
         const supabase = await createSupabaseServerClient();
         const {
           data: { user },
         } = await supabase.auth.getUser();
 
-        if (!user)
+        if (!user) {
+          log.warn(LOGGER_ERROR_MESSAGES.Unauthorized, { formData });
           return {
             success: false,
-            message: "You need to be signed in to perform this action",
+            message: USER_ERROR_MESSAGES.Unauthorized,
           };
+        }
+
+        log = log.with({ userId: user.id });
 
         const { data, error } = await supabase
           .from("workflows")
@@ -45,7 +48,7 @@ const createWorkflowAction = actionClient
             status: "DRAFT",
             definition: "TODO",
           })
-          .select("id");
+          .select("workflowId");
 
         if (error) {
           if (error.message.includes('constraint "user_workflow_name_unique"'))
@@ -56,21 +59,26 @@ const createWorkflowAction = actionClient
               message: `Workflow name "${formData.name}" already exists. Please provide a unique name.`,
             };
 
+          log.error(LOGGER_ERROR_MESSAGES.Insert, {
+            error,
+            formData,
+          });
           return {
             success: false,
-            message: "An unexpected error occurred",
+            message: USER_ERROR_MESSAGES.Unexpected,
           };
         }
 
-        redirect(`/workflows/editor/${data[0].id}`);
+        redirect(`/workflows/editor/${data[0].workflowId}`);
       } catch (error) {
         // When you call the redirect() function (from next/navigation), it throws a special error (with the code NEXT_REDIRECT) to immediately halt further processing and trigger the redirection. This “error” is meant to be caught internally by Next.js, not by the try/catch blocks.
         // Throw the “error” to trigger the redirection
         if (isRedirectError(error)) throw error;
 
+        log.error(LOGGER_ERROR_MESSAGES.Unexpected, { error });
         return {
           success: false,
-          message: "An unexpected error occurred",
+          message: USER_ERROR_MESSAGES.Unexpected,
         };
       } finally {
         revalidatePath("/workflows");

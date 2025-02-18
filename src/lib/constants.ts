@@ -27,3 +27,17 @@ export const routes = [
     icon: CreditCardIcon,
   },
 ];
+
+export const USER_ERROR_MESSAGES = {
+  Unauthorized: "You need to be signed in to perform this action",
+  Unexpected: "An unexpected error occurred. Please try again later.",
+} as const;
+
+export const LOGGER_ERROR_MESSAGES = {
+  Unauthorized: "Unauthorized",
+  Unexpected: "Unexpected error",
+  Insert: "Insert error",
+  Delete: "Delete error",
+  Select: "Select error",
+  Update: "Update error",
+} as const;

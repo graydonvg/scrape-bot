@@ -32,31 +32,31 @@ export type Database = {
           createdAt: string;
           definition: string;
           description: string | null;
-          id: number;
           name: string;
           status: Database["public"]["Enums"]["workflow_status"];
           updatedAt: string;
           userId: string;
+          workflowId: number;
         };
         Insert: {
           createdAt?: string;
           definition: string;
           description?: string | null;
-          id?: number;
           name: string;
           status: Database["public"]["Enums"]["workflow_status"];
           updatedAt?: string;
           userId?: string;
+          workflowId?: number;
         };
         Update: {
           createdAt?: string;
           definition?: string;
           description?: string | null;
-          id?: number;
           name?: string;
           status?: Database["public"]["Enums"]["workflow_status"];
           updatedAt?: string;
           userId?: string;
+          workflowId?: number;
         };
         Relationships: [];
       };

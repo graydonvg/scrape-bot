@@ -39,7 +39,7 @@ export default function WorkflowCard({ workflow }: Props) {
           <div>
             <h3 className="text-muted-foreground text-base font-bold">
               <Link
-                href={`/workflow/editor/${workflow.id}`}
+                href={`/workflow/editor/${workflow.workflowId}`}
                 className="hover:underline"
               >
                 {workflow.name}
@@ -54,14 +54,14 @@ export default function WorkflowCard({ workflow }: Props) {
         </div>
         <div className="flex items-center gap-2">
           <Button asChild variant="outline" size="sm">
-            <Link href={`/workflow/editor/${workflow.id}`}>
+            <Link href={`/workflow/editor/${workflow.workflowId}`}>
               <PencilIcon size={16} />
               Edit
             </Link>
           </Button>
           <WorkflowActionsMenu
             workflowName={workflow.name}
-            workflowId={workflow.id}
+            workflowId={workflow.workflowId}
           />
         </div>
       </CardContent>

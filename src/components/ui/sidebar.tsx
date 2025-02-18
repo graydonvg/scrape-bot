@@ -282,14 +282,17 @@ function SidebarTrigger({
       data-slot="sidebar-trigger"
       variant="ghost"
       size="icon"
-      className={cn("p-1.5", className)}
+      className={cn(
+        "transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:size-8",
+        className,
+      )}
       onClick={(event) => {
         onClick?.(event);
         toggleSidebar();
       }}
       {...props}
     >
-      <PanelLeftIcon className="size-full" />
+      <PanelLeftIcon className="size-6 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:size-4" />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );

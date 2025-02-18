@@ -16,7 +16,7 @@ export const createWorkflowSchema = z.object({
 export type CreateWorkflowSchemaType = z.infer<typeof createWorkflowSchema>;
 
 export const deleteWorkflowSchema = z.object({
-  id: z.number().positive(),
+  workflowId: z.number().positive(),
 });
 
 export type DeleteWorkflowSchemaType = z.infer<typeof deleteWorkflowSchema>;
