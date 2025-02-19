@@ -23,17 +23,15 @@ import { toast } from "sonner";
 import { Loader2Icon } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { USER_ERROR_MESSAGES } from "@/lib/constants";
+import useWorkflowsStore from "@/lib/store/workflows-store";
 
 const initialState = {
   name: "",
   description: "",
 };
 
-type Props = {
-  existingWorkflowNames?: string[];
-};
-
-export default function CreateWorkflowForm({ existingWorkflowNames }: Props) {
+export default function CreateWorkflowForm() {
+  const { existingWorkflowNames } = useWorkflowsStore();
   const toastId = "create-workflow";
   const form = useForm<CreateWorkflowSchemaType>({
     resolver: zodResolver(createWorkflowSchema),

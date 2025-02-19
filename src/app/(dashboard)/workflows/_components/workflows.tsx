@@ -1,14 +1,13 @@
 import { InboxIcon } from "lucide-react";
 import CreateWorkflowDialog from "./create-workflow-dialog";
 import WorkflowCard from "./workflow-card";
-import { Database } from "@/lib/supabase/database.types";
 import CustomAlert from "@/components/custom-alert";
+import getWorkflows from "../_services/get-workkflows";
+import WorkflowsStoreInitializer from "@/components/store-initializers/workflows-store-initializer";
 
-type Props = {
-  workflows: Database["public"]["Tables"]["workflows"]["Row"][] | null;
-};
+export default async function Workflows() {
+  const workflows = await getWorkflows();
 
-export default async function Workflows({ workflows }: Props) {
   if (!workflows) {
     return (
       <CustomAlert
@@ -41,6 +40,7 @@ export default async function Workflows({ workflows }: Props) {
       {workflows.map((workflow) => (
         <WorkflowCard key={workflow.workflowId} workflow={workflow} />
       ))}
+      <WorkflowsStoreInitializer workflows={workflows} />
     </div>
   );
 }
