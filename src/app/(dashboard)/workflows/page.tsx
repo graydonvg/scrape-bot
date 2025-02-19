@@ -3,6 +3,11 @@ import { Suspense } from "react";
 import WorkflowsSkeleton from "./_components/workflows-skeleton";
 import CreateWorkflowDialog from "./_components/create-workflow-dialog";
 import getWorkflows from "./_services/get-workkflows";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Workflows",
+};
 
 export default async function WorkflowsPage() {
   const workflows = await getWorkflows();

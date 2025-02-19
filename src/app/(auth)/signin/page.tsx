@@ -8,7 +8,7 @@ export default function SignInPage() {
         <div className="flex justify-center gap-2 md:justify-start">
           <Logo />
         </div>
-        <div className="flex flex-1 items-center justify-center">
+        <div className="flex-center flex-1">
           <div className="w-full max-w-xs">
             <SignInForm />
           </div>

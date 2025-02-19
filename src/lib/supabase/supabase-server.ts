@@ -18,6 +18,7 @@ export default async function createSupabaseServerClient() {
             cookiesToSet.forEach(({ name, value, options }) => {
               cookieStore.set(name, value, options);
             });
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
           } catch (error) {
             // The `set` method was called from a Server Component.
             // This can be ignored if you have middleware refreshing

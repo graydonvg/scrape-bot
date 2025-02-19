@@ -6,13 +6,14 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { routes } from "@/lib/constants";
+import { siteConfig } from "@/config/site";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export function NavMain() {
   const pathname = usePathname();
   const paths = pathname === "/" ? ["/"] : pathname.split("/");
+  const routes = siteConfig.navMain;
   const activeRoute = routes.find((route) => paths.includes(route.href));
 
   return (
