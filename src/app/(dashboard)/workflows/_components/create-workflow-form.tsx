@@ -20,7 +20,6 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import createWorkflowAction from "../_actions/create-workflow-action";
 import { toast } from "sonner";
-import { Loader2Icon } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { USER_ERROR_MESSAGES } from "@/lib/constants";
 import useWorkflowsStore from "@/lib/store/workflows-store";
@@ -157,12 +156,8 @@ export default function CreateWorkflowForm() {
             </FormItem>
           )}
         />
-        <Button
-          type="submit"
-          disabled={isPending}
-          className="w-full capitalize"
-        >
-          {!isPending ? "Proceed" : <Loader2Icon className="animate-spin" />}
+        <Button type="submit" loading={isPending} className="w-full capitalize">
+          Proceed
         </Button>
       </form>
     </Form>

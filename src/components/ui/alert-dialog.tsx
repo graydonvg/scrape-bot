@@ -5,6 +5,7 @@ import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog";
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
+import { Loader2Icon } from "lucide-react";
 
 function AlertDialog({
   ...props
@@ -117,13 +118,19 @@ function AlertDialogDescription({
 
 function AlertDialogAction({
   className,
+  loading,
   ...props
-}: React.ComponentProps<typeof AlertDialogPrimitive.Action>) {
+}: React.ComponentProps<typeof AlertDialogPrimitive.Action> & {
+  loading?: boolean;
+}) {
   return (
     <AlertDialogPrimitive.Action
       className={cn(buttonVariants(), className)}
+      disabled={loading || props.disabled}
       {...props}
-    />
+    >
+      {!loading ? props.children : <Loader2Icon className="animate-spin" />}
+    </AlertDialogPrimitive.Action>
   );
 }
 

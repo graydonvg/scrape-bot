@@ -3,7 +3,7 @@ import CreateWorkflowDialog from "./create-workflow-dialog";
 import WorkflowCard from "./workflow-card";
 import CustomAlert from "@/components/custom-alert";
 import getWorkflows from "../_services/get-workkflows";
-import WorkflowsStoreInitializer from "@/components/store-initializers/workflows-store-initializer";
+import WorkflowsStoreUpdater from "@/components/store-updaters/workflows-store-updater";
 
 export default async function Workflows() {
   const workflows = await getWorkflows();
@@ -36,11 +36,13 @@ export default async function Workflows() {
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      {workflows.map((workflow) => (
-        <WorkflowCard key={workflow.workflowId} workflow={workflow} />
-      ))}
-      <WorkflowsStoreInitializer workflows={workflows} />
-    </div>
+    <>
+      <div className="flex flex-col gap-4">
+        {workflows.map((workflow) => (
+          <WorkflowCard key={workflow.workflowId} workflow={workflow} />
+        ))}
+      </div>
+      <WorkflowsStoreUpdater workflows={workflows} />
+    </>
   );
 }

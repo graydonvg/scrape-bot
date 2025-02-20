@@ -2,7 +2,7 @@ import { BotIcon } from "lucide-react";
 
 export default function Logo() {
   return (
-    <>
+    <div className="flex items-center gap-2">
       <div className="text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg bg-linear-to-r from-blue-700 via-blue-600 to-blue-500">
         <BotIcon className="size-4" />
       </div>
@@ -12,6 +12,6 @@ export default function Logo() {
         </span>
         <span className="text-stone-700 dark:text-stone-300">Bot</span>
       </div>
-    </>
+    </div>
   );
 }

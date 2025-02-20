@@ -1,6 +1,8 @@
 import { LOGGER_ERROR_MESSAGES } from "@/lib/constants";
 import createSupabaseServerClient from "@/lib/supabase/supabase-server";
 import { Logger } from "next-axiom";
+import { isRedirectError } from "next/dist/client/components/redirect-error";
+import { redirect } from "next/navigation";
 
 export default async function getWorkflows() {
   let log = new Logger();
@@ -14,7 +16,7 @@ export default async function getWorkflows() {
 
     if (!user) {
       log.warn(LOGGER_ERROR_MESSAGES.Unauthorized);
-      return null;
+      return redirect("/signin");
     }
 
     const { data, error } = await supabase
@@ -32,6 +34,8 @@ export default async function getWorkflows() {
 
     return data;
   } catch (error) {
+    if (isRedirectError(error)) throw error;
+
     log.error(LOGGER_ERROR_MESSAGES.Unexpected, { error });
     return null;
   }

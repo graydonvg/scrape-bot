@@ -1,9 +1,20 @@
-import CustomAlert from "@/components/custom-alert";
 import getWorkflow from "./_services/get-workflow";
+import { notFound } from "next/navigation";
 
 type Params = {
   params: Promise<{ workflowId: string }>;
 };
+
+export async function generateMetadata({ params }: Params) {
+  const workflowIdString = (await params).workflowId;
+  const workflowIdNumber = parseInt(workflowIdString, 10);
+
+  const workflow = await getWorkflow(workflowIdNumber);
+
+  return {
+    title: workflow ? workflow.name : "Not Found",
+  };
+}
 
 export default async function WorkflowPage({ params }: Params) {
   const workflowIdString = (await params).workflowId;
@@ -11,10 +22,7 @@ export default async function WorkflowPage({ params }: Params) {
 
   const workflow = await getWorkflow(workflowIdNumber);
 
-  if (!workflow)
-    return <CustomAlert title="Error" description="Workflow not found." />;
+  if (!workflow) notFound();
 
-  return (
-    <pre className="min-h-screen">{JSON.stringify(workflow, null, 2)}</pre>
-  );
+  return <pre>{JSON.stringify(workflow, null, 2)}</pre>;
 }

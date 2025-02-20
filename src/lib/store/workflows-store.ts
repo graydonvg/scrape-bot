@@ -1,16 +1,14 @@
 import { create } from "zustand";
-import { Database } from "../supabase/database.types";
+import { Workflow } from "../types";
 
 type WorkflowsState = {
   existingWorkflowNames: string[];
-  setExistingWorkflowNames: (
-    workflows: Database["public"]["Tables"]["workflows"]["Row"][],
-  ) => void;
+  updateExistingWorkflowNames: (workflows: Workflow[]) => void;
 };
 
 const useWorkflowsStore = create<WorkflowsState>((set) => ({
   existingWorkflowNames: [],
-  setExistingWorkflowNames: (workflows) =>
+  updateExistingWorkflowNames: (workflows) =>
     set({ existingWorkflowNames: workflows.map((workflow) => workflow.name) }),
 }));
 

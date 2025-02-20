@@ -65,10 +65,10 @@ export function SignUpForm() {
           />
           <Button
             type="submit"
-            disabled={isPending}
+            loading={isPending}
             className="w-full capitalize"
           >
-            {isPending ? "Signing up..." : "Sign up"}
+            Sign up
           </Button>
         </div>
         <div className="text-center text-sm">

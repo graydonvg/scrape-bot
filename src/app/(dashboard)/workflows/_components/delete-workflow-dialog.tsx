@@ -98,12 +98,13 @@ export default function DeleteWorkflowDialog({
           </AlertDialogCancel>
           <AlertDialogAction
             className={cn(
-              "relative",
+              "min-w-[75px]",
               buttonVariants({
                 variant: "destructive",
               }),
             )}
             disabled={confirmText !== workflowName || isPending}
+            loading={isPending}
             onClick={(e) => {
               e.preventDefault();
               execute({ workflowId });

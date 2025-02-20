@@ -1,19 +1,16 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Database } from "@/lib/supabase/database.types";
 import { cn } from "@/lib/utils";
 import { FileTextIcon, PencilIcon, PlayIcon } from "lucide-react";
 import Link from "next/link";
 import WorkflowActionsMenu from "./workflow-actions";
 import { Button } from "@/components/ui/button";
+import { Workflow, WorkflowStatus } from "@/lib/types";
 
 type Props = {
-  workflow: Database["public"]["Tables"]["workflows"]["Row"];
+  workflow: Workflow;
 };
 
-const statusColors: Record<
-  Database["public"]["Enums"]["workflow_status"],
-  string
-> = {
+const statusColors: Record<WorkflowStatus, string> = {
   DRAFT: "bg-yellow-400 text-yellow-600",
   PUBLISHED: "bg-primary",
 };
