@@ -3,63 +3,49 @@
 import createSupabaseServerClient from "@/lib/supabase/supabase-server";
 import { redirect } from "next/navigation";
 import { actionClient } from "@/lib/safe-action";
-import { signUpSchema, SignUpSchemaType } from "@/lib/schemas/auth";
+import { signInSchema, SignInSchemaType } from "@/lib/schemas/auth";
 import { Logger } from "next-axiom";
 import { LOGGER_ERROR_MESSAGES, USER_ERROR_MESSAGES } from "@/lib/constants";
 import { ActionReturn } from "@/lib/types";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 
-const signUpAction = actionClient
-  .metadata({ actionName: "signUpAction" })
-  .schema(signUpSchema)
+const signInWithPasswordAction = actionClient
+  .metadata({ actionName: "signInWithPasswordAction" })
+  .schema(signInSchema)
   .action(
     async ({
       parsedInput: formData,
     }: {
-      parsedInput: SignUpSchemaType;
-    }): Promise<ActionReturn<Array<keyof SignUpSchemaType>>> => {
+      parsedInput: SignInSchemaType;
+    }): Promise<ActionReturn> => {
       let log = new Logger();
-      log = log.with({ context: "signUpAction" });
+      log = log.with({ context: "signInWithPasswordAction" });
 
       try {
         const supabase = await createSupabaseServerClient();
-
         const {
           data: { user },
         } = await supabase.auth.getUser();
 
         if (user) {
-          log.warn("Failed to sign up. A user session already exists.", user);
+          log.warn("Failed to sign in. A user session already exists.", user);
           return {
             success: false,
-            message: "Unable to sign up",
+            message: "Unable to sign in",
           };
         }
 
-        if (formData.password !== formData.confirmPassword) {
-          log.warn("Passwords do not match");
-          return {
-            success: false,
-            field: ["password", "confirmPassword"],
-            type: "validate",
-            message: "Passwords do not match",
-          };
-        }
-
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { confirmPassword, ...signupData } = formData;
-
-        const { error } = await supabase.auth.signUp(signupData);
+        const { error } = await supabase.auth.signInWithPassword(formData);
 
         if (error) {
-          log.error("Signup error", {
+          log.error("Signin error", {
             error,
           });
 
-          if (error.code === "user_already_exists") {
+          if (error.code === "invalid_credentials") {
             return {
               success: false,
-              message: "Unable to sign up",
+              message: "Unable to sign in",
             };
           }
 
@@ -84,4 +70,4 @@ const signUpAction = actionClient
     },
   );
 
-export default signUpAction;
+export default signInWithPasswordAction;

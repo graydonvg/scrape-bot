@@ -8,7 +8,7 @@ import {
 export const siteConfig = {
   name: "ScrapeBot",
   // TODO: Provide better description.
-  description: "Web scraper.",
+  description: "An AI powered web scraper",
   navMain: [
     {
       href: "/",

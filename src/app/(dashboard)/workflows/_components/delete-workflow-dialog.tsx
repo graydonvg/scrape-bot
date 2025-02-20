@@ -16,7 +16,6 @@ import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useRouter } from "next/navigation";
 import { USER_ERROR_MESSAGES } from "@/lib/constants";
 import CustomAlert from "@/components/custom-alert";
 
@@ -33,7 +32,6 @@ export default function DeleteWorkflowDialog({
   workflowName,
   workflowId,
 }: Props) {
-  const router = useRouter();
   const toastId = `workflow-${workflowId}`;
   const [confirmText, setConfirmText] = useState("");
   const { execute, isPending } = useAction(deleteWorkflowAction, {
@@ -49,7 +47,6 @@ export default function DeleteWorkflowDialog({
 
       setOpen(false);
       toast.success("Workflow deleted", { id: toastId });
-      router.refresh();
     },
     onError: () => {
       setConfirmText("");

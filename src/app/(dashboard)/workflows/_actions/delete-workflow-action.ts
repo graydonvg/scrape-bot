@@ -9,6 +9,7 @@ import {
 import { ActionReturn } from "@/lib/types";
 import { Logger } from "next-axiom";
 import { LOGGER_ERROR_MESSAGES, USER_ERROR_MESSAGES } from "@/lib/constants";
+import { revalidatePath } from "next/cache";
 
 const deleteWorkflowAction = actionClient
   .metadata({ actionName: "deleteWorkflowAction" })
@@ -55,6 +56,7 @@ const deleteWorkflowAction = actionClient
           };
         }
 
+        revalidatePath("/workflows");
         return {
           success: true,
           message: "Workflow deleted",

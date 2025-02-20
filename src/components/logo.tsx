@@ -7,10 +7,12 @@ export default function Logo() {
         <BotIcon className="size-4" />
       </div>
       <div className="text-left text-2xl leading-tight font-extrabold">
-        <span className="bg-linear-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent">
+        <span className="bg-linear-to-r from-blue-600 to-blue-500 bg-clip-text text-transparent dark:from-blue-500 dark:to-blue-400">
           Scrape
         </span>
-        <span className="text-stone-700 dark:text-stone-300">Bot</span>
+        <span className="bg-linear-to-r from-stone-700 to-stone-600 bg-clip-text text-transparent dark:from-stone-300 dark:to-stone-200">
+          Bot
+        </span>
       </div>
     </div>
   );

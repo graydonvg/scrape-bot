@@ -53,7 +53,9 @@ export default function CreateWorkflowForm() {
               shouldFocus: true,
             },
           );
-          return toast.error("Failed to create workflow", { id: toastId });
+          return toast.error(USER_ERROR_MESSAGES.GenericFormValidation, {
+            id: toastId,
+          });
         }
 
         return toast.error(data.message, { id: toastId });
@@ -73,10 +75,14 @@ export default function CreateWorkflowForm() {
             {
               message:
                 validationErrors.fieldErrors[key]?.[0] ||
-                "Please fix the errors in the form",
+                USER_ERROR_MESSAGES.GenericFormValidation,
             },
             { shouldFocus: true },
           );
+        });
+
+        return toast.error(USER_ERROR_MESSAGES.GenericFormValidation, {
+          id: toastId,
         });
       }
 
@@ -86,6 +92,7 @@ export default function CreateWorkflowForm() {
 
   function handleSubmit(formData: CreateWorkflowSchemaType) {
     const workflowNameExists = existingWorkflowNames?.includes(formData.name);
+
     if (workflowNameExists) {
       form.setError(
         "name",
