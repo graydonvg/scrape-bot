@@ -12,16 +12,22 @@ export type Database = {
       users: {
         Row: {
           email: string;
+          firstName: string | null;
+          lastName: string | null;
           updatedAt: string;
           userId: string;
         };
         Insert: {
           email: string;
+          firstName?: string | null;
+          lastName?: string | null;
           updatedAt?: string;
           userId: string;
         };
         Update: {
           email?: string;
+          firstName?: string | null;
+          lastName?: string | null;
           updatedAt?: string;
           userId?: string;
         };

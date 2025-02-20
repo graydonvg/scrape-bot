@@ -47,9 +47,17 @@ const signUpAction = actionClient
         }
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { confirmPassword, ...signupData } = formData;
+        const { confirmPassword, firstName, lastName, ...authData } = formData;
 
-        const { error } = await supabase.auth.signUp(signupData);
+        const { error } = await supabase.auth.signUp({
+          ...authData,
+          options: {
+            data: {
+              first_name: firstName?.length ? firstName : null,
+              last_name: lastName?.length ? lastName : null,
+            },
+          },
+        });
 
         if (error) {
           log.error("Signup error", {

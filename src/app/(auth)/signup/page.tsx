@@ -19,12 +19,22 @@ import { toast } from "sonner";
 import { USER_ERROR_MESSAGES } from "@/lib/constants";
 import signUpAction from "./_actions/sign-up-action";
 import { useEffect } from "react";
+import CustomFormLabel from "@/components/custom-form-label";
+import { Separator } from "@/components/ui/separator";
+
+const initialValues = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+};
 
 export default function SignUpPage() {
   const toastId = "sign-up";
   const form = useForm<SignUpSchemaType>({
     resolver: zodResolver(signUpSchema),
-    defaultValues: { email: "", password: "", confirmPassword: "" },
+    defaultValues: initialValues,
   });
   const { execute, isPending } = useAction(signUpAction, {
     onExecute: () => {
@@ -104,6 +114,34 @@ export default function SignUpPage() {
           </p>
         </div>
         <div className="space-y-6">
+          <Separator />
+          <FormField
+            control={form.control}
+            name="firstName"
+            render={({ field }) => (
+              <FormItem>
+                <CustomFormLabel label="First Name" optional />
+                <FormControl>
+                  <Input placeholder="Your first name..." {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="lastName"
+            render={({ field }) => (
+              <FormItem>
+                <CustomFormLabel label="Last Name" optional />
+                <FormControl>
+                  <Input placeholder="Your last name..." {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Separator />
           <FormField
             control={form.control}
             name="email"
@@ -124,7 +162,11 @@ export default function SignUpPage() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input type="password" {...field} />
+                  <Input
+                    type="password"
+                    placeholder="Your password..."
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -137,7 +179,11 @@ export default function SignUpPage() {
               <FormItem>
                 <FormLabel>Confirm Password</FormLabel>
                 <FormControl>
-                  <Input type="password" {...field} />
+                  <Input
+                    type="password"
+                    placeholder="Your password..."
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

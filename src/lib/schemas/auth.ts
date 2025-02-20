@@ -16,6 +16,26 @@ export type SignInSchemaType = z.infer<typeof signInSchema>;
 
 export const signUpSchema = z
   .object({
+    firstName: z
+      .string()
+      .trim()
+      .max(50, { message: "First name cannot exceed 50 characters" })
+      .regex(/^[\p{L}\p{M}.'’,()-]+(?: [\p{L}\p{M}.'’,()-]+)*$/u, {
+        message:
+          "First name can only contain letters, spaces, hyphens, apostrophes, dots, commas, and parentheses",
+      })
+      .or(z.literal(""))
+      .optional(),
+    lastName: z
+      .string()
+      .trim()
+      .max(50, { message: "Last name cannot exceed 50 characters" })
+      .regex(/^[\p{L}\p{M}.'’,()-]+(?: [\p{L}\p{M}.'’,()-]+)*$/u, {
+        message:
+          "Last name can only contain letters, spaces, hyphens, apostrophes, dots, commas, and parentheses",
+      })
+      .or(z.literal(""))
+      .optional(),
     email: z
       .string()
       .trim()

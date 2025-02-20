@@ -4,11 +4,11 @@ import {
   SidebarFooter,
   SidebarHeader,
 } from "@/components/ui/sidebar";
-import { ComponentProps } from "react";
+import { ComponentProps, Suspense } from "react";
 import { NavMain } from "./nav-main";
 import SidebarLogo from "./sidebar-logo";
-import { NavUser } from "./nav-user";
-import SignOutButton from "../sign-out-button";
+import NavUserServer from "./nav-user-server";
+import { Skeleton } from "../ui/skeleton";
 
 export default function AppSidebar({
   ...props
@@ -22,10 +22,13 @@ export default function AppSidebar({
         <NavMain />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser
-          user={{ avatar: "", email: "john@doe.com", name: "John Doe" }}
-        />
-        <SignOutButton />
+        <Suspense
+          fallback={
+            <Skeleton className="bg-sidebar-accent h-12 w-full transition-[height] ease-linear group-data-[collapsible=icon]:size-8" />
+          }
+        >
+          <NavUserServer />
+        </Suspense>
       </SidebarFooter>
     </Sidebar>
   );

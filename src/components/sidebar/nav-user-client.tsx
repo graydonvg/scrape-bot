@@ -6,7 +6,6 @@ import {
   ChevronsUpDownIcon,
   CreditCardIcon,
   LogOutIcon,
-  SparklesIcon,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -24,22 +23,55 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { createSupabaseBrowserClient } from "@/lib/supabase/supabase-browser";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { useLogger } from "next-axiom";
 
-export function NavUser({
+export function NavUserClient({
   user,
 }: {
   user: {
-    name: string;
+    firstName: string | null;
+    lastName: string | null;
     email: string;
-    avatar: string;
+    avatar?: string;
   };
 }) {
   const { isMobile } = useSidebar();
-  const avatarFallbackChars = user.name
-    .split(" ")
-    .splice(0, 2)
-    .map((name) => name.charAt(0))
-    .join("");
+  const supabase = createSupabaseBrowserClient();
+  const router = useRouter();
+  const log = useLogger();
+
+  async function handleSignOut() {
+    try {
+      const { error } = await supabase.auth.signOut();
+
+      if (error) {
+        log.error("Signout error", { error });
+        toast.error("Failed to sign out. An unexpected error occured.");
+      } else {
+        router.refresh();
+      }
+    } catch (error) {
+      log.error("Signout error", { error });
+      toast.error("Failed to sign out. An unexpected error occured.");
+    } finally {
+      log.flush();
+    }
+  }
+
+  const userFullName = `${user.firstName ? user.firstName : ""} ${user.lastName ? user.lastName : ""}`;
+  const userName = userFullName.length ? userFullName : "User";
+
+  const avatarFallbackChars = userFullName.length
+    ? userFullName
+        .trim()
+        .split(" ")
+        .slice(0, 2)
+        .map((name) => name.charAt(0))
+        .join("")
+    : user.email.charAt(0);
 
   return (
     <SidebarMenu>
@@ -51,13 +83,13 @@ export function NavUser({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="rounded-lg">
+                <AvatarImage src={user.avatar} alt={`${userName} avatar`} />
+                <AvatarFallback className="rounded-lg uppercase">
                   {avatarFallbackChars}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{user.name}</span>
+                <span className="truncate font-semibold">{userName}</span>
                 <span className="truncate text-xs">{user.email}</span>
               </div>
               <ChevronsUpDownIcon className="ml-auto size-4" />
@@ -72,24 +104,17 @@ export function NavUser({
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">
+                  <AvatarImage src={user.avatar} alt={`${userName} avatar`} />
+                  <AvatarFallback className="rounded-lg uppercase">
                     {avatarFallbackChars}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{user.name}</span>
+                  <span className="truncate font-semibold">{userName}</span>
                   <span className="truncate text-xs">{user.email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <SparklesIcon />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
@@ -106,9 +131,9 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleSignOut}>
               <LogOutIcon />
-              Log out
+              Sign out
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

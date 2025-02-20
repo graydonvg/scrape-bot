@@ -10,7 +10,6 @@ import {
   FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import {
@@ -23,6 +22,7 @@ import { toast } from "sonner";
 import { useAction } from "next-safe-action/hooks";
 import { USER_ERROR_MESSAGES } from "@/lib/constants";
 import useWorkflowsStore from "@/lib/store/workflows-store";
+import CustomFormLabel from "@/components/custom-form-label";
 
 const initialState = {
   name: "",
@@ -119,12 +119,7 @@ export default function CreateWorkflowForm() {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="flex items-center gap-1">
-                Name
-                <span className="text-primary text-xs dark:text-blue-500">
-                  (required)
-                </span>
-              </FormLabel>
+              <CustomFormLabel label="Name" optional={false} />
               <FormControl>
                 <Input
                   placeholder="Provide a descriptive and unique name"
@@ -140,12 +135,7 @@ export default function CreateWorkflowForm() {
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="flex items-center gap-1">
-                Description
-                <span className="text-muted-foreground text-xs">
-                  (optional)
-                </span>
-              </FormLabel>
+              <CustomFormLabel label="Description" optional />
               <FormControl>
                 <Textarea
                   {...field}

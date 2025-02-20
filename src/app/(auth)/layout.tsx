@@ -29,8 +29,8 @@ export default function AuthLayout({ children }: Props) {
           className="pointer-events-none size-full scale-200 object-cover blur-xs brightness-25 grayscale-25 select-none"
         />
         <div className="flex-center absolute inset-0 z-50 flex-col gap-4">
-          <div className="text-sidebar-primary-foreground flex aspect-square size-20 items-center justify-center rounded-lg bg-linear-to-r from-blue-700 via-blue-600 to-blue-500">
-            <BotIcon className="size-10" />
+          <div className="text-sidebar-primary-foreground flex aspect-square size-16 items-center justify-center rounded-lg bg-linear-to-r from-blue-700 via-blue-600 to-blue-500">
+            <BotIcon className="size-1/2" />
           </div>
           <div className="flex-center flex-col gap-2">
             <h1 className="text-4xl font-black whitespace-nowrap text-white">

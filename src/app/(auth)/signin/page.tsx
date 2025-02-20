@@ -20,9 +20,14 @@ import GoogleIcon from "@/components/icons/google-icon";
 import { USER_ERROR_MESSAGES } from "@/lib/constants";
 import signInWithPasswordAction from "./_actions/sign-in-with-password-action";
 import signInWithGoogleAction from "./_actions/sign-in-with-google-action";
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { Separator } from "@/components/ui/separator";
 
 export default function SignInPage() {
   const toastId = "sign-in";
+  const searchParams = useSearchParams();
+  const oAuthSuccess = searchParams.get("success");
   const form = useForm<SignInSchemaType>({
     resolver: zodResolver(signInSchema),
     defaultValues: { email: "", password: "" },
@@ -73,6 +78,14 @@ export default function SignInPage() {
     }
   }
 
+  useEffect(() => {
+    if (oAuthSuccess === "false") {
+      setTimeout(() => {
+        toast.error("An unexpected error occured. Please try again later.");
+      }, 100);
+    }
+  }, [oAuthSuccess]);
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(execute)} className="space-y-6">
@@ -83,6 +96,7 @@ export default function SignInPage() {
           </p>
         </div>
         <div className="space-y-6">
+          <Separator />
           <FormField
             control={form.control}
             name="email"
@@ -103,7 +117,11 @@ export default function SignInPage() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input type="password" {...field} />
+                  <Input
+                    type="password"
+                    placeholder="Your password..."
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
