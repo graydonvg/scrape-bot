@@ -115,33 +115,34 @@ export default function SignUpPage() {
         </div>
         <div className="space-y-6">
           <Separator />
-          <FormField
-            control={form.control}
-            name="firstName"
-            render={({ field }) => (
-              <FormItem>
-                <CustomFormLabel label="First Name" optional />
-                <FormControl>
-                  <Input placeholder="Your first name..." {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="lastName"
-            render={({ field }) => (
-              <FormItem>
-                <CustomFormLabel label="Last Name" optional />
-                <FormControl>
-                  <Input placeholder="Your last name..." {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Separator />
+          <div className="grid grid-cols-2 gap-6 lg:grid-cols-2">
+            <FormField
+              control={form.control}
+              name="firstName"
+              render={({ field }) => (
+                <FormItem>
+                  <CustomFormLabel label="First Name" optional />
+                  <FormControl>
+                    <Input placeholder="Your first name..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <CustomFormLabel label="Last Name" optional />
+                  <FormControl>
+                    <Input placeholder="Your last name..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
           <FormField
             control={form.control}
             name="email"

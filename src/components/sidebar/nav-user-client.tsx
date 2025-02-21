@@ -62,11 +62,11 @@ export function NavUserClient({
   }
 
   const userFullName = `${user.firstName ? user.firstName : ""} ${user.lastName ? user.lastName : ""}`;
-  const userName = userFullName.length ? userFullName : "User";
+  const trimmedFullName = userFullName.trim();
+  const userName = trimmedFullName.length ? trimmedFullName : "User";
 
-  const avatarFallbackChars = userFullName.length
-    ? userFullName
-        .trim()
+  const avatarFallbackChars = trimmedFullName.length
+    ? trimmedFullName
         .split(" ")
         .slice(0, 2)
         .map((name) => name.charAt(0))
