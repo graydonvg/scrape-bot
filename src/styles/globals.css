@@ -129,6 +129,9 @@
   button {
     @apply cursor-pointer;
   }
+  a {
+    @apply ring-offset-background focus-visible:ring-ring hover:text-foreground rounded-md transition-[box-shadow] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none;
+  }
 }
 
 @utility container {

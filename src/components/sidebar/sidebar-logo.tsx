@@ -3,7 +3,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import Link from "next/link";
 import Logo from "../logo";
 
 export default function SidebarLogo() {
@@ -11,9 +10,7 @@ export default function SidebarLogo() {
     <SidebarMenu>
       <SidebarMenuItem>
         <SidebarMenuButton asChild size="lg" className="hover:bg-sidebar">
-          <Link href="/" aria-label="navigate to home page">
-            <Logo />
-          </Link>
+          <Logo isLink />
         </SidebarMenuButton>
       </SidebarMenuItem>
     </SidebarMenu>

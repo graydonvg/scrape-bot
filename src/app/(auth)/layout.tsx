@@ -11,16 +11,16 @@ type Props = {
 
 export default function AuthLayout({ children }: Props) {
   return (
-    <div className="divide-border grid min-h-svh divide-x lg:grid-cols-2">
-      <div className="flex flex-col gap-4 p-6 md:p-10">
+    <main className="divide-border grid min-h-svh divide-x lg:grid-cols-2">
+      <section className="flex flex-col gap-4 p-6 md:p-10">
         <div className="flex justify-center gap-2 lg:justify-start">
           <Logo />
         </div>
         <div className="flex-center flex-1">
           <div className="w-full max-w-xs">{children}</div>
         </div>
-      </div>
-      <div className="relative hidden overflow-hidden lg:block">
+      </section>
+      <section className="relative hidden overflow-hidden lg:block">
         <Image
           src={workflowImage}
           alt="workflow image"
@@ -47,7 +47,7 @@ export default function AuthLayout({ children }: Props) {
             <p className="text-xl text-white/70">{siteConfig.description}</p>
           </div>
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 }

@@ -22,7 +22,7 @@ const getWorkflow = cache(async (workflowId: number) => {
 
     const { data, error } = await supabase
       .from("workflows")
-      .select("*")
+      .select("workflowId, name, description, definition, status")
       .eq("userId", user.id)
       .eq("workflowId", workflowId);
 

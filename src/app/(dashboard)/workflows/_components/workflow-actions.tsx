@@ -30,7 +30,7 @@ export default function WorkflowActionsMenu({
       <DropdownMenu>
         <TooltipWrapper tooltipContent="More actions">
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="ring-offset-card">
               <MoreVerticalIcon size={18} />
             </Button>
           </DropdownMenuTrigger>

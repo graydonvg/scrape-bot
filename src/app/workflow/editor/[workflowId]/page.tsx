@@ -1,4 +1,5 @@
-import getWorkflow from "./_services/get-workflow";
+import Editor from "../../_components/editor";
+import getWorkflow from "../../_services/get-workflow";
 import { notFound } from "next/navigation";
 
 type Params = {
@@ -24,5 +25,5 @@ export default async function WorkflowPage({ params }: Params) {
 
   if (!workflow) notFound();
 
-  return <pre>{JSON.stringify(workflow, null, 2)}</pre>;
+  return <Editor workflow={workflow} />;
 }

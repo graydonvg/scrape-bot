@@ -5,6 +5,7 @@ import Link from "next/link";
 import WorkflowActionsMenu from "./workflow-actions";
 import { Button } from "@/components/ui/button";
 import { Workflow, WorkflowStatus } from "@/lib/types";
+import { Badge } from "@/components/ui/badge";
 
 type Props = {
   workflow: Workflow;
@@ -21,36 +22,37 @@ export default function WorkflowCard({ workflow }: Props) {
     <Card className="hover:dark:shadow-primary/30 hover:shadow-md">
       <CardContent className="flex h-[100px] items-center justify-between p-4">
         <div className="flex items-center gap-3">
-          <div
+          <Badge
             className={cn(
-              "flex-center size-10 rounded-full",
+              "flex-center size-10 rounded-full p-0 [&>svg]:size-5",
               statusColors[workflow.status],
             )}
           >
-            {isDraft ? (
-              <FileTextIcon className="size-5" />
-            ) : (
-              <PlayIcon className="size-5" />
-            )}
-          </div>
-          <div>
-            <h3 className="text-muted-foreground text-base font-bold">
+            {isDraft ? <FileTextIcon /> : <PlayIcon />}
+          </Badge>
+          <div className="flex items-center gap-2">
+            <h3 className="text-muted-foreground text-xl font-bold">
               <Link
                 href={`/workflow/editor/${workflow.workflowId}`}
-                className="hover:underline"
+                className="ring-offset-card hover:underline"
               >
                 {workflow.name}
               </Link>
-              {isDraft && (
-                <span className="ml-2 rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-800">
-                  Draft
-                </span>
-              )}
             </h3>
+            {isDraft && (
+              <Badge className="rounded-full bg-yellow-100 text-yellow-800">
+                Draft
+              </Badge>
+            )}
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button asChild variant="outline" size="sm">
+          <Button
+            asChild
+            variant="outline"
+            size="sm"
+            className="ring-offset-card"
+          >
             <Link href={`/workflow/editor/${workflow.workflowId}`}>
               <PencilIcon size={16} />
               Edit
