@@ -1,5 +1,5 @@
 import { useReactFlow } from "@xyflow/react";
-import { CheckIcon } from "lucide-react";
+import { SaveIcon } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import saveWorkflowAction from "../../_actions/save-workflow-action";
 import { toast } from "sonner";
@@ -31,14 +31,9 @@ export default function SaveWorkflowButton({ workflowId }: Props) {
 
   return (
     <ButtonWithSpinner
-      variant="outline"
+      className="bg-green-700 hover:bg-green-700/90"
       loading={isPending}
-      startIcon={
-        <CheckIcon
-          size={16}
-          className="stroke-green-700 dark:stroke-green-400"
-        />
-      }
+      startIcon={<SaveIcon size={16} />}
       onClick={() =>
         execute({ workflowId, definition: JSON.stringify(toObject()) })
       }
