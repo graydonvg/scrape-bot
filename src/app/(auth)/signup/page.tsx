@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { signUpSchema, SignUpSchemaType } from "@/lib/schemas/auth";
@@ -21,6 +20,7 @@ import signUpAction from "./_actions/sign-up-action";
 import { useEffect } from "react";
 import CustomFormLabel from "@/components/custom-form-label";
 import { Separator } from "@/components/ui/separator";
+import ButtonWithSpinner from "@/components/button-with-spinner";
 
 const initialValues = {
   firstName: "",
@@ -190,13 +190,13 @@ export default function SignUpPage() {
               </FormItem>
             )}
           />
-          <Button
+          <ButtonWithSpinner
             type="submit"
             loading={isPending}
             className="w-full capitalize"
           >
-            Sign up
-          </Button>
+            {!isPending ? "Sign up" : "Signing up..."}
+          </ButtonWithSpinner>
         </div>
         <div className="text-center text-sm">
           Already have an account?{" "}

@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,6 +22,7 @@ import { useAction } from "next-safe-action/hooks";
 import { USER_ERROR_MESSAGES } from "@/lib/constants";
 import useWorkflowsStore from "@/lib/store/workflows-store";
 import CustomFormLabel from "@/components/custom-form-label";
+import ButtonWithSpinner from "@/components/button-with-spinner";
 
 const initialState = {
   name: "",
@@ -153,9 +153,13 @@ export default function CreateWorkflowForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" loading={isPending} className="w-full capitalize">
-          Proceed
-        </Button>
+        <ButtonWithSpinner
+          type="submit"
+          loading={isPending}
+          className="w-full capitalize"
+        >
+          {!isPending ? "Proceed" : "Creating workflow..."}
+        </ButtonWithSpinner>
       </form>
     </Form>
   );

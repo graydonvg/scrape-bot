@@ -4,6 +4,7 @@ import WorkflowCard from "./workflow-card";
 import CustomAlert from "@/components/custom-alert";
 import getWorkflows from "../_services/get-workkflows";
 import WorkflowsStoreUpdater from "@/components/store-updaters/workflows-store-updater";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default async function Workflows() {
   const workflows = await getWorkflows();
@@ -37,11 +38,17 @@ export default async function Workflows() {
 
   return (
     <>
-      <div className="flex flex-col gap-4">
-        {workflows.map((workflow) => (
-          <WorkflowCard key={workflow.workflowId} workflow={workflow} />
-        ))}
-      </div>
+      <ScrollArea className="h-[calc(100svh-238.6px)] rounded-md border p-4 transition-[height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-[calc(100svh-222.6px)]">
+        <div className="space-y-4">
+          {workflows.map((workflow) => (
+            <WorkflowCard key={workflow.workflowId} workflow={workflow} />
+          ))}
+        </div>
+      </ScrollArea>
+      <div
+        id="scroll-area-measurement-element"
+        className="pointer-events-none invisible absolute inset-0 -z-50 size-full select-none"
+      />
       <WorkflowsStoreUpdater workflows={workflows} />
     </>
   );

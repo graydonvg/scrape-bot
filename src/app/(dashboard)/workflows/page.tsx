@@ -19,7 +19,7 @@ export default function WorkflowsPage() {
         <CreateWorkflowDialog />
       </div>
 
-      <div className="h-full">
+      <div className="relative h-full">
         <Suspense fallback={<WorkflowsSkeleton />}>
           <Workflows />
         </Suspense>

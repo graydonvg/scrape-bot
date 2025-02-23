@@ -7,7 +7,7 @@ type Props = {
 
 export default function WorkflowLayout({ children }: Props) {
   return (
-    <div className="flex min-h-screen w-full flex-col">
+    <div className="flex h-screen w-full flex-col">
       {children}
       <WorkflowFooter />
     </div>

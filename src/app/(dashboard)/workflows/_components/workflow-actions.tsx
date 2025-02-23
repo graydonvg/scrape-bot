@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { MoreVerticalIcon, TrashIcon } from "lucide-react";
+import { MoreVerticalIcon, Trash2Icon } from "lucide-react";
 import DeleteWorkflowDialog from "./delete-workflow-dialog";
 import { useState } from "react";
 
@@ -42,7 +42,7 @@ export default function WorkflowActionsMenu({
             onClick={() => setOpenDeleteDialog(true)}
             className="text-destructive focus:text-destructive flex items-center gap-2"
           >
-            <TrashIcon size={16} className="stroke-destructive" />
+            <Trash2Icon size={16} className="stroke-destructive" />
             Delete
           </DropdownMenuItem>
         </DropdownMenuContent>

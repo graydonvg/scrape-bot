@@ -18,6 +18,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { USER_ERROR_MESSAGES } from "@/lib/constants";
 import CustomAlert from "@/components/custom-alert";
+import { Trash2Icon } from "lucide-react";
 
 type Props = {
   open: boolean;
@@ -95,19 +96,19 @@ export default function DeleteWorkflowDialog({
           </AlertDialogCancel>
           <AlertDialogAction
             className={cn(
-              "min-w-[75px]",
               buttonVariants({
                 variant: "destructive",
               }),
             )}
             disabled={confirmText !== workflowName || isPending}
             loading={isPending}
+            startIcon={<Trash2Icon size={16} />}
             onClick={(e) => {
               e.preventDefault();
               execute({ workflowId });
             }}
           >
-            Delete
+            {!isPending ? "Delete" : "Deleting..."}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

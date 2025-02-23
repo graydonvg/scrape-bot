@@ -12,7 +12,11 @@ type Props = {
 export default function Editor({ workflow }: Props) {
   return (
     <ReactFlowProvider>
-      <TopBar />
+      <TopBar
+        workflowId={workflow.workflowId!}
+        title="Workflow editor"
+        subtitle={workflow.name!}
+      />
       <main className="flex grow">
         <section className="flex grow">
           <Flow workflow={workflow} />

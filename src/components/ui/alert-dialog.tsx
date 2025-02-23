@@ -119,9 +119,13 @@ function AlertDialogDescription({
 function AlertDialogAction({
   className,
   loading,
+  startIcon,
+  spinnerClassName,
   ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Action> & {
   loading?: boolean;
+  startIcon?: React.ReactNode;
+  spinnerClassName?: string;
 }) {
   return (
     <AlertDialogPrimitive.Action
@@ -129,7 +133,12 @@ function AlertDialogAction({
       disabled={loading || props.disabled}
       {...props}
     >
-      {!loading ? props.children : <Loader2Icon className="animate-spin" />}
+      {!loading ? (
+        startIcon
+      ) : (
+        <Loader2Icon className={cn("size-4 animate-spin", spinnerClassName)} />
+      )}
+      {props.children}
     </AlertDialogPrimitive.Action>
   );
 }

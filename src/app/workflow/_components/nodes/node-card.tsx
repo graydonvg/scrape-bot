@@ -38,7 +38,6 @@ export default function NodeCard({ nodeId, isSelected, children }: Props) {
         {
           "ring-ring/40 outline-ring ring-4 outline-1 transition-[box-shadow]":
             isSelected,
-          // "border-primary": isSelected,
         },
       )}
     >

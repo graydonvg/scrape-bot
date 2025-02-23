@@ -23,6 +23,7 @@ import signInWithGoogleAction from "./_actions/sign-in-with-google-action";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
+import ButtonWithSpinner from "@/components/button-with-spinner";
 
 export default function SignInPage() {
   const toastId = "sign-in";
@@ -127,13 +128,13 @@ export default function SignInPage() {
               </FormItem>
             )}
           />
-          <Button
+          <ButtonWithSpinner
             type="submit"
             loading={isPending}
             className="w-full capitalize"
           >
-            Sign in
-          </Button>
+            {!isPending ? "Sign in" : "Signing in..."}
+          </ButtonWithSpinner>
           <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
             <span className="bg-background text-muted-foreground relative z-10 px-2">
               Or continue with

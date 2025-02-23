@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { jsonSchema } from "./json";
 
 export const createWorkflowSchema = z.object({
   name: z
@@ -20,3 +21,11 @@ export const deleteWorkflowSchema = z.object({
 });
 
 export type DeleteWorkflowSchemaType = z.infer<typeof deleteWorkflowSchema>;
+
+export const saveWorkflowSchema = z.object({
+  workflowId: z.number().positive(),
+  definition: jsonSchema,
+  // .max(80, { message: "Maximum 80 characters allowed" })
+});
+
+export type SaveWorkflowSchemaType = z.infer<typeof saveWorkflowSchema>;

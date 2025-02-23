@@ -36,7 +36,7 @@ export type Database = {
       workflows: {
         Row: {
           createdAt: string;
-          definition: string;
+          definition: Json;
           description: string | null;
           name: string;
           status: Database["public"]["Enums"]["workflow_status"];
@@ -46,17 +46,17 @@ export type Database = {
         };
         Insert: {
           createdAt?: string;
-          definition: string;
+          definition: Json;
           description?: string | null;
           name: string;
-          status: Database["public"]["Enums"]["workflow_status"];
+          status?: Database["public"]["Enums"]["workflow_status"];
           updatedAt?: string;
           userId?: string;
           workflowId?: number;
         };
         Update: {
           createdAt?: string;
-          definition?: string;
+          definition?: Json;
           description?: string | null;
           name?: string;
           status?: Database["public"]["Enums"]["workflow_status"];
