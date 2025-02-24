@@ -6,11 +6,11 @@ import {
 } from "@/components/ui/sidebar";
 import { ComponentProps, Suspense } from "react";
 import { NavMain } from "./nav-main";
-import SidebarLogo from "./sidebar-logo";
-import NavUserServer from "./nav-user-server";
-import { Skeleton } from "../ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
+import SidebarLogo from "@/components/sidebar-logo";
+import NavUserServer from "@/components/sidebar/nav-user-server";
 
-export default function AppSidebar({
+export default function DashboardSidebar({
   ...props
 }: ComponentProps<typeof Sidebar>) {
   return (

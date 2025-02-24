@@ -2,7 +2,7 @@ import { InboxIcon } from "lucide-react";
 import CreateWorkflowDialog from "./create-workflow-dialog";
 import WorkflowCard from "./workflow-card";
 import CustomAlert from "@/components/custom-alert";
-import getWorkflows from "../_services/get-workkflows";
+import getWorkflows from "../_data-access/get-workkflows";
 import WorkflowsStoreUpdater from "@/components/store-updaters/workflows-store-updater";
 import { ScrollArea } from "@/components/ui/scroll-area";
 

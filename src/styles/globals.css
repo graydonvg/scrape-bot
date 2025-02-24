@@ -117,6 +117,9 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  --xy-background-color-props: var(--background);
+  --xy-background-pattern-color-props: var(--muted-foreground);
 }
 
 @layer base {

@@ -1,15 +1,27 @@
-import { ReactNode } from "react";
-import WorkflowFooter from "./workflow-footer";
+import { CSSProperties, ReactNode } from "react";
+import { cookies } from "next/headers";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import WorkflowSidebar from "./_components/sidebar/workflow-sidebar";
 
 type Props = {
   children: ReactNode;
 };
 
-export default function WorkflowLayout({ children }: Props) {
+export default async function WorkflowLayout({ children }: Props) {
+  const cookieStore = await cookies();
+  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
+
   return (
-    <div className="flex h-screen w-full flex-col">
-      {children}
-      <WorkflowFooter />
-    </div>
+    <SidebarProvider
+      defaultOpen={defaultOpen}
+      style={
+        {
+          "--sidebar-width": "17rem",
+        } as CSSProperties
+      }
+    >
+      <WorkflowSidebar />
+      <SidebarInset>{children}</SidebarInset>
+    </SidebarProvider>
   );
 }

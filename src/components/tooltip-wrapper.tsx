@@ -19,7 +19,7 @@ export default function TooltipWrapper({
   children,
 }: Props) {
   return (
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>{children}</TooltipTrigger>
         <TooltipContent side={side}>

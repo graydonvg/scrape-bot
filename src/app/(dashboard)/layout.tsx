@@ -8,7 +8,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import AppSidebar from "@/components/sidebar/app-sidebar";
+import DashboardSidebar from "./_components/sidebar/dashboard-sidebar";
 
 type Props = {
   children: ReactNode;
@@ -20,7 +20,7 @@ export default async function DashboardLayout({ children }: Props) {
 
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
-      <AppSidebar />
+      <DashboardSidebar />
       <SidebarInset className="border">
         <header className="flex h-16 shrink-0 items-center px-4 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <div className="flex w-full items-center justify-between">

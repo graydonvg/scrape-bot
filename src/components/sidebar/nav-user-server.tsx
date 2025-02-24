@@ -1,4 +1,4 @@
-import geUserData from "@/app/(dashboard)/_services/get-user-data";
+import geUserData from "@/data-access/get-user-data";
 import { NavUserClient } from "./nav-user-client";
 
 export default async function NavUserServer() {

@@ -31,7 +31,7 @@ export default function SaveWorkflowButton({ workflowId }: Props) {
 
   return (
     <ButtonWithSpinner
-      className="bg-green-700 hover:bg-green-700/90"
+      className="bg-green-700 transition-[height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-8 hover:bg-green-700/90"
       loading={isPending}
       startIcon={<SaveIcon size={16} />}
       onClick={() =>

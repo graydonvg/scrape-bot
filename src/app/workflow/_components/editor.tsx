@@ -17,11 +17,9 @@ export default function Editor({ workflow }: Props) {
         title="Workflow editor"
         subtitle={workflow.name!}
       />
-      <main className="flex grow">
-        <section className="flex grow">
-          <Flow workflow={workflow} />
-        </section>
-      </main>
+      <section className="flex grow">
+        <Flow workflow={workflow} />
+      </section>
     </ReactFlowProvider>
   );
 }

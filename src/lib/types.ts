@@ -16,10 +16,12 @@ export type Workflow = Database["public"]["Tables"]["workflows"]["Row"];
 
 export enum WorkflowTaskInputType {
   String = "STRING",
+  BroswerInstance = "BROWSER_INSTANCE",
 }
 
 export enum WorkflowTaskType {
   LaunchBrowser = "LAUNCH_BROWSER",
+  GetPageHtml = "GET_PAGE_HTML",
 }
 
 export type WorkflowTaskInput = {

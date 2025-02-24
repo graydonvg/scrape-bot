@@ -42,6 +42,16 @@ export function NavUserClient({
   const supabase = createSupabaseBrowserClient();
   const router = useRouter();
   const log = useLogger();
+  const userFullName = `${user.firstName ? user.firstName : ""} ${user.lastName ? user.lastName : ""}`;
+  const trimmedFullName = userFullName.trim();
+  const userName = trimmedFullName.length ? trimmedFullName : "User";
+  const avatarFallbackChars = trimmedFullName.length
+    ? trimmedFullName
+        .split(" ")
+        .slice(0, 2)
+        .map((name) => name.charAt(0))
+        .join("")
+    : user.email.charAt(0);
 
   async function handleSignOut() {
     try {
@@ -60,18 +70,6 @@ export function NavUserClient({
       log.flush();
     }
   }
-
-  const userFullName = `${user.firstName ? user.firstName : ""} ${user.lastName ? user.lastName : ""}`;
-  const trimmedFullName = userFullName.trim();
-  const userName = trimmedFullName.length ? trimmedFullName : "User";
-
-  const avatarFallbackChars = trimmedFullName.length
-    ? trimmedFullName
-        .split(" ")
-        .slice(0, 2)
-        .map((name) => name.charAt(0))
-        .join("")
-    : user.email.charAt(0);
 
   return (
     <SidebarMenu>

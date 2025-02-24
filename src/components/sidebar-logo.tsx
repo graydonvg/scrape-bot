@@ -3,7 +3,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import Logo from "../logo";
+import Logo from "./logo";
 
 export default function SidebarLogo() {
   return (

@@ -1,6 +1,6 @@
-import Editor from "../../_components/editor";
-import getWorkflow from "../../_services/get-workflow";
 import { notFound } from "next/navigation";
+import getWorkflow from "../../_data-access/get-workflow";
+import Editor from "../../_components/editor";
 
 type Params = {
   params: Promise<{ workflowId: string }>;
