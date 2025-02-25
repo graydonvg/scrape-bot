@@ -14,7 +14,7 @@ export type WorkflowStatus = Database["public"]["Enums"]["workflow_status"];
 
 export type Workflow = Database["public"]["Tables"]["workflows"]["Row"];
 
-export enum WorkflowTaskInputType {
+export enum WorkflowTaskParamType {
   String = "STRING",
   BroswerInstance = "BROWSER_INSTANCE",
 }
@@ -26,11 +26,16 @@ export enum WorkflowTaskType {
 
 export type WorkflowTaskInput = {
   name: string;
-  type: string;
+  type: WorkflowTaskParamType;
   helperText?: string;
   required?: boolean;
   hideHandle?: boolean;
   [key: string]: unknown;
+};
+
+export type WorkflowTaskOutput = {
+  name: string;
+  type: WorkflowTaskParamType;
 };
 
 export type WorkflowTask = {
@@ -39,6 +44,7 @@ export type WorkflowTask = {
   icon: (props: LucideProps) => ReactNode;
   isEntryPoint: boolean;
   inputs: WorkflowTaskInput[];
+  outputs: WorkflowTaskOutput[];
 };
 
 export type WorkflowNodeData = {

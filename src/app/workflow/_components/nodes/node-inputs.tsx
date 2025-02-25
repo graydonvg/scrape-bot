@@ -1,9 +1,17 @@
-import { ReactNode } from "react";
+import { WorkflowTaskInput } from "@/lib/types";
+import NodeInput from "./node-input";
 
 type Props = {
-  children: ReactNode;
+  nodeId: string;
+  inputs: WorkflowTaskInput[];
 };
 
-export default function NodeInputs({ children }: Props) {
-  return <div className="flex flex-col gap-2 divide-y">{children}</div>;
+export default function NodeInputs({ nodeId, inputs }: Props) {
+  return (
+    <div className="divide-background divide-y">
+      {inputs.map((input) => (
+        <NodeInput key={input.name} nodeId={nodeId} input={input} />
+      ))}
+    </div>
+  );
 }

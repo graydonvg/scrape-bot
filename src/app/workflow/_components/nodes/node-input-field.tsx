@@ -1,11 +1,12 @@
 import {
   WorkflowNode,
   WorkflowTaskInput,
-  WorkflowTaskInputType,
+  WorkflowTaskParamType,
 } from "@/lib/types";
-import NodeStringInput from "./inputs/node-string-input";
+import StringInput from "./inputs/string-input";
 import { useReactFlow } from "@xyflow/react";
 import { useCallback } from "react";
+import BrowserInstanceInput from "./inputs/browser-instance-input";
 
 type Props = {
   nodeId: string;
@@ -30,12 +31,20 @@ export default function NodeInputField({ nodeId, input }: Props) {
   );
 
   switch (input.type) {
-    case WorkflowTaskInputType.String:
+    case WorkflowTaskParamType.String:
       return (
-        <NodeStringInput
+        <StringInput
           input={input}
           value={inputValue}
           onBlur={updateNodeInputValue}
+        />
+      );
+
+    case WorkflowTaskParamType.BroswerInstance:
+      return (
+        <BrowserInstanceInput
+          input={input}
+          // value={""}
         />
       );
 

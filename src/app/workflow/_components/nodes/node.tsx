@@ -4,7 +4,7 @@ import NodeHeader from "./node-header";
 import { WorkflowNodeData } from "@/lib/types";
 import { taskRegistry } from "@/lib/workflow/task-registry";
 import NodeInputs from "./node-inputs";
-import NodeInput from "./node-input";
+import NodeOutputs from "./node-outputs";
 
 export default function Node(props: NodeProps) {
   const nodeData = props.data as WorkflowNodeData;
@@ -14,11 +14,10 @@ export default function Node(props: NodeProps) {
   return (
     <NodeCard nodeId={props.id} isSelected={props.selected}>
       <NodeHeader taskType={taskType} />
-      <NodeInputs>
-        {task.inputs.map((input) => (
-          <NodeInput key={input.name} nodeId={props.id} input={input} />
-        ))}
-      </NodeInputs>
+      <div className="divide-background bg-muted divide-y-2">
+        <NodeInputs nodeId={props.id} inputs={task.inputs} />
+        <NodeOutputs outputs={task.outputs} />
+      </div>
     </NodeCard>
   );
 }

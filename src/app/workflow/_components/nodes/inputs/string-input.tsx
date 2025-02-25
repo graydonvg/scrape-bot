@@ -9,7 +9,7 @@ type Props = {
   onBlur: (newValue: string) => void;
 };
 
-export default function NodeStringInput({ input, value, onBlur }: Props) {
+export default function StringInput({ input, value, onBlur }: Props) {
   const id = useId();
   const [internalValue, setInternalValue] = useState(value ?? "");
 
