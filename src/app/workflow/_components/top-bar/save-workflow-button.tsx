@@ -31,14 +31,16 @@ export default function SaveWorkflowButton({ workflowId }: Props) {
 
   return (
     <ButtonWithSpinner
-      className="bg-green-700 transition-[height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-8 hover:bg-green-700/90"
+      className="h-9 w-[81px] gap-0 overflow-hidden bg-green-700 transition-[width,height,padding] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-8 group-has-data-[collapsible=icon]/sidebar-wrapper:w-8 hover:bg-green-700/90 group-has-data-[collapsible=icon]/sidebar-wrapper:has-[>svg]:px-2"
       loading={isPending}
       startIcon={<SaveIcon size={16} />}
       onClick={() =>
         execute({ workflowId, definition: JSON.stringify(toObject()) })
       }
     >
-      {!isPending ? "Save" : "Saving..."}
+      <span className="ml-2 truncate transition-[margin] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:ml-0">
+        {!isPending ? "Save" : "Saving..."}
+      </span>
     </ButtonWithSpinner>
   );
 }

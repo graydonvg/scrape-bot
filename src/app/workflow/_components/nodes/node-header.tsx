@@ -29,7 +29,7 @@ export default function NodeHeader({ taskType }: Props) {
           <Button
             variant="ghost"
             size="icon"
-            className="drag-handle cursor-grab"
+            className="drag-handle cursor-grab active:cursor-grabbing"
           >
             <GripVerticalIcon size={20} />
           </Button>

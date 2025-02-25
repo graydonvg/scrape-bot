@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function createWorkflowNode(
-  nodeType: WorkflowTaskType,
+  taskType: WorkflowTaskType,
   position?: { x: number; y: number },
 ): WorkflowNode {
   return {
@@ -15,7 +15,7 @@ export function createWorkflowNode(
     type: "node",
     dragHandle: ".drag-handle",
     position: { x: 0, y: 0, ...position },
-    data: { type: nodeType, inputs: {} },
+    data: { type: taskType, inputs: {} },
   };
 }
 

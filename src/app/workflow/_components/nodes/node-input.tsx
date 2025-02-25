@@ -10,7 +10,7 @@ type Props = {
 
 export default function NodeInput({ nodeId, input }: Props) {
   return (
-    <div className="bg-secondary relative flex w-full p-3">
+    <div className="bg-muted relative flex w-full p-3">
       <NodeInputField input={input} nodeId={nodeId} />
       {!input.hideHandle && (
         <Handle
@@ -18,7 +18,7 @@ export default function NodeInput({ nodeId, input }: Props) {
           type="target"
           position={Position.Left}
           className={cn(
-            "!bg-muted-foreground !border-background !-left-2 !size-4 !border-2",
+            "!bg-muted-foreground !border-background !size-4 !border-2",
           )}
         />
       )}

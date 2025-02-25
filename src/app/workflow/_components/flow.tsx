@@ -1,4 +1,4 @@
-import { Workflow } from "@/lib/types";
+import { Workflow, WorkflowNode, WorkflowTaskType } from "@/lib/types";
 import {
   ReactFlow,
   useNodesState,
@@ -12,10 +12,11 @@ import {
 import "@xyflow/react/dist/style.css";
 import Node from "./nodes/node";
 import { useTheme } from "next-themes";
-import { useEffect, useMemo, useState } from "react";
+import { DragEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { USER_ERROR_MESSAGES } from "@/lib/constants";
 import { useLogger } from "next-axiom";
+import { createWorkflowNode } from "@/lib/utils";
 
 const fitViewOptions = {
   padding: 1,
@@ -30,8 +31,8 @@ export default function Flow({ workflow }: Props) {
   const { theme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
   const nodeTypes = useMemo(() => ({ node: Node }), []);
-  const { setViewport } = useReactFlow();
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const { setViewport, screenToFlowPosition } = useReactFlow();
+  const [nodes, setNodes, onNodesChange] = useNodesState<WorkflowNode>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   useEffect(() => {
@@ -64,6 +65,30 @@ export default function Flow({ workflow }: Props) {
     }
   }, [workflow.definition, setEdges, setNodes, setViewport, logger]);
 
+  const handleDragOver = useCallback((e: DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.effectAllowed = "move";
+  }, []);
+
+  const handleDrop = useCallback(
+    (e: DragEvent) => {
+      e.preventDefault();
+      const taskType = e.dataTransfer.getData("application/reactflow");
+
+      if (!taskType || typeof taskType === "undefined") return;
+
+      const poisiton = screenToFlowPosition({ x: e.clientX, y: e.clientY });
+
+      const newNode = createWorkflowNode(
+        taskType as WorkflowTaskType,
+        poisiton,
+      );
+
+      setNodes((prev) => prev.concat(newNode));
+    },
+    [setNodes, screenToFlowPosition],
+  );
+
   if (!isMounted) return null;
 
   return (
@@ -76,6 +101,8 @@ export default function Flow({ workflow }: Props) {
       colorMode={`${theme}` as ColorMode}
       fitViewOptions={fitViewOptions}
       fitView
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
     >
       <Controls position="top-left" fitViewOptions={fitViewOptions} />
       <Background variant={BackgroundVariant.Dots} gap={12} size={1} />

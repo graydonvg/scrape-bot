@@ -15,11 +15,14 @@ type Props = {
 
 export default function TopBar({ title, subtitle, workflowId }: Props) {
   return (
-    <header className="flex h-16 shrink-0 items-center border-b px-4 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+    <header className="bg-sidebar flex h-16 shrink-0 items-center border-b px-4 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
       <div className="flex w-full items-center justify-between">
         <div className="flex w-full items-center gap-2">
           <SidebarTrigger />
-          <Separator orientation="vertical" className="mr-2 !h-4" />
+          <Separator
+            orientation="vertical"
+            className="bg-sidebar-border mr-2 !h-4"
+          />
           <div className="flex grow basis-2/4 items-center gap-4 truncate">
             <TooltipWrapper tooltipContent="Back">
               <Button
@@ -34,7 +37,7 @@ export default function TopBar({ title, subtitle, workflowId }: Props) {
               </Button>
             </TooltipWrapper>
 
-            <div>
+            <div className="flex flex-col justify-center">
               <p className="font-bold transition-[font-size] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:text-xs">
                 {title}
               </p>
