@@ -1,10 +1,9 @@
 import { InboxIcon } from "lucide-react";
 import CreateWorkflowDialog from "./create-workflow-dialog";
-import WorkflowCard from "./workflow-card";
 import CustomAlert from "@/components/custom-alert";
 import getWorkflows from "../_data-access/get-workkflows";
-import WorkflowsStoreUpdater from "@/components/store-updaters/workflows-store-updater";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import WorklfowCards from "./worklfow-cards";
 
 export default async function Workflows() {
   const workflows = await getWorkflows();
@@ -37,19 +36,8 @@ export default async function Workflows() {
   }
 
   return (
-    <>
-      <ScrollArea className="h-[calc(100svh-238.6px)] rounded-md border p-4 transition-[height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-[calc(100svh-222.6px)]">
-        <div className="space-y-4">
-          {workflows.map((workflow) => (
-            <WorkflowCard key={workflow.workflowId} workflow={workflow} />
-          ))}
-        </div>
-      </ScrollArea>
-      <div
-        id="scroll-area-measurement-element"
-        className="pointer-events-none invisible absolute inset-0 -z-50 size-full select-none"
-      />
-      <WorkflowsStoreUpdater workflows={workflows} />
-    </>
+    <ScrollArea className="h-[calc(100svh-238.6px)] rounded-md border p-4 transition-[height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-[calc(100svh-222.6px)]">
+      <WorklfowCards workflows={workflows} />
+    </ScrollArea>
   );
 }
