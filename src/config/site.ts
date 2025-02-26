@@ -7,8 +7,8 @@ import {
 
 export const siteConfig = {
   name: "ScrapeBot",
-  // TODO: Provide better description.
-  description: "An AI powered web scraper",
+  description:
+    "A platform to visually create and manage web scrapers without writing code. Simplifying data extraction with an intuitive drag-and-drop interface and a scheduling system for automating data collection. Additionally, it includes the option to integrate AI into the web scraping process if desired.",
   navMain: [
     {
       href: "/",

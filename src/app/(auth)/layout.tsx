@@ -1,9 +1,9 @@
 import Logo from "@/components/logo";
-import { siteConfig } from "@/config/site";
 import { BotIcon } from "lucide-react";
 import Image from "next/image";
 import { ReactNode } from "react";
 import workflowImage from "../../../public/workflow.jpg";
+import { Separator } from "@/components/ui/separator";
 
 type Props = {
   children: ReactNode;
@@ -44,7 +44,12 @@ export default function AuthLayout({ children }: Props) {
                 </span>
               </span>
             </h1>
-            <p className="text-xl text-white/70">{siteConfig.description}</p>
+            <Separator />
+            <p className="text-center text-lg text-pretty text-white/70">
+              Visually create and manage web scrapers
+              <br />
+              without writing any code.
+            </p>
           </div>
         </div>
       </section>
