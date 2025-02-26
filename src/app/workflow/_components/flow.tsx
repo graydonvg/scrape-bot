@@ -8,6 +8,9 @@ import {
   BackgroundVariant,
   ColorMode,
   useReactFlow,
+  Connection,
+  addEdge,
+  Edge,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import Node from "./nodes/node";
@@ -17,6 +20,7 @@ import { toast } from "sonner";
 import { USER_ERROR_MESSAGES } from "@/lib/constants";
 import { useLogger } from "next-axiom";
 import { createWorkflowNode } from "@/lib/utils";
+import DeleteableEdge from "./edges/deleteable-edge";
 
 const fitViewOptions = {
   padding: 1,
@@ -31,9 +35,10 @@ export default function Flow({ workflow }: Props) {
   const { theme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
   const nodeTypes = useMemo(() => ({ node: Node }), []);
+  const edgeTypes = useMemo(() => ({ default: DeleteableEdge }), []);
   const { setViewport, screenToFlowPosition } = useReactFlow();
   const [nodes, setNodes, onNodesChange] = useNodesState<WorkflowNode>([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
   useEffect(() => {
     // Required to prevent hydration error when setting ReactFlow colorMode using next-themes
@@ -89,6 +94,22 @@ export default function Flow({ workflow }: Props) {
     [setNodes, screenToFlowPosition],
   );
 
+  const handleOnConnect = useCallback(
+    (connection: Connection) => {
+      console.log("@handleOnConnect", connection);
+      setEdges((edges) =>
+        addEdge(
+          {
+            ...connection,
+            animated: true,
+          },
+          edges,
+        ),
+      );
+    },
+    [setEdges],
+  );
+
   if (!isMounted) return null;
 
   return (
@@ -98,11 +119,13 @@ export default function Flow({ workflow }: Props) {
       edges={edges}
       onEdgesChange={onEdgesChange}
       nodeTypes={nodeTypes}
+      edgeTypes={edgeTypes}
       colorMode={`${theme}` as ColorMode}
       fitViewOptions={fitViewOptions}
       fitView
       onDragOver={handleDragOver}
       onDrop={handleDrop}
+      onConnect={handleOnConnect}
     >
       <Controls position="top-left" fitViewOptions={fitViewOptions} />
       <Background variant={BackgroundVariant.Dots} gap={12} size={1} />

@@ -10,11 +10,11 @@ type Props = {
 };
 
 export default function WorklfowCards({ workflows }: Props) {
-  const { updateExistingWorkflowNames } = useWorkflowsStore();
+  const { setExistingWorkflowNames } = useWorkflowsStore();
 
   useEffect(() => {
-    updateExistingWorkflowNames(workflows);
-  }, [workflows, updateExistingWorkflowNames]);
+    setExistingWorkflowNames(workflows.map((workflow) => workflow.name));
+  }, [workflows, setExistingWorkflowNames]);
 
   return (
     <div className="space-y-4">

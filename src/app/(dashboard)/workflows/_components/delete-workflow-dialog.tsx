@@ -19,6 +19,7 @@ import { cn } from "@/lib/utils";
 import { USER_ERROR_MESSAGES } from "@/lib/constants";
 import CustomAlert from "@/components/custom-alert";
 import { Trash2Icon } from "lucide-react";
+import useWorkflowsStore from "@/lib/store/workflows-store";
 
 type Props = {
   open: boolean;
@@ -34,6 +35,8 @@ export default function DeleteWorkflowDialog({
   workflowId,
 }: Props) {
   const toastId = `workflow-${workflowId}`;
+  const { existingWorkflowNames, setExistingWorkflowNames } =
+    useWorkflowsStore();
   const [confirmText, setConfirmText] = useState("");
   const { execute, isPending } = useAction(deleteWorkflowAction, {
     onExecute: () => {
@@ -47,6 +50,11 @@ export default function DeleteWorkflowDialog({
       }
 
       setOpen(false);
+      setExistingWorkflowNames([
+        ...existingWorkflowNames.filter(
+          (existingWorkflowName) => existingWorkflowName !== workflowName,
+        ),
+      ]);
       toast.success("Workflow deleted", { id: toastId });
     },
     onError: () => {
@@ -72,7 +80,7 @@ export default function DeleteWorkflowDialog({
           />
         </AlertDialogHeader>
         <div className="bg-muted dark:bg-card grid gap-2 p-6">
-          <Label className="text-muted-foreground font-normal">
+          <Label className="text-muted-foreground font-normal select-text">
             Enter the workflow name{" "}
             <span className="text-card-foreground font-semibold">
               {workflowName}

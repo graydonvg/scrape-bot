@@ -12,7 +12,7 @@ export default function NodeOutput({ output }: Props) {
     <div className="relative flex w-full justify-end px-4 py-3">
       <Handle
         id={output.name}
-        type="target"
+        type="source"
         position={Position.Right}
         className={cn(
           "!bg-muted-foreground !border-background !size-4 !border-2",

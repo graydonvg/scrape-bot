@@ -34,6 +34,8 @@ export default async function getWorkflows() {
 
     return data;
   } catch (error) {
+    // When you call the redirect() function (from next/navigation), it throws a special error (with the code NEXT_REDIRECT) to immediately halt further processing and trigger the redirection. This “error” is meant to be caught internally by Next.js, not by the try/catch blocks.
+    // Throw the “error” to trigger the redirection
     if (isRedirectError(error)) throw error;
 
     log.error(LOGGER_ERROR_MESSAGES.Unexpected, { error });

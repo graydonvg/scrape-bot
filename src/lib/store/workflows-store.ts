@@ -1,15 +1,14 @@
 import { create } from "zustand";
-import { Workflow } from "../types";
 
 type WorkflowsState = {
   existingWorkflowNames: string[];
-  updateExistingWorkflowNames: (workflows: Workflow[]) => void;
+  setExistingWorkflowNames: (workflowNames: string[]) => void;
 };
 
 const useWorkflowsStore = create<WorkflowsState>((set) => ({
   existingWorkflowNames: [],
-  updateExistingWorkflowNames: (workflows) =>
-    set({ existingWorkflowNames: workflows.map((workflow) => workflow.name) }),
+  setExistingWorkflowNames: (workflowNames) =>
+    set({ existingWorkflowNames: workflowNames }),
 }));
 
 export default useWorkflowsStore;
