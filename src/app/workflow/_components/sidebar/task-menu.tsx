@@ -32,7 +32,10 @@ const items = [
     category: "Data Extraction",
     icon: PickaxeIcon,
     isOpen: true,
-    taskTypes: [WorkflowTaskType.GetPageHtml],
+    taskTypes: [
+      WorkflowTaskType.GetPageHtml,
+      WorkflowTaskType.ExtractTextFromElement,
+    ],
   },
 ];
 

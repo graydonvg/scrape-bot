@@ -11,9 +11,10 @@ import BrowserInstanceInput from "./inputs/browser-instance-input";
 type Props = {
   nodeId: string;
   input: WorkflowTaskInput;
+  disabled: boolean;
 };
 
-export default function NodeInputField({ nodeId, input }: Props) {
+export default function NodeInputField({ nodeId, input, disabled }: Props) {
   const { updateNodeData, getNode } = useReactFlow();
   const node = getNode(nodeId) as WorkflowNode;
   const inputValue = node.data.inputs[input.name];
@@ -37,16 +38,12 @@ export default function NodeInputField({ nodeId, input }: Props) {
           input={input}
           value={inputValue}
           onBlur={updateNodeInputValue}
+          disabled={disabled}
         />
       );
 
     case WorkflowTaskParamType.BroswerInstance:
-      return (
-        <BrowserInstanceInput
-          input={input}
-          // value={""}
-        />
-      );
+      return <BrowserInstanceInput input={input} />;
 
     default:
       return <p className="text-muted-foreground text-xs">Not implemented</p>;

@@ -22,6 +22,7 @@ export enum WorkflowTaskParamType {
 export enum WorkflowTaskType {
   LaunchBrowser = "LAUNCH_BROWSER",
   GetPageHtml = "GET_PAGE_HTML",
+  ExtractTextFromElement = "EXTRACT_TEXT_FROM_ELEMENT",
 }
 
 export type WorkflowTaskInput = {
@@ -30,6 +31,7 @@ export type WorkflowTaskInput = {
   helperText?: string;
   required?: boolean;
   hideHandle?: boolean;
+  variant?: string;
   [key: string]: unknown;
 };
 

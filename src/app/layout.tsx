@@ -1,3 +1,4 @@
+import { ReactScan } from "@/components/react-scan"; // This component must be the top-most import in this file!
 import type { Metadata, Viewport } from "next";
 import "@/styles/globals.css";
 import { cn } from "@/lib/utils";
@@ -28,6 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <ReactScan />
       <body className={cn("font-inter antialiased", fontInter.variable)}>
         <Providers>{children}</Providers>
         <Toaster richColors />

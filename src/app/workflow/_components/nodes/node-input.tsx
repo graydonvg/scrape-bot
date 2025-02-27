@@ -1,6 +1,6 @@
 import { WorkflowTaskInput } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { Handle, Position } from "@xyflow/react";
+import { Handle, Position, useEdges } from "@xyflow/react";
 import NodeInputField from "./node-input-field";
 import { nodeHandleColor } from "./common";
 
@@ -10,12 +10,18 @@ type Props = {
 };
 
 export default function NodeInput({ nodeId, input }: Props) {
+  const edges = useEdges();
+  const isConnected = edges.some(
+    (edge) => edge.target === nodeId && edge.targetHandle,
+  );
+
   return (
     <div className="relative flex w-full px-4 py-3">
-      <NodeInputField input={input} nodeId={nodeId} />
+      <NodeInputField input={input} nodeId={nodeId} disabled={isConnected} />
       {!input.hideHandle && (
         <Handle
           id={input.name}
+          isConnectable={!isConnected}
           type="target"
           position={Position.Left}
           className={cn(
