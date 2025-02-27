@@ -43,6 +43,7 @@ export type WorkflowTaskOutput = {
 export type WorkflowTask = {
   type: WorkflowTaskType;
   label: string;
+  credits: number;
   icon: (props: LucideProps) => ReactNode;
   isEntryPoint: boolean;
   inputs: WorkflowTaskInput[];

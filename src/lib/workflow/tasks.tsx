@@ -5,9 +5,10 @@ import {
 } from "@/lib/types";
 import { CodeIcon, GlobeIcon, LucideProps, TextIcon } from "lucide-react";
 
-export const launchBrowserTask: WorkflowTask = {
+export const launchBrowserTask = {
   type: WorkflowTaskType.LaunchBrowser,
   label: "Launch browser",
+  credits: 5,
   icon: (props: LucideProps) => (
     <GlobeIcon className="stroke-pink-400" {...props} />
   ),
@@ -27,11 +28,12 @@ export const launchBrowserTask: WorkflowTask = {
       type: WorkflowTaskParamType.BroswerInstance,
     },
   ],
-};
+} satisfies WorkflowTask;
 
-export const getPageHtmlTask: WorkflowTask = {
+export const getPageHtmlTask = {
   type: WorkflowTaskType.GetPageHtml,
   label: "Get page HTML",
+  credits: 2,
   icon: (props: LucideProps) => (
     <CodeIcon className="stroke-rose-400" {...props} />
   ),
@@ -53,11 +55,12 @@ export const getPageHtmlTask: WorkflowTask = {
       type: WorkflowTaskParamType.BroswerInstance,
     },
   ],
-};
+} satisfies WorkflowTask;
 
-export const extractTextFromElementTask: WorkflowTask = {
+export const extractTextFromElementTask = {
   type: WorkflowTaskType.ExtractTextFromElement,
   label: "Extract text from element",
+  credits: 2,
   icon: (props: LucideProps) => (
     <TextIcon className="stroke-rose-400" {...props} />
   ),
@@ -81,4 +84,4 @@ export const extractTextFromElementTask: WorkflowTask = {
       type: WorkflowTaskParamType.String,
     },
   ],
-};
+} satisfies WorkflowTask;

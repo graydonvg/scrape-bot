@@ -4,7 +4,7 @@ import {
   ChevronRight,
   CopyMinusIcon,
   CopyPlusIcon,
-  PickaxeIcon,
+  FileCode2Icon,
 } from "lucide-react";
 import {
   Collapsible,
@@ -30,7 +30,7 @@ import { WorkflowTaskType } from "@/lib/types";
 const items = [
   {
     category: "Data Extraction",
-    icon: PickaxeIcon,
+    icon: FileCode2Icon,
     isOpen: true,
     taskTypes: [
       WorkflowTaskType.GetPageHtml,

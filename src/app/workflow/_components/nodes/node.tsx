@@ -13,7 +13,7 @@ export default function Node(props: NodeProps) {
 
   return (
     <NodeCard nodeId={props.id} isSelected={props.selected}>
-      <NodeHeader taskType={taskType} />
+      <NodeHeader taskType={taskType} nodeId={props.id} />
       <div className="divide-background bg-muted divide-y-2">
         <NodeInputs nodeId={props.id} inputs={task.inputs} />
         <NodeOutputs outputs={task.outputs} />
