@@ -12,6 +12,7 @@ import {
   addEdge,
   Edge,
   getOutgoers,
+  MarkerType,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import Node from "./nodes/node";
@@ -110,6 +111,12 @@ export default function Flow({ workflow }: Props) {
           {
             ...connection,
             animated: true,
+            markerEnd: {
+              type: MarkerType.ArrowClosed,
+              width: 16,
+              height: 16,
+              color: "var(--success)",
+            },
           },
           edges,
         ),
@@ -217,7 +224,13 @@ export default function Flow({ workflow }: Props) {
       isValidConnection={isValidConnection}
     >
       <Controls position="top-left" fitViewOptions={fitViewOptions} />
-      <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
+      <Background
+        variant={BackgroundVariant.Dots}
+        gap={12}
+        size={1}
+        patternClassName="!fill-muted-foreground"
+        className="!bg-background"
+      />
     </ReactFlow>
   );
 }

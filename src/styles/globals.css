@@ -19,6 +19,8 @@
   --muted-foreground: hsl(240 5.2% 33.9%);
   --accent: hsl(240 4.9% 83.9%);
   --accent-foreground: hsl(240 5.9% 10%);
+  --success: hsl(142.4 71.8% 29.2%);
+  --success-foreground: hsl(0 0% 98%);
   --destructive: hsl(0 84.2% 60.2%);
   --destructive-foreground: hsl(0 0% 98%);
   --border: hsl(240 4.9% 83.9%);
@@ -55,6 +57,8 @@
   --muted-foreground: hsl(240 5% 64.9%);
   --accent: hsl(240 3.7% 15.9%);
   --accent-foreground: hsl(240 4.8% 95.9%);
+  --success: hsl(142.4 71.8% 29.2%);
+  --success-foreground: hsl(0 0% 98%);
   --destructive: hsl(0 84.2% 60.2%);
   --destructive-foreground: hsl(0 0% 98%);
   --border: hsl(240 3.7% 15.9%);
@@ -92,6 +96,8 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
@@ -117,9 +123,6 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-
-  --xy-background-color-props: var(--background);
-  --xy-background-pattern-color-props: var(--muted-foreground);
 }
 
 @layer base {

@@ -54,7 +54,7 @@ export default function WorkflowCard({ workflow }: Props) {
             className="ring-offset-card"
           >
             <Link href={`/workflow/editor/${workflow.workflowId}`}>
-              <PencilIcon size={16} />
+              <PencilIcon />
               Edit
             </Link>
           </Button>

@@ -59,3 +59,8 @@ export type WorkflowNodeData = {
 export type WorkflowNode = Node & {
   data: WorkflowNodeData;
 };
+
+export type WorkflowExecutionQueue = {
+  phase: number;
+  nodes: WorkflowNode[];
+};

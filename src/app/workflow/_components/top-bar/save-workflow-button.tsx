@@ -31,9 +31,9 @@ export default function SaveWorkflowButton({ workflowId }: Props) {
 
   return (
     <ButtonWithSpinner
-      className="h-9 w-[81px] gap-0 overflow-hidden bg-green-700 transition-[width,height,padding] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-8 group-has-data-[collapsible=icon]/sidebar-wrapper:w-8 hover:bg-green-700/90 group-has-data-[collapsible=icon]/sidebar-wrapper:has-[>svg]:px-2"
+      className="bg-success hover:bg-success/90 h-9 w-[81px] gap-0 overflow-hidden transition-[width,height,padding] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-8 group-has-data-[collapsible=icon]/sidebar-wrapper:w-8 group-has-data-[collapsible=icon]/sidebar-wrapper:has-[>svg]:px-2"
       loading={isPending}
-      startIcon={<SaveIcon size={16} />}
+      startIcon={<SaveIcon />}
       onClick={() =>
         execute({ workflowId, definition: JSON.stringify(toObject()) })
       }

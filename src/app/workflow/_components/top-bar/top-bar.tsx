@@ -6,6 +6,7 @@ import SaveWorkflowButton from "./save-workflow-button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { ThemeMenu } from "@/components/theme/theme-menu";
+import ExecuteWorkflowButton from "./execute-workflow-button";
 
 type Props = {
   title: string;
@@ -47,6 +48,7 @@ export default function TopBar({ title, subtitle, workflowId }: Props) {
             </div>
           </div>
           <div className="flex grow justify-end gap-4">
+            <ExecuteWorkflowButton workflowId={workflowId} />
             <SaveWorkflowButton workflowId={workflowId} />
             <ThemeMenu />
           </div>

@@ -12,7 +12,7 @@ type Props = {
 export default function NodeInput({ nodeId, input }: Props) {
   const edges = useEdges();
   const isConnected = edges.some(
-    (edge) => edge.target === nodeId && edge.targetHandle,
+    (edge) => edge.target === nodeId && edge.targetHandle === input.name,
   );
 
   return (
