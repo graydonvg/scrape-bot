@@ -2,10 +2,10 @@ import { ReactScan } from "@/components/react-scan"; // This component must be t
 import type { Metadata, Viewport } from "next";
 import "@/styles/globals.css";
 import { cn } from "@/lib/utils";
-import Providers from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
 import { fontInter } from "@/fonts/inter-font";
 import { siteConfig } from "@/config/site";
+import Providers from "@/components/providers";
 
 export const viewport: Viewport = {
   themeColor: [

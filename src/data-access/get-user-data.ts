@@ -4,9 +4,9 @@ import { Logger } from "next-axiom";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { redirect } from "next/navigation";
 
-export default async function geUserData() {
+export default async function getUserData() {
   let log = new Logger();
-  log = log.with({ context: "geUserData" });
+  log = log.with({ context: "getUserData" });
 
   try {
     const supabase = await createSupabaseServerClient();

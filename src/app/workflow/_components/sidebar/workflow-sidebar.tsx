@@ -1,35 +1,14 @@
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-} from "@/components/ui/sidebar";
-import { ComponentProps, Suspense } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
-import NavUserServer from "@/components/sidebar/nav-user-server";
-import SidebarLogo from "@/components/sidebar-logo";
+import { Sidebar } from "@/components/ui/sidebar";
+import { ComponentProps } from "react";
 import TaskMenu from "./task-menu";
+import AppSidebar from "@/components/sidebar/app-sidebar";
 
 export default function WorkflowSidebar({
   ...props
 }: ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
-        <SidebarLogo />
-      </SidebarHeader>
-      <SidebarContent>
-        <TaskMenu />
-      </SidebarContent>
-      <SidebarFooter>
-        <Suspense
-          fallback={
-            <Skeleton className="bg-sidebar-accent h-12 w-full transition-[height] ease-linear group-data-[collapsible=icon]:size-8" />
-          }
-        >
-          <NavUserServer />
-        </Suspense>
-      </SidebarFooter>
-    </Sidebar>
+    <AppSidebar {...props}>
+      <TaskMenu />
+    </AppSidebar>
   );
 }

@@ -1,7 +1,7 @@
 import Logo from "@/components/logo";
 import { BotIcon } from "lucide-react";
 import Image from "next/image";
-import { ReactNode } from "react";
+import { ReactNode, Suspense } from "react";
 import workflowImage from "../../../public/workflow.jpg";
 import { Separator } from "@/components/ui/separator";
 
@@ -17,7 +17,10 @@ export default function AuthLayout({ children }: Props) {
           <Logo />
         </div>
         <div className="flex-center flex-1">
-          <div className="w-full max-w-xs">{children}</div>
+          <div className="w-full max-w-xs">
+            {/* Suspense boundary is required because the signin pages includes useSearchParams()  */}
+            <Suspense fallback={null}>{children}</Suspense>
+          </div>
         </div>
       </section>
       <section className="relative hidden overflow-hidden lg:block">

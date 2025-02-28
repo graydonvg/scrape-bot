@@ -28,16 +28,16 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useLogger } from "next-axiom";
 
-export function NavUserClient({
-  user,
-}: {
+type Props = {
   user: {
     firstName: string | null;
     lastName: string | null;
     email: string;
     avatar?: string;
   };
-}) {
+};
+
+export function NavUserClient({ user }: Props) {
   const { isMobile } = useSidebar();
   const supabase = createSupabaseBrowserClient();
   const router = useRouter();
