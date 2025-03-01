@@ -119,7 +119,7 @@ function getInvalidInputs(
       // If the input is required but has no valid source, mark it as invalid
       if (!isProvidedByQueuedNode) invalidInputs.push(input.name);
     } else {
-      // If the input is optional, check if it's linked to an incoming edge
+      // If the input is optional, check if it's linked to a node
       // that is not yet added to the execution queue.
       if (
         connectedEdge &&
