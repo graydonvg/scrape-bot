@@ -4,7 +4,7 @@ import TooltipWrapper from "@/components/tooltip-wrapper";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { WorkflowTaskType } from "@/lib/types";
-import { createWorkflowNode } from "@/lib/utils";
+import { createWorkflowNode } from "@/lib/workflow/helpers/create-workflow-node";
 import { taskRegistry } from "@/lib/workflow/task-registry";
 import { useReactFlow } from "@xyflow/react";
 import {

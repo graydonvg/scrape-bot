@@ -23,6 +23,7 @@ import { USER_ERROR_MESSAGES } from "@/lib/constants";
 import useWorkflowsStore from "@/lib/store/workflows-store";
 import CustomFormLabel from "@/components/custom-form-label";
 import ButtonWithSpinner from "@/components/button-with-spinner";
+import { ActionReturn } from "@/lib/types";
 
 const initialState = {
   name: "",
@@ -41,75 +42,12 @@ export default function CreateWorkflowForm() {
       toast.loading("Creating workflow...", { id: toastId });
     },
     onSuccess: ({ data }) => {
-      if (data && !data.success) {
-        if (data.field) {
-          form.setError(
-            data.field,
-            {
-              type: data.type,
-              message: data.message,
-            },
-            {
-              shouldFocus: true,
-            },
-          );
-          return toast.error(USER_ERROR_MESSAGES.GenericFormValidation, {
-            id: toastId,
-          });
-        }
-
-        return toast.error(data.message, { id: toastId });
-      }
-
-      toast.success("Workflow created", { id: toastId });
+      handleSuccess(data);
     },
     onError: ({ error: { validationErrors } }) => {
-      if (validationErrors) {
-        const keys = Object.keys(validationErrors.fieldErrors) as Array<
-          keyof typeof validationErrors.fieldErrors
-        >;
-
-        keys.forEach((key) => {
-          form.setError(
-            key,
-            {
-              message:
-                validationErrors.fieldErrors[key]?.[0] ||
-                USER_ERROR_MESSAGES.GenericFormValidation,
-            },
-            { shouldFocus: true },
-          );
-        });
-
-        return toast.error(USER_ERROR_MESSAGES.GenericFormValidation, {
-          id: toastId,
-        });
-      }
-
-      toast.error(USER_ERROR_MESSAGES.Unexpected, { id: toastId });
+      handleError(validationErrors);
     },
   });
-
-  function handleSubmit(formData: CreateWorkflowSchemaType) {
-    const workflowNameExists = existingWorkflowNames?.includes(formData.name);
-
-    if (workflowNameExists) {
-      form.setError(
-        "name",
-        {
-          type: "duplicate",
-          message: `Workflow name "${formData.name}" already exists. Please provide a unique name.`,
-        },
-        {
-          shouldFocus: true,
-        },
-      );
-
-      return;
-    }
-
-    execute(formData);
-  }
 
   return (
     <Form {...form}>
@@ -163,4 +101,81 @@ export default function CreateWorkflowForm() {
       </form>
     </Form>
   );
+
+  function handleSubmit(formData: CreateWorkflowSchemaType) {
+    const workflowNameExists = existingWorkflowNames?.includes(formData.name);
+
+    if (workflowNameExists) {
+      form.setError(
+        "name",
+        {
+          type: "duplicate",
+          message: `Workflow name "${formData.name}" already exists. Please provide a unique name.`,
+        },
+        {
+          shouldFocus: true,
+        },
+      );
+
+      return;
+    }
+
+    execute(formData);
+  }
+
+  function handleSuccess(data?: ActionReturn<"name" | "description">) {
+    if (data && !data.success) {
+      if (data.field) {
+        form.setError(
+          data.field,
+          {
+            type: data.type,
+            message: data.message,
+          },
+          {
+            shouldFocus: true,
+          },
+        );
+        return toast.error(USER_ERROR_MESSAGES.GenericFormValidation, {
+          id: toastId,
+        });
+      }
+
+      return toast.error(data.message, { id: toastId });
+    }
+
+    toast.success("Workflow created", { id: toastId });
+  }
+
+  function handleError(validationErrors?: {
+    formErrors: string[];
+    fieldErrors: {
+      name?: string[] | undefined;
+      description?: string[] | undefined;
+    };
+  }) {
+    if (validationErrors) {
+      const keys = Object.keys(validationErrors.fieldErrors) as Array<
+        keyof typeof validationErrors.fieldErrors
+      >;
+
+      keys.forEach((key) => {
+        form.setError(
+          key,
+          {
+            message:
+              validationErrors.fieldErrors[key]?.[0] ||
+              USER_ERROR_MESSAGES.GenericFormValidation,
+          },
+          { shouldFocus: true },
+        );
+      });
+
+      return toast.error(USER_ERROR_MESSAGES.GenericFormValidation, {
+        id: toastId,
+      });
+    }
+
+    toast.error(USER_ERROR_MESSAGES.Unexpected, { id: toastId });
+  }
 }

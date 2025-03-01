@@ -3,32 +3,7 @@ import {
   WorkflowTaskParamType,
   WorkflowTaskType,
 } from "@/lib/types";
-import { CodeIcon, GlobeIcon, LucideProps, TextIcon } from "lucide-react";
-
-export const launchBrowserTask = {
-  type: WorkflowTaskType.LaunchBrowser,
-  label: "Launch browser",
-  credits: 5,
-  icon: (props: LucideProps) => (
-    <GlobeIcon className="stroke-pink-400" {...props} />
-  ),
-  isEntryPoint: true,
-  inputs: [
-    {
-      name: "Website URL",
-      type: WorkflowTaskParamType.String,
-      helperText: "e.g. https://www.example.com",
-      required: true,
-      hideHandle: true,
-    },
-  ],
-  outputs: [
-    {
-      name: "Web page",
-      type: WorkflowTaskParamType.BroswerInstance,
-    },
-  ],
-} satisfies WorkflowTask;
+import { CodeIcon, LucideProps, TextIcon } from "lucide-react";
 
 export const getPageHtmlTask = {
   type: WorkflowTaskType.GetPageHtml,

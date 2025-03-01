@@ -25,6 +25,7 @@ export default function WorkflowActionsMenu({
   workflowId,
 }: Props) {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+
   return (
     <>
       <DropdownMenu>

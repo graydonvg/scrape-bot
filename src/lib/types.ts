@@ -3,6 +3,13 @@ import { Database } from "./supabase/database.types";
 import { LucideProps } from "lucide-react";
 import { ReactNode } from "react";
 
+export type User = {
+  firstName: string | null;
+  lastName: string | null;
+  email: string;
+  avatar?: string;
+};
+
 export type ActionReturn<T = void> = {
   success: boolean;
   field?: T;

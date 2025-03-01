@@ -27,9 +27,12 @@ import { createSupabaseBrowserClient } from "@/lib/supabase/supabase-browser";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useLogger } from "next-axiom";
+import useUserStore from "@/lib/store/user-store";
+import { useEffect } from "react";
+import getUserDataClient from "@/data-access/get-user-data-client";
 
 type Props = {
-  user: {
+  user?: {
     firstName: string | null;
     lastName: string | null;
     email: string;
@@ -38,38 +41,34 @@ type Props = {
 };
 
 export function NavUserClient({ user }: Props) {
+  const logger = useLogger();
+  const router = useRouter();
   const { isMobile } = useSidebar();
   const supabase = createSupabaseBrowserClient();
-  const router = useRouter();
-  const log = useLogger();
-  const userFullName = `${user.firstName ? user.firstName : ""} ${user.lastName ? user.lastName : ""}`;
-  const trimmedFullName = userFullName.trim();
-  const userName = trimmedFullName.length ? trimmedFullName : "User";
-  const avatarFallbackChars = trimmedFullName.length
-    ? trimmedFullName
-        .split(" ")
-        .slice(0, 2)
-        .map((name) => name.charAt(0))
-        .join("")
-    : user.email.charAt(0);
+  const { user: userStore, setUser } = useUserStore();
+  const userFullName = getUserFullName();
+  const userName = userFullName.length ? userFullName : "User";
+  const avatarFallbackChars = getUserAvatarFallbackChars(userFullName);
 
-  async function handleSignOut() {
-    try {
-      const { error } = await supabase.auth.signOut();
+  useEffect(() => {
+    if (user) setUser(user);
 
-      if (error) {
-        log.error("Signout error", { error });
-        toast.error("Failed to sign out. An unexpected error occured.");
-      } else {
-        router.refresh();
+    // User data is persisted in local storage to reduce number of requests
+    // If local storage is cleared, refetch the user data and add it back to store
+    if (!user) {
+      async function fetchUserData() {
+        const userData = await getUserDataClient();
+
+        if (userData) {
+          setUser(userData);
+        } else {
+          router.push("/signin");
+        }
       }
-    } catch (error) {
-      log.error("Signout error", { error });
-      toast.error("Failed to sign out. An unexpected error occured.");
-    } finally {
-      log.flush();
+
+      fetchUserData();
     }
-  }
+  }, [user, setUser, router]);
 
   return (
     <SidebarMenu>
@@ -81,14 +80,17 @@ export function NavUserClient({ user }: Props) {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.avatar} alt={`${userName} avatar`} />
+                <AvatarImage
+                  src={userStore.avatar}
+                  alt={`${userName} avatar`}
+                />
                 <AvatarFallback className="rounded-lg uppercase">
                   {avatarFallbackChars}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">{userName}</span>
-                <span className="truncate text-xs">{user.email}</span>
+                <span className="truncate text-xs">{userStore.email}</span>
               </div>
               <ChevronsUpDownIcon className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -102,14 +104,17 @@ export function NavUserClient({ user }: Props) {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={`${userName} avatar`} />
+                  <AvatarImage
+                    src={userStore.avatar}
+                    alt={`${userName} avatar`}
+                  />
                   <AvatarFallback className="rounded-lg uppercase">
                     {avatarFallbackChars}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">{userName}</span>
-                  <span className="truncate text-xs">{user.email}</span>
+                  <span className="truncate text-xs">{userStore.email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
@@ -138,4 +143,38 @@ export function NavUserClient({ user }: Props) {
       </SidebarMenuItem>
     </SidebarMenu>
   );
+
+  function getUserFullName() {
+    const userFullName = `${userStore.firstName ? userStore.firstName : ""} ${userStore.lastName ? userStore.lastName : ""}`;
+
+    return userFullName.trim();
+  }
+
+  function getUserAvatarFallbackChars(userFullName: string) {
+    return userFullName.length
+      ? userFullName
+          .split(" ")
+          .slice(0, 2)
+          .map((name) => name.charAt(0))
+          .join("")
+      : userStore.email.charAt(0);
+  }
+
+  async function handleSignOut() {
+    try {
+      const { error } = await supabase.auth.signOut();
+
+      if (error) {
+        logger.error("Signout error", { error });
+        toast.error("Failed to sign out. An unexpected error occured.");
+      } else {
+        router.refresh();
+      }
+    } catch (error) {
+      logger.error("Signout error", { error });
+      toast.error("Failed to sign out. An unexpected error occured.");
+    } finally {
+      logger.flush();
+    }
+  }
 }

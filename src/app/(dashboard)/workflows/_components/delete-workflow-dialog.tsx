@@ -20,6 +20,7 @@ import { USER_ERROR_MESSAGES } from "@/lib/constants";
 import CustomAlert from "@/components/custom-alert";
 import { Trash2Icon } from "lucide-react";
 import useWorkflowsStore from "@/lib/store/workflows-store";
+import { ActionReturn } from "@/lib/types";
 
 type Props = {
   open: boolean;
@@ -43,19 +44,7 @@ export default function DeleteWorkflowDialog({
       toast.loading("Deleting workflow...", { id: toastId });
     },
     onSuccess: ({ data }) => {
-      setConfirmText("");
-
-      if (data && !data.success) {
-        return toast.error(data.message, { id: toastId });
-      }
-
-      setOpen(false);
-      setExistingWorkflowNames([
-        ...existingWorkflowNames.filter(
-          (existingWorkflowName) => existingWorkflowName !== workflowName,
-        ),
-      ]);
-      toast.success("Workflow deleted", { id: toastId });
+      handleSuccess(data);
     },
     onError: () => {
       setConfirmText("");
@@ -122,4 +111,20 @@ export default function DeleteWorkflowDialog({
       </AlertDialogContent>
     </AlertDialog>
   );
+
+  function handleSuccess(data?: ActionReturn) {
+    setConfirmText("");
+
+    if (data && !data.success) {
+      return toast.error(data.message, { id: toastId });
+    }
+
+    setOpen(false);
+    setExistingWorkflowNames([
+      ...existingWorkflowNames.filter(
+        (existingWorkflowName) => existingWorkflowName !== workflowName,
+      ),
+    ]);
+    toast.success("Workflow deleted", { id: toastId });
+  }
 }

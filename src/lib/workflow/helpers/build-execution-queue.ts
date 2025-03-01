@@ -1,12 +1,12 @@
 import { Edge, getIncomers } from "@xyflow/react";
-import { WorkflowExecutionQueue, WorkflowNode } from "../types";
-import { taskRegistry } from "./task-registry";
+import { WorkflowExecutionQueue, WorkflowNode } from "../../types";
+import { taskRegistry } from "../task-registry";
 
 type ExecutionQueue = {
   executionQueue?: WorkflowExecutionQueue[];
 };
 
-export default function workflowToExecutionQueue(
+export default function buildExecutionQueue(
   nodes: WorkflowNode[],
   edges: Edge[],
 ): ExecutionQueue {

@@ -28,9 +28,9 @@ import {
 import { toast } from "sonner";
 import { USER_ERROR_MESSAGES } from "@/lib/constants";
 import { useLogger } from "next-axiom";
-import { createWorkflowNode } from "@/lib/utils";
 import DeleteableEdge from "./edges/deleteable-edge";
 import { taskRegistry } from "@/lib/workflow/task-registry";
+import { createWorkflowNode } from "@/lib/workflow/helpers/create-workflow-node";
 
 const fitViewOptions = {
   padding: 1,
@@ -49,6 +49,7 @@ export default function Flow({ workflow }: Props) {
   const { setViewport, screenToFlowPosition, updateNodeData } = useReactFlow();
   const [nodes, setNodes, onNodesChange] = useNodesState<WorkflowNode>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
+  const lastInvalidConnection = useRef<string | null>(null);
 
   useEffect(() => {
     // Required to prevent hydration error when setting ReactFlow colorMode using next-themes
@@ -138,8 +139,6 @@ export default function Flow({ workflow }: Props) {
     },
     [setEdges, nodes, updateNodeData],
   );
-
-  const lastInvalidConnection = useRef<string | null>(null);
 
   const isValidConnection = useCallback(
     (connection: Edge | Connection) => {
