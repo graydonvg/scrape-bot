@@ -1,3 +1,4 @@
+import useWorkflowsStore from "@/lib/store/workflows-store";
 import { cn } from "@/lib/utils";
 import { useReactFlow } from "@xyflow/react";
 import { ReactNode } from "react";
@@ -10,6 +11,10 @@ type Props = {
 
 export default function NodeCard({ nodeId, isSelected, children }: Props) {
   const { getNode, setCenter } = useReactFlow();
+  const { invalidInputs } = useWorkflowsStore();
+  const hasInvalidInput = invalidInputs?.some(
+    (invalidInput) => invalidInput.nodeId === nodeId,
+  );
 
   function handleDoubleClick() {
     const node = getNode(nodeId);
@@ -34,10 +39,12 @@ export default function NodeCard({ nodeId, isSelected, children }: Props) {
     <div
       onDoubleClick={handleDoubleClick}
       className={cn(
-        "bg-background flex w-md cursor-pointer flex-col rounded-md border-2 text-xs",
+        "bg-muted flex w-md cursor-pointer flex-col rounded-md border-2 text-xs",
         {
-          "ring-ring/40 outline-ring ring-4 outline-1 transition-[box-shadow]":
+          "ring-ring/40 border-ring ring-4 transition-[border,box-shadow] outline-none":
             isSelected,
+          "ring-destructive/40 border-destructive ring-4 transition-[border,box-shadow] outline-none":
+            hasInvalidInput,
         },
       )}
     >

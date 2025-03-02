@@ -49,7 +49,7 @@ export default function NodeHeader({ nodeId, taskType }: Props) {
   }
 
   return (
-    <div className="flex items-center gap-2 p-2">
+    <div className="bg-background flex items-center gap-2 rounded-t-md p-2">
       <task.icon size={16} />
       <div className="flex w-full items-center justify-between">
         <p className="text-muted-foreground text-xs font-bold uppercase">

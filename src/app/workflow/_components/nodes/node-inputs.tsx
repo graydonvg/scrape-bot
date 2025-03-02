@@ -8,7 +8,7 @@ type Props = {
 
 export default function NodeInputs({ nodeId, inputs }: Props) {
   return (
-    <div className="divide-background divide-y">
+    <div className="divide-background divide-y-2">
       {inputs.map((input) => (
         <NodeInput key={input.name} nodeId={nodeId} input={input} />
       ))}

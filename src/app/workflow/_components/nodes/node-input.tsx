@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { Handle, Position, useEdges } from "@xyflow/react";
 import NodeInputField from "./node-input-field";
 import { nodeHandleColor } from "./common";
+import useWorkflowsStore from "@/lib/store/workflows-store";
 
 type Props = {
   nodeId: string;
@@ -14,10 +15,25 @@ export default function NodeInput({ nodeId, input }: Props) {
   const isConnected = edges.some(
     (edge) => edge.target === nodeId && edge.targetHandle === input.name,
   );
+  const { invalidInputs } = useWorkflowsStore();
+
+  const invalidNode = invalidInputs?.find(
+    (invalidInput) => invalidInput.nodeId === nodeId,
+  );
+  const invalidInputNames = invalidNode?.inputNames;
+  const hasInvalidInput = invalidInputNames?.includes(input.name) || false;
 
   return (
-    <div className="relative flex w-full px-4 py-3">
-      <NodeInputField input={input} nodeId={nodeId} disabled={isConnected} />
+    <div
+      className={cn("relative flex w-full px-4 py-3", {
+        "bg-destructive/30": hasInvalidInput,
+      })}
+    >
+      <NodeInputField
+        input={{ ...input, isInvalid: hasInvalidInput }}
+        nodeId={nodeId}
+        disabled={isConnected}
+      />
       {!input.hideHandle && (
         <Handle
           id={input.name}

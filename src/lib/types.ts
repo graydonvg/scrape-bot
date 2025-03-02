@@ -67,7 +67,22 @@ export type WorkflowNode = Node & {
   data: WorkflowNodeData;
 };
 
-export type WorkflowExecutionQueue = {
+export type WorkflowExecutionPlan = {
   phase: number;
   nodes: WorkflowNode[];
+};
+
+export enum WorkflowExecutionPlanErrorType {
+  "NO_ENTRY_POINT",
+  "INVALID_INPUTS",
+}
+
+export type WorkflowNodeInvalidInputs = {
+  nodeId: string;
+  inputNames: string[];
+};
+
+export type WorkflowExecutionPlanError = {
+  type: WorkflowExecutionPlanErrorType;
+  invalidInputs?: WorkflowNodeInvalidInputs[];
 };
