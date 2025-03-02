@@ -16,7 +16,7 @@ export default async function WorkflowLayout({ children }: Props) {
       defaultOpen={defaultOpen}
       style={
         {
-          "--sidebar-width": "17rem",
+          "--sidebar-width": "20rem",
         } as CSSProperties
       }
     >
