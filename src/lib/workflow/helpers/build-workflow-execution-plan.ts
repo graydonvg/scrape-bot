@@ -1,4 +1,4 @@
-import { Edge, getIncomers } from "@xyflow/react";
+import { Edge } from "@xyflow/react";
 import {
   WorkflowExecutionPlan,
   WorkflowNode,
@@ -156,4 +156,22 @@ function getInvalidInputs(
   }
 
   return invalidInputs;
+}
+
+// Identifies all nodes that have edges directed towards a specified node
+// React Flow has a 'getIncomers' utility function which is a client function.
+// We need to be able to invoke this function on the server.
+// Therefore, we will recreate this function.
+function getIncomers(node: WorkflowNode, nodes: WorkflowNode[], edges: Edge[]) {
+  if (!node.id) {
+    return [];
+  }
+
+  // Filter edges where the target matches the node's id
+  const incomingEdgeSources = edges
+    .filter((edge) => edge.target === node.id)
+    .map((edge) => edge.source);
+
+  // Filter nodes whose ids are in the incomingEdgeSources array
+  return nodes.filter((n) => incomingEdgeSources.includes(n.id));
 }

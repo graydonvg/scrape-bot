@@ -17,7 +17,10 @@ export type ActionReturn<T = void> = {
   message: string;
 };
 
-export type WorkflowStatus = Database["public"]["Enums"]["workflow_status"];
+export type WorkflowStatus = Database["public"]["Enums"]["WorkflowStatus"];
+
+export type ExecutionPhaseStatus =
+  Database["public"]["Enums"]["ExecutionPhaseStatus"];
 
 export type Workflow = Database["public"]["Tables"]["workflows"]["Row"];
 

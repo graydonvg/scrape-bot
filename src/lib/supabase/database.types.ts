@@ -9,6 +9,59 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      executionPhases: {
+        Row: {
+          completedAt: string | null;
+          creditsConsumed: number | null;
+          executionPhaseId: number;
+          inputs: Json | null;
+          node: Json;
+          outputs: Json | null;
+          phase: number;
+          startedAt: string | null;
+          status: Database["public"]["Enums"]["ExecutionPhaseStatus"];
+          taskName: string;
+          userId: string;
+          workflowExecutionId: number;
+        };
+        Insert: {
+          completedAt?: string | null;
+          creditsConsumed?: number | null;
+          executionPhaseId?: number;
+          inputs?: Json | null;
+          node: Json;
+          outputs?: Json | null;
+          phase: number;
+          startedAt?: string | null;
+          status: Database["public"]["Enums"]["ExecutionPhaseStatus"];
+          taskName: string;
+          userId?: string;
+          workflowExecutionId: number;
+        };
+        Update: {
+          completedAt?: string | null;
+          creditsConsumed?: number | null;
+          executionPhaseId?: number;
+          inputs?: Json | null;
+          node?: Json;
+          outputs?: Json | null;
+          phase?: number;
+          startedAt?: string | null;
+          status?: Database["public"]["Enums"]["ExecutionPhaseStatus"];
+          taskName?: string;
+          userId?: string;
+          workflowExecutionId?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "executionPhase_workflowExecutionId_fkey";
+            columns: ["workflowExecutionId"];
+            isOneToOne: false;
+            referencedRelation: "workflowExecutions";
+            referencedColumns: ["workflowExecutionId"];
+          },
+        ];
+      };
       users: {
         Row: {
           email: string;
@@ -33,13 +86,57 @@ export type Database = {
         };
         Relationships: [];
       };
+      workflowExecutions: {
+        Row: {
+          completedAt: string | null;
+          createdAt: string;
+          creditsConsumed: number;
+          startedAt: string;
+          status: Database["public"]["Enums"]["WorkflowExecutionStatus"];
+          trigger: Database["public"]["Enums"]["WorkflowExecutionTrigger"];
+          userId: string;
+          workflowExecutionId: number;
+          workflowId: number;
+        };
+        Insert: {
+          completedAt?: string | null;
+          createdAt?: string;
+          creditsConsumed: number;
+          startedAt: string;
+          status: Database["public"]["Enums"]["WorkflowExecutionStatus"];
+          trigger: Database["public"]["Enums"]["WorkflowExecutionTrigger"];
+          userId?: string;
+          workflowExecutionId?: number;
+          workflowId: number;
+        };
+        Update: {
+          completedAt?: string | null;
+          createdAt?: string;
+          creditsConsumed?: number;
+          startedAt?: string;
+          status?: Database["public"]["Enums"]["WorkflowExecutionStatus"];
+          trigger?: Database["public"]["Enums"]["WorkflowExecutionTrigger"];
+          userId?: string;
+          workflowExecutionId?: number;
+          workflowId?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "workflowExecution_workflowId_fkey";
+            columns: ["workflowId"];
+            isOneToOne: false;
+            referencedRelation: "workflows";
+            referencedColumns: ["workflowId"];
+          },
+        ];
+      };
       workflows: {
         Row: {
           createdAt: string;
           definition: Json;
           description: string | null;
           name: string;
-          status: Database["public"]["Enums"]["workflow_status"];
+          status: Database["public"]["Enums"]["WorkflowStatus"];
           updatedAt: string;
           userId: string;
           workflowId: number;
@@ -49,7 +146,7 @@ export type Database = {
           definition: Json;
           description?: string | null;
           name: string;
-          status?: Database["public"]["Enums"]["workflow_status"];
+          status?: Database["public"]["Enums"]["WorkflowStatus"];
           updatedAt?: string;
           userId?: string;
           workflowId?: number;
@@ -59,7 +156,7 @@ export type Database = {
           definition?: Json;
           description?: string | null;
           name?: string;
-          status?: Database["public"]["Enums"]["workflow_status"];
+          status?: Database["public"]["Enums"]["WorkflowStatus"];
           updatedAt?: string;
           userId?: string;
           workflowId?: number;
@@ -74,7 +171,15 @@ export type Database = {
       [_ in never]: never;
     };
     Enums: {
-      workflow_status: "DRAFT" | "PUBLISHED";
+      ExecutionPhaseStatus:
+        | "CREATED"
+        | "PENDING"
+        | "RUNNING"
+        | "COMPLETED"
+        | "FAILED";
+      WorkflowExecutionStatus: "PENDING" | "RUNNING" | "COMPLETED" | "FAILED";
+      WorkflowExecutionTrigger: "MANUAL";
+      WorkflowStatus: "DRAFT" | "PUBLISHED";
     };
     CompositeTypes: {
       [_ in never]: never;
