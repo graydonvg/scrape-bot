@@ -20,8 +20,6 @@ export default async function WorkflowExecutionPage({ params }: Params) {
 
   if (!workflowExecution) notFound();
 
-  console.log(workflowExecution.executionPhases);
-
   return (
     <ExecutionViewer workflowId={workflowId} initialData={workflowExecution} />
   );
