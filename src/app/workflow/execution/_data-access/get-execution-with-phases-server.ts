@@ -3,11 +3,15 @@ import createSupabaseServerClient from "@/lib/supabase/supabase-server";
 import { Logger } from "next-axiom";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { redirect } from "next/navigation";
-import { cache } from "react";
 
-const getWorkflow = cache(async (workflowId: number) => {
+export default async function getWorkflowExecutionWithPhasesServer(
+  workflowExecutionId: string,
+) {
   let log = new Logger();
-  log = log.with({ context: "getWorkflow" });
+  log = log.with({
+    context: "getWorkflowExecutionWithPhasesServer",
+    workflowExecutionId,
+  });
 
   try {
     const supabase = await createSupabaseServerClient();
@@ -20,11 +24,14 @@ const getWorkflow = cache(async (workflowId: number) => {
       return redirect("/signin");
     }
 
+    log = log.with({ userId: user.id });
+
     const { data, error } = await supabase
-      .from("workflows")
-      .select("workflowId, name, description, definition, status")
+      .from("workflowExecutions")
+      .select("*, executionPhases(*)")
       .eq("userId", user.id)
-      .eq("workflowId", workflowId);
+      .eq("workflowExecutionId", workflowExecutionId)
+      .order("phase", { ascending: true, referencedTable: "executionPhases" });
 
     if (error) {
       log.error(LOGGER_ERROR_MESSAGES.Select, {
@@ -42,6 +49,4 @@ const getWorkflow = cache(async (workflowId: number) => {
     log.error(LOGGER_ERROR_MESSAGES.Unexpected, { error });
     return null;
   }
-});
-
-export default getWorkflow;
+}

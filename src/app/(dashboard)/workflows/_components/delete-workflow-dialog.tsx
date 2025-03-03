@@ -26,7 +26,7 @@ type Props = {
   open: boolean;
   setOpen: (open: boolean) => void;
   workflowName: string;
-  workflowId: number;
+  workflowId: string;
 };
 
 export default function DeleteWorkflowDialog({

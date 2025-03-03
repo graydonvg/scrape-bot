@@ -41,7 +41,7 @@ type Props = {
 };
 
 export function NavUserClient({ user }: Props) {
-  const logger = useLogger();
+  const log = useLogger();
   const router = useRouter();
   const { isMobile } = useSidebar();
   const supabase = createSupabaseBrowserClient();
@@ -165,16 +165,16 @@ export function NavUserClient({ user }: Props) {
       const { error } = await supabase.auth.signOut();
 
       if (error) {
-        logger.error("Signout error", { error });
+        log.error("Signout error", { error });
         toast.error("Failed to sign out. An unexpected error occured.");
       } else {
         router.refresh();
       }
     } catch (error) {
-      logger.error("Signout error", { error });
+      log.error("Signout error", { error });
       toast.error("Failed to sign out. An unexpected error occured.");
     } finally {
-      logger.flush();
+      log.flush();
     }
   }
 }

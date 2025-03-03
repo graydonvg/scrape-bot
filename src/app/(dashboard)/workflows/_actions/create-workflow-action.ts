@@ -35,10 +35,7 @@ const createWorkflowAction = actionClient
 
         if (!user) {
           log.warn(LOGGER_ERROR_MESSAGES.Unauthorized, { formData });
-          return {
-            success: false,
-            message: USER_ERROR_MESSAGES.Unauthorized,
-          };
+          redirect("/signin");
         }
 
         log = log.with({ userId: user.id });

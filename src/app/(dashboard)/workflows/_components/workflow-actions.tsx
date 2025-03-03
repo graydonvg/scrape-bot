@@ -17,7 +17,7 @@ import { useState } from "react";
 
 type Props = {
   workflowName: string;
-  workflowId: number;
+  workflowId: string;
 };
 
 export default function WorkflowActionsMenu({

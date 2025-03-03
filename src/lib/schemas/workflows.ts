@@ -16,21 +16,21 @@ export const createWorkflowSchema = z.object({
 export type CreateWorkflowSchemaType = z.infer<typeof createWorkflowSchema>;
 
 export const deleteWorkflowSchema = z.object({
-  workflowId: z.number().positive(),
+  workflowId: z.string().uuid(),
 });
 
 export type DeleteWorkflowSchemaType = z.infer<typeof deleteWorkflowSchema>;
 
 export const saveWorkflowSchema = z.object({
-  workflowId: z.number().positive(),
+  workflowId: z.string().uuid(),
   definition: z.string(),
 });
 
 export type SaveWorkflowSchemaType = z.infer<typeof saveWorkflowSchema>;
 
 export const executeWorkflowSchema = z.object({
-  workflowId: z.number().positive(),
-  definition: z.string().optional(),
+  workflowId: z.string().uuid(),
+  definition: z.string(),
 });
 
 export type ExecuteWorkflowSchemaType = z.infer<typeof executeWorkflowSchema>;

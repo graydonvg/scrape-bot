@@ -13,7 +13,7 @@ export type Database = {
         Row: {
           completedAt: string | null;
           creditsConsumed: number | null;
-          executionPhaseId: number;
+          executionPhaseId: string;
           inputs: Json | null;
           node: Json;
           outputs: Json | null;
@@ -22,12 +22,12 @@ export type Database = {
           status: Database["public"]["Enums"]["ExecutionPhaseStatus"];
           taskName: string;
           userId: string;
-          workflowExecutionId: number;
+          workflowExecutionId: string | null;
         };
         Insert: {
           completedAt?: string | null;
           creditsConsumed?: number | null;
-          executionPhaseId?: number;
+          executionPhaseId?: string;
           inputs?: Json | null;
           node: Json;
           outputs?: Json | null;
@@ -36,12 +36,12 @@ export type Database = {
           status: Database["public"]["Enums"]["ExecutionPhaseStatus"];
           taskName: string;
           userId?: string;
-          workflowExecutionId: number;
+          workflowExecutionId?: string | null;
         };
         Update: {
           completedAt?: string | null;
           creditsConsumed?: number | null;
-          executionPhaseId?: number;
+          executionPhaseId?: string;
           inputs?: Json | null;
           node?: Json;
           outputs?: Json | null;
@@ -50,11 +50,11 @@ export type Database = {
           status?: Database["public"]["Enums"]["ExecutionPhaseStatus"];
           taskName?: string;
           userId?: string;
-          workflowExecutionId?: number;
+          workflowExecutionId?: string | null;
         };
         Relationships: [
           {
-            foreignKeyName: "executionPhase_workflowExecutionId_fkey";
+            foreignKeyName: "executionPhases_workflowExecutionId_fkey";
             columns: ["workflowExecutionId"];
             isOneToOne: false;
             referencedRelation: "workflowExecutions";
@@ -90,39 +90,39 @@ export type Database = {
         Row: {
           completedAt: string | null;
           createdAt: string;
-          creditsConsumed: number;
+          creditsConsumed: number | null;
           startedAt: string;
           status: Database["public"]["Enums"]["WorkflowExecutionStatus"];
           trigger: Database["public"]["Enums"]["WorkflowExecutionTrigger"];
           userId: string;
-          workflowExecutionId: number;
-          workflowId: number;
+          workflowExecutionId: string;
+          workflowId: string | null;
         };
         Insert: {
           completedAt?: string | null;
           createdAt?: string;
-          creditsConsumed: number;
+          creditsConsumed?: number | null;
           startedAt: string;
           status: Database["public"]["Enums"]["WorkflowExecutionStatus"];
           trigger: Database["public"]["Enums"]["WorkflowExecutionTrigger"];
           userId?: string;
-          workflowExecutionId?: number;
-          workflowId: number;
+          workflowExecutionId?: string;
+          workflowId?: string | null;
         };
         Update: {
           completedAt?: string | null;
           createdAt?: string;
-          creditsConsumed?: number;
+          creditsConsumed?: number | null;
           startedAt?: string;
           status?: Database["public"]["Enums"]["WorkflowExecutionStatus"];
           trigger?: Database["public"]["Enums"]["WorkflowExecutionTrigger"];
           userId?: string;
-          workflowExecutionId?: number;
-          workflowId?: number;
+          workflowExecutionId?: string;
+          workflowId?: string | null;
         };
         Relationships: [
           {
-            foreignKeyName: "workflowExecution_workflowId_fkey";
+            foreignKeyName: "workflowExecutions_workflowId_fkey";
             columns: ["workflowId"];
             isOneToOne: false;
             referencedRelation: "workflows";
@@ -139,7 +139,7 @@ export type Database = {
           status: Database["public"]["Enums"]["WorkflowStatus"];
           updatedAt: string;
           userId: string;
-          workflowId: number;
+          workflowId: string;
         };
         Insert: {
           createdAt?: string;
@@ -149,7 +149,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["WorkflowStatus"];
           updatedAt?: string;
           userId?: string;
-          workflowId?: number;
+          workflowId?: string;
         };
         Update: {
           createdAt?: string;
@@ -159,7 +159,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["WorkflowStatus"];
           updatedAt?: string;
           userId?: string;
-          workflowId?: number;
+          workflowId?: string;
         };
         Relationships: [];
       };
@@ -174,10 +174,10 @@ export type Database = {
       ExecutionPhaseStatus:
         | "CREATED"
         | "PENDING"
-        | "RUNNING"
+        | "EXECUTING"
         | "COMPLETED"
         | "FAILED";
-      WorkflowExecutionStatus: "PENDING" | "RUNNING" | "COMPLETED" | "FAILED";
+      WorkflowExecutionStatus: "PENDING" | "EXECUTING" | "COMPLETED" | "FAILED";
       WorkflowExecutionTrigger: "MANUAL";
       WorkflowStatus: "DRAFT" | "PUBLISHED";
     };

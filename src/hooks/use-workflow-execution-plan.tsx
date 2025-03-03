@@ -8,10 +8,12 @@ import {
 } from "@/lib/types";
 import buildWorkflowExecutionPlan from "@/lib/workflow/helpers/build-workflow-execution-plan";
 import { useReactFlow } from "@xyflow/react";
+import { useLogger } from "next-axiom";
 import { useCallback } from "react";
 import { toast } from "sonner";
 
 export default function useWorkflowExecutionPlan() {
+  const log = useLogger().with({ context: "useWorkflowExecutionPlan" });
   const { toObject } = useReactFlow();
   const { setInvalidInputs, clearErrors } = useWorkflowsStore();
 
@@ -28,11 +30,15 @@ export default function useWorkflowExecutionPlan() {
           toast.error("Missing required inputs. Please check and try again.");
           break;
         default:
+          log.error(
+            "An unexpected error occured while building workflow execution plan",
+            { error },
+          );
           toast.error("An unexpected error occured");
           break;
       }
     },
-    [setInvalidInputs],
+    [setInvalidInputs, log],
   );
 
   const generateExecutionPlan = useCallback(() => {
@@ -45,7 +51,6 @@ export default function useWorkflowExecutionPlan() {
 
     if (error) {
       handleError(error);
-      console.log(error);
 
       return null;
     }

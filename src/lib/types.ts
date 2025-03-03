@@ -19,10 +19,10 @@ export type ActionReturn<T = void> = {
 
 export type WorkflowStatus = Database["public"]["Enums"]["WorkflowStatus"];
 
-export type ExecutionPhaseStatus =
-  Database["public"]["Enums"]["ExecutionPhaseStatus"];
-
 export type Workflow = Database["public"]["Tables"]["workflows"]["Row"];
+
+export type WorkflowExecutionPhase =
+  Database["public"]["Tables"]["executionPhases"]["Row"];
 
 export enum WorkflowTaskParamType {
   String = "STRING",

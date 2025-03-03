@@ -2,19 +2,25 @@ import TooltipWrapper from "@/components/tooltip-wrapper";
 import { Button } from "@/components/ui/button";
 import { ChevronLeftIcon } from "lucide-react";
 import Link from "next/link";
-import SaveWorkflowButton from "./save-workflow-button";
+import SaveWorkflowButton from "../editor/_components/buttons/save-workflow-button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { ThemeMenu } from "@/components/theme/theme-menu";
-import ExecuteWorkflowButton from "./execute-workflow-button";
+import ExecuteWorkflowButton from "../editor/_components/buttons/execute-workflow-button";
 
 type Props = {
   title: string;
   subtitle?: string;
-  workflowId: number;
+  workflowId: string;
+  hideButtons?: boolean;
 };
 
-export default function TopBar({ title, subtitle, workflowId }: Props) {
+export default function TopBar({
+  title,
+  subtitle,
+  workflowId,
+  hideButtons = false,
+}: Props) {
   return (
     <header className="bg-sidebar flex h-16 shrink-0 items-center border-b px-4 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
       <div className="flex w-full items-center justify-between">
@@ -48,8 +54,12 @@ export default function TopBar({ title, subtitle, workflowId }: Props) {
             </div>
           </div>
           <div className="flex grow justify-end gap-4">
-            <ExecuteWorkflowButton workflowId={workflowId} />
-            <SaveWorkflowButton workflowId={workflowId} />
+            {!hideButtons && (
+              <>
+                <ExecuteWorkflowButton workflowId={workflowId} />
+                <SaveWorkflowButton workflowId={workflowId} />
+              </>
+            )}
             <ThemeMenu />
           </div>
         </div>

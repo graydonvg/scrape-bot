@@ -13,13 +13,13 @@ export default function AppSidebar({
   ...props
 }: ComponentProps<typeof Sidebar> & Props) {
   const pathname = usePathname();
-  const isEditor = pathname.includes("/editor");
+  const isSidebarVariant = pathname.includes("/workflow/");
 
   return (
     <Sidebar
       collapsible="icon"
       {...props}
-      variant={isEditor ? "sidebar" : "inset"}
+      variant={isSidebarVariant ? "sidebar" : "inset"}
     >
       {children}
     </Sidebar>

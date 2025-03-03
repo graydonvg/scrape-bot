@@ -11,6 +11,7 @@ import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { ActionReturn } from "@/lib/types";
 import { Logger } from "next-axiom";
 import { LOGGER_ERROR_MESSAGES, USER_ERROR_MESSAGES } from "@/lib/constants";
+import { redirect } from "next/navigation";
 
 const saveWorkflowAction = actionClient
   .metadata({ actionName: "saveWorkflowAction" })
@@ -32,10 +33,7 @@ const saveWorkflowAction = actionClient
 
         if (!user) {
           log.warn(LOGGER_ERROR_MESSAGES.Unauthorized, { formData });
-          return {
-            success: false,
-            message: USER_ERROR_MESSAGES.Unauthorized,
-          };
+          redirect("signin");
         }
 
         log = log.with({ userId: user.id });

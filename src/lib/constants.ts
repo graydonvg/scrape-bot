@@ -1,5 +1,5 @@
 export const USER_ERROR_MESSAGES = {
-  Unauthorized: "You need to be signed in to perform this action",
+  // Unauthorized: "You need to be signed in to perform this action",
   Unexpected: "An unexpected error occurred. Please try again later.",
   GenericFormValidation: "Please fix the errors in the form",
 } as const;

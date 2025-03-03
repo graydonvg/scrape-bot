@@ -7,7 +7,7 @@ import { USER_ERROR_MESSAGES } from "@/lib/constants";
 import ButtonWithSpinner from "@/components/button-with-spinner";
 
 type Props = {
-  workflowId: number;
+  workflowId: string;
 };
 
 export default function SaveWorkflowButton({ workflowId }: Props) {

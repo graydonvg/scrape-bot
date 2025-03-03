@@ -1,7 +1,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { Loader2Icon } from "lucide-react";
 
-export default function Loading() {
+export default function LoadingComponent() {
   return (
     <div className="flex grow flex-col">
       <Skeleton className="bg-sidebar flex h-16 shrink-0 items-center rounded-none border-b group-has-data-[collapsible=icon]/sidebar-wrapper:h-12" />

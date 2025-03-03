@@ -41,7 +41,7 @@ type Props = {
 };
 
 export default function Flow({ workflow }: Props) {
-  const logger = useLogger();
+  const log = useLogger();
   const { theme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
   const nodeTypes = useMemo(() => ({ node: Node }), []);
@@ -73,13 +73,13 @@ export default function Flow({ workflow }: Props) {
       setNodes([]);
       setEdges([]);
 
-      logger.error("Error parsing workflow definition", { error });
+      log.error("Error parsing workflow definition", { error });
 
       toast.error(USER_ERROR_MESSAGES.Unexpected);
     } finally {
-      logger.flush();
+      log.flush();
     }
-  }, [workflow.definition, setEdges, setNodes, setViewport, logger]);
+  }, [workflow.definition, setEdges, setNodes, setViewport, log]);
 
   const handleDragOver = useCallback((e: DragEvent) => {
     e.preventDefault();

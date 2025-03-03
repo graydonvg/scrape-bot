@@ -3,7 +3,7 @@
 import { Workflow } from "@/lib/types";
 import { ReactFlowProvider } from "@xyflow/react";
 import Flow from "./flow";
-import TopBar from "./top-bar/top-bar";
+import TopBar from "../../_components/top-bar";
 
 type Props = {
   workflow: Partial<Workflow>;

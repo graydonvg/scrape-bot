@@ -3,12 +3,12 @@ import useWorkflowExecutionPlan from "@/hooks/use-workflow-execution-plan";
 import { useReactFlow } from "@xyflow/react";
 import { PlayIcon } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
-import executeWorkflowAction from "../../_actions/execute-workflow-action";
 import { toast } from "sonner";
 import { USER_ERROR_MESSAGES } from "@/lib/constants";
+import executeWorkflowAction from "../../_actions/execute-workflow-action";
 
 type Props = {
-  workflowId: number;
+  workflowId: string;
 };
 
 export default function ExecuteWorkflowButton({ workflowId }: Props) {

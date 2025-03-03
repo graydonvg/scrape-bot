@@ -6,15 +6,13 @@ import {
   executeWorkflowSchema,
   ExecuteWorkflowSchemaType,
 } from "@/lib/schemas/workflows";
-import {
-  ActionReturn,
-  ExecutionPhaseStatus,
-  WorkflowExecutionPlan,
-} from "@/lib/types";
+import { ActionReturn, WorkflowExecutionPhase } from "@/lib/types";
 import { Logger } from "next-axiom";
 import { LOGGER_ERROR_MESSAGES, USER_ERROR_MESSAGES } from "@/lib/constants";
 import buildWorkflowExecutionPlan from "@/lib/workflow/helpers/build-workflow-execution-plan";
 import { taskRegistry } from "@/lib/workflow/task-registry";
+import { isRedirectError } from "next/dist/client/components/redirect-error";
+import { redirect } from "next/navigation";
 
 const executeWorkflowAction = actionClient
   .metadata({ actionName: "executeWorkflowAction" })
@@ -36,43 +34,12 @@ const executeWorkflowAction = actionClient
 
         if (!user) {
           log.warn(LOGGER_ERROR_MESSAGES.Unauthorized, { formData });
-          return {
-            success: false,
-            message: USER_ERROR_MESSAGES.Unauthorized,
-          };
+          redirect("/signin");
         }
 
         log = log.with({ userId: user.id });
 
-        // const { data: selectWorkflowsData, error: selectWorkflowsError } =
-        //   await supabase
-        //     .from("workflows")
-        //     .select("definition")
-        //     .eq("userId", user.id)
-        //     .eq("workflowId", formData.workflowId);
-
-        // if (selectWorkflowsError) {
-        //   log.error(LOGGER_ERROR_MESSAGES.Select, {
-        //     error: selectWorkflowsError,
-        //     formData,
-        //   });
-        //   return {
-        //     success: false,
-        //     message: USER_ERROR_MESSAGES.Unexpected,
-        //   };
-        // }
-
-        // const workflowDefinitionFromDatabase =
-        //   selectWorkflowsData[0].definition;
-
-        let executionPlan: WorkflowExecutionPlan[] = [];
-        if (!formData.definition) {
-          return {
-            success: false,
-            message: "Workflow definition is undefined",
-          };
-        }
-
+        const workflowId = formData.workflowId;
         const workflowDefinition = JSON.parse(formData.definition);
         const { nodes, edges } = workflowDefinition;
         const result = buildWorkflowExecutionPlan(nodes, edges);
@@ -93,17 +60,16 @@ const executeWorkflowAction = actionClient
           };
         }
 
-        executionPlan = result.executionPlan;
+        const executionPlan = result.executionPlan;
 
         const { data: workflowExecutionsData, error: workflowExecutionsError } =
           await supabase
             .from("workflowExecutions")
             .insert({
-              workflowId: formData.workflowId,
+              workflowId,
               status: "PENDING",
               trigger: "MANUAL",
               startedAt: new Date().toISOString(),
-              creditsConsumed: 5,
             })
             .select("workflowExecutionId");
 
@@ -117,24 +83,25 @@ const executeWorkflowAction = actionClient
           };
         }
 
+        const workflowExecutionId =
+          workflowExecutionsData[0].workflowExecutionId;
+
         const executionPhases = executionPlan.flatMap((plan) => {
           return plan.nodes.flatMap((node) => {
             return {
-              workflowExecutionId:
-                workflowExecutionsData[0].workflowExecutionId,
-              status: "CREATED" as ExecutionPhaseStatus,
+              workflowExecutionId,
+              status: "CREATED",
               phase: plan.phase,
               node: JSON.stringify(node),
               taskName: taskRegistry[node.data.type].label,
-            };
+            } as WorkflowExecutionPhase;
           });
         });
 
-        const { data: executionPhasesData, error: executionPhasesError } =
-          await supabase
-            .from("executionPhases")
-            .insert(executionPhases)
-            .select("*");
+        const { error: executionPhasesError } = await supabase
+          .from("executionPhases")
+          .insert(executionPhases)
+          .select("*");
 
         if (executionPhasesError) {
           log.error(LOGGER_ERROR_MESSAGES.Insert, {
@@ -146,14 +113,12 @@ const executeWorkflowAction = actionClient
           };
         }
 
-        console.log("workflowExecutionsData", workflowExecutionsData);
-        console.log("executionPhasesData", executionPhasesData);
-
-        return {
-          success: true,
-          message: "Execution started",
-        };
+        redirect(`/workflow/execution/${workflowId}/${workflowExecutionId}`);
       } catch (error) {
+        // When you call the redirect() function (from next/navigation), it throws a special error (with the code NEXT_REDIRECT) to immediately halt further processing and trigger the redirection. This “error” is meant to be caught internally by Next.js, not by the try/catch blocks.
+        // Throw the “error” to trigger the redirection
+        if (isRedirectError(error)) throw error;
+
         log.error(LOGGER_ERROR_MESSAGES.Unexpected, { error });
         return {
           success: false,
