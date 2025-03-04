@@ -1,15 +1,17 @@
+import "server-only";
+
 import { LOGGER_ERROR_MESSAGES } from "@/lib/constants";
 import createSupabaseServerClient from "@/lib/supabase/supabase-server";
 import { Logger } from "next-axiom";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { redirect } from "next/navigation";
 
-export default async function getWorkflowExecutionWithPhasesServer(
+export default async function getWorkflowExecutionWithTasksServer(
   workflowExecutionId: string,
 ) {
   let log = new Logger();
   log = log.with({
-    context: "getWorkflowExecutionWithPhasesServer",
+    context: "getWorkflowExecutionWithTasksServer",
     workflowExecutionId,
   });
 
@@ -28,10 +30,10 @@ export default async function getWorkflowExecutionWithPhasesServer(
 
     const { data, error } = await supabase
       .from("workflowExecutions")
-      .select("*, executionPhases(*)")
+      .select("*, tasks(*)")
       .eq("userId", user.id)
       .eq("workflowExecutionId", workflowExecutionId)
-      .order("phase", { ascending: true, referencedTable: "executionPhases" });
+      .order("phase", { ascending: true, referencedTable: "tasks" });
 
     if (error) {
       log.error(LOGGER_ERROR_MESSAGES.Select, {

@@ -2,10 +2,12 @@
 
 import { useQuery } from "@tanstack/react-query";
 import TopBar from "../../_components/top-bar";
-import getWorkflowExecutionWithPhases from "../_data-access/get-execution-with-phases-server";
+import getWorkflowExecutionWithPhases from "../_data-access/get-execution-with-tasks-server";
 import { useEffect } from "react";
 import useWorkflowsStore from "@/lib/store/workflows-store";
-import getWorkflowExecutionWithPhasesClient from "../_data-access/get-execution-with-phases-client";
+import getWorkflowExecutionWithTasksClient from "../_data-access/get-execution-with-tasks-client";
+import { useSearchParams } from "next/navigation";
+import getTaskDetails from "../_data-access/get-task-details";
 
 type Props = {
   workflowId: string;
@@ -13,21 +15,28 @@ type Props = {
 };
 
 export default function ExecutionViewer({ workflowId, initialData }: Props) {
+  const searchParams = useSearchParams();
+  const taskId = searchParams.get("task");
+  const { setWorkflowExecutionData } = useWorkflowsStore();
   const workflowExecutionId = initialData!.workflowExecutionId;
-  const query = useQuery({
+  const executionData = useQuery({
     queryKey: ["execution", workflowExecutionId],
     initialData,
-    queryFn: () => getWorkflowExecutionWithPhasesClient(workflowExecutionId),
+    queryFn: () => getWorkflowExecutionWithTasksClient(workflowExecutionId),
     refetchInterval: (query) =>
       query.state.data?.status === "EXECUTING" ? 1000 : false,
   });
-  const { setWorkflowExecutionData } = useWorkflowsStore();
+  const taskDetails = useQuery({
+    queryKey: ["taskDetails", taskId],
+    enabled: taskId !== null,
+    queryFn: () => getTaskDetails(taskId!),
+  });
 
   useEffect(() => {
-    const workflowExecutionData = query.data;
+    const workflowExecutionData = executionData.data;
 
     if (workflowExecutionData) setWorkflowExecutionData(workflowExecutionData);
-  }, [query.data, setWorkflowExecutionData]);
+  }, [executionData.data, setWorkflowExecutionData]);
 
   return (
     <div className="flex size-full flex-col overflow-hidden">
@@ -38,7 +47,7 @@ export default function ExecutionViewer({ workflowId, initialData }: Props) {
         hideButtons
       />
       <section className="flex grow">
-        <div>Wrapper for ID:{workflowExecutionId}</div>
+        <pre>{JSON.stringify(taskDetails.data, null, 2)}</pre>
       </section>
     </div>
   );

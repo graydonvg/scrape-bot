@@ -2,13 +2,11 @@ import { LOGGER_ERROR_MESSAGES } from "@/lib/constants";
 import { createSupabaseBrowserClient } from "@/lib/supabase/supabase-browser";
 import { Logger } from "next-axiom";
 
-export default async function getWorkflowExecutionWithPhasesClient(
-  workflowExecutionId: string,
-) {
+export default async function getTaskDetails(taskId: string) {
   let log = new Logger();
   log = log.with({
-    context: "getWorkflowExecutionWithPhasesClient",
-    workflowExecutionId,
+    context: "getPhaseTaskDetails",
+    taskId,
   });
 
   try {
@@ -25,12 +23,10 @@ export default async function getWorkflowExecutionWithPhasesClient(
     log = log.with({ userId: user.id });
 
     const { data, error } = await supabase
-      .from("workflowExecutions")
-      .select("*, executionPhases(*)")
+      .from("tasks")
+      .select("*")
       .eq("userId", user.id)
-      .eq("workflowExecutionId", workflowExecutionId)
-      .order("phase", { ascending: true, referencedTable: "executionPhases" });
-
+      .eq("taskId", taskId);
     if (error) {
       log.error(LOGGER_ERROR_MESSAGES.Select, {
         error,

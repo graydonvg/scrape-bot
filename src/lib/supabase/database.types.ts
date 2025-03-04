@@ -9,52 +9,52 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      executionPhases: {
+      tasks: {
         Row: {
           completedAt: string | null;
           creditsConsumed: number | null;
-          executionPhaseId: string;
           inputs: Json | null;
+          name: string;
           node: Json;
           outputs: Json | null;
           phase: number;
           startedAt: string | null;
-          status: Database["public"]["Enums"]["ExecutionPhaseStatus"];
-          taskName: string;
+          status: Database["public"]["Enums"]["TaskStatus"];
+          taskId: string;
           userId: string;
           workflowExecutionId: string | null;
         };
         Insert: {
           completedAt?: string | null;
           creditsConsumed?: number | null;
-          executionPhaseId?: string;
           inputs?: Json | null;
+          name: string;
           node: Json;
           outputs?: Json | null;
           phase: number;
           startedAt?: string | null;
-          status: Database["public"]["Enums"]["ExecutionPhaseStatus"];
-          taskName: string;
+          status: Database["public"]["Enums"]["TaskStatus"];
+          taskId?: string;
           userId?: string;
           workflowExecutionId?: string | null;
         };
         Update: {
           completedAt?: string | null;
           creditsConsumed?: number | null;
-          executionPhaseId?: string;
           inputs?: Json | null;
+          name?: string;
           node?: Json;
           outputs?: Json | null;
           phase?: number;
           startedAt?: string | null;
-          status?: Database["public"]["Enums"]["ExecutionPhaseStatus"];
-          taskName?: string;
+          status?: Database["public"]["Enums"]["TaskStatus"];
+          taskId?: string;
           userId?: string;
           workflowExecutionId?: string | null;
         };
         Relationships: [
           {
-            foreignKeyName: "executionPhases_workflowExecutionId_fkey";
+            foreignKeyName: "tasks_workflowExecutionId_fkey";
             columns: ["workflowExecutionId"];
             isOneToOne: false;
             referencedRelation: "workflowExecutions";
@@ -135,6 +135,11 @@ export type Database = {
           createdAt: string;
           definition: Json;
           description: string | null;
+          lastExecutedAt: string | null;
+          lastExecutionId: string | null;
+          lastExecutionStatus:
+            | Database["public"]["Enums"]["WorkflowExecutionStatus"]
+            | null;
           name: string;
           status: Database["public"]["Enums"]["WorkflowStatus"];
           updatedAt: string;
@@ -145,6 +150,11 @@ export type Database = {
           createdAt?: string;
           definition: Json;
           description?: string | null;
+          lastExecutedAt?: string | null;
+          lastExecutionId?: string | null;
+          lastExecutionStatus?:
+            | Database["public"]["Enums"]["WorkflowExecutionStatus"]
+            | null;
           name: string;
           status?: Database["public"]["Enums"]["WorkflowStatus"];
           updatedAt?: string;
@@ -155,6 +165,11 @@ export type Database = {
           createdAt?: string;
           definition?: Json;
           description?: string | null;
+          lastExecutedAt?: string | null;
+          lastExecutionId?: string | null;
+          lastExecutionStatus?:
+            | Database["public"]["Enums"]["WorkflowExecutionStatus"]
+            | null;
           name?: string;
           status?: Database["public"]["Enums"]["WorkflowStatus"];
           updatedAt?: string;
@@ -171,12 +186,7 @@ export type Database = {
       [_ in never]: never;
     };
     Enums: {
-      ExecutionPhaseStatus:
-        | "CREATED"
-        | "PENDING"
-        | "EXECUTING"
-        | "COMPLETED"
-        | "FAILED";
+      TaskStatus: "CREATED" | "PENDING" | "EXECUTING" | "COMPLETED" | "FAILED";
       WorkflowExecutionStatus: "PENDING" | "EXECUTING" | "COMPLETED" | "FAILED";
       WorkflowExecutionTrigger: "MANUAL";
       WorkflowStatus: "DRAFT" | "PUBLISHED";

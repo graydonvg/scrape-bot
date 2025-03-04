@@ -21,8 +21,7 @@ export type WorkflowStatus = Database["public"]["Enums"]["WorkflowStatus"];
 
 export type Workflow = Database["public"]["Tables"]["workflows"]["Row"];
 
-export type WorkflowExecutionPhase =
-  Database["public"]["Tables"]["executionPhases"]["Row"];
+export type WorkflowTaskDb = Database["public"]["Tables"]["tasks"]["Row"];
 
 export enum WorkflowTaskParamType {
   String = "STRING",
@@ -88,4 +87,9 @@ export type WorkflowNodeInvalidInputs = {
 export type WorkflowExecutionPlanError = {
   type: WorkflowExecutionPlanErrorType;
   invalidInputs?: WorkflowNodeInvalidInputs[];
+};
+
+export type WorkflowPhase = {
+  phaseNumber: number;
+  tasks: WorkflowTaskDb[];
 };

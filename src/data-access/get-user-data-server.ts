@@ -1,3 +1,5 @@
+import "server-only";
+
 import { LOGGER_ERROR_MESSAGES } from "@/lib/constants";
 import createSupabaseServerClient from "@/lib/supabase/supabase-server";
 import { Logger } from "next-axiom";

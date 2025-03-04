@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ExecutionViewer from "../../_components/execution-viewer";
-import getWorkflowExecutionWithPhasesServer from "../../_data-access/get-execution-with-phases-server";
+import getWorkflowExecutionWithTasksServer from "../../_data-access/get-execution-with-tasks-server";
 
 export const metadata: Metadata = {
   title: "Workflow execution",
@@ -16,7 +16,7 @@ export default async function WorkflowExecutionPage({ params }: Params) {
   const executionId = (await params).execution_id;
 
   const workflowExecution =
-    await getWorkflowExecutionWithPhasesServer(executionId);
+    await getWorkflowExecutionWithTasksServer(executionId);
 
   if (!workflowExecution) notFound();
 

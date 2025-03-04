@@ -6,13 +6,14 @@ import {
   executeWorkflowSchema,
   ExecuteWorkflowSchemaType,
 } from "@/lib/schemas/workflows";
-import { ActionReturn, WorkflowExecutionPhase } from "@/lib/types";
+import { ActionReturn, WorkflowTaskDb } from "@/lib/types";
 import { Logger } from "next-axiom";
 import { LOGGER_ERROR_MESSAGES, USER_ERROR_MESSAGES } from "@/lib/constants";
 import buildWorkflowExecutionPlan from "@/lib/workflow/helpers/build-workflow-execution-plan";
 import { taskRegistry } from "@/lib/workflow/task-registry";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { redirect } from "next/navigation";
+import executeWorkflow from "@/lib/workflow/helpers/execute-workflow";
 
 const executeWorkflowAction = actionClient
   .metadata({ actionName: "executeWorkflowAction" })
@@ -62,20 +63,22 @@ const executeWorkflowAction = actionClient
 
         const executionPlan = result.executionPlan;
 
-        const { data: workflowExecutionsData, error: workflowExecutionsError } =
-          await supabase
-            .from("workflowExecutions")
-            .insert({
-              workflowId,
-              status: "PENDING",
-              trigger: "MANUAL",
-              startedAt: new Date().toISOString(),
-            })
-            .select("workflowExecutionId");
+        const {
+          data: workflowExecutionData,
+          error: insertWorkflowExecutionError,
+        } = await supabase
+          .from("workflowExecutions")
+          .insert({
+            workflowId,
+            status: "PENDING",
+            trigger: "MANUAL",
+            startedAt: new Date().toISOString(),
+          })
+          .select("workflowExecutionId");
 
-        if (workflowExecutionsError) {
+        if (insertWorkflowExecutionError) {
           log.error(LOGGER_ERROR_MESSAGES.Insert, {
-            error: workflowExecutionsError,
+            error: insertWorkflowExecutionError,
           });
           return {
             success: false,
@@ -84,28 +87,28 @@ const executeWorkflowAction = actionClient
         }
 
         const workflowExecutionId =
-          workflowExecutionsData[0].workflowExecutionId;
+          workflowExecutionData[0].workflowExecutionId;
 
-        const executionPhases = executionPlan.flatMap((plan) => {
+        const tasks = executionPlan.flatMap((plan) => {
           return plan.nodes.flatMap((node) => {
             return {
               workflowExecutionId,
               status: "CREATED",
               phase: plan.phase,
               node: JSON.stringify(node),
-              taskName: taskRegistry[node.data.type].label,
-            } as WorkflowExecutionPhase;
+              name: taskRegistry[node.data.type].label,
+            } as WorkflowTaskDb;
           });
         });
 
-        const { error: executionPhasesError } = await supabase
-          .from("executionPhases")
-          .insert(executionPhases)
+        const { error: insertTaskError } = await supabase
+          .from("tasks")
+          .insert(tasks)
           .select("*");
 
-        if (executionPhasesError) {
+        if (insertTaskError) {
           log.error(LOGGER_ERROR_MESSAGES.Insert, {
-            error: executionPhasesError,
+            error: insertTaskError,
           });
           return {
             success: false,
@@ -113,6 +116,7 @@ const executeWorkflowAction = actionClient
           };
         }
 
+        executeWorkflow(user.id, workflowId, workflowExecutionId); // run in the background
         redirect(`/workflow/execution/${workflowId}/${workflowExecutionId}`);
       } catch (error) {
         // When you call the redirect() function (from next/navigation), it throws a special error (with the code NEXT_REDIRECT) to immediately halt further processing and trigger the redirection. This “error” is meant to be caught internally by Next.js, not by the try/catch blocks.

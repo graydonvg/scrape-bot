@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { WorkflowNodeInvalidInputs } from "../types";
-import getWorkflowExecutionWithPhasesClient from "@/app/workflow/execution/_data-access/get-execution-with-phases-client";
+import getWorkflowExecutionWithTasksClient from "@/app/workflow/execution/_data-access/get-execution-with-tasks-client";
 
 type WorkflowsState = {
   existingWorkflowNames: string[];
@@ -9,11 +9,11 @@ type WorkflowsState = {
   setInvalidInputs: (invalidInputs: WorkflowNodeInvalidInputs[]) => void;
   clearErrors: () => void;
   workflowExecutionData: Awaited<
-    ReturnType<typeof getWorkflowExecutionWithPhasesClient>
+    ReturnType<typeof getWorkflowExecutionWithTasksClient>
   > | null;
   setWorkflowExecutionData: (
     workflowExecutionData: Awaited<
-      ReturnType<typeof getWorkflowExecutionWithPhasesClient>
+      ReturnType<typeof getWorkflowExecutionWithTasksClient>
     > | null,
   ) => void;
 };
