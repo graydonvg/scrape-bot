@@ -1,4 +1,4 @@
-import { SidebarMenuSubButton } from "@/components/ui/sidebar";
+import { SidebarMenuSubButton, useSidebar } from "@/components/ui/sidebar";
 import { WorkflowTaskType } from "@/lib/types";
 import { taskRegistry } from "@/lib/workflow/task-registry";
 import { GripVerticalIcon } from "lucide-react";
@@ -10,10 +10,13 @@ type Props = {
 
 export default function TaskMenuButton({ taskType }: Props) {
   const task = taskRegistry[taskType];
+  const { isMobile, setOpenMobile } = useSidebar();
 
   function handleDragStart(e: DragEvent) {
     e.dataTransfer.setData("application/reactflow", taskType);
     e.dataTransfer.effectAllowed = "move";
+
+    if (isMobile) setOpenMobile(false);
   }
 
   return (
@@ -24,7 +27,7 @@ export default function TaskMenuButton({ taskType }: Props) {
       <button
         draggable
         onDragStart={(e) => handleDragStart(e)}
-        className="w-full"
+        className="w-full space-x-4"
       >
         <div className="flex items-center gap-2">
           <task.icon size={16} />

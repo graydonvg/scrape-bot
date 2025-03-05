@@ -1,6 +1,7 @@
 import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { CircleCheckBigIcon, CircleXIcon, Loader2Icon } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -12,6 +13,7 @@ type Props = {
 };
 
 export default function PhaseTaskButton({ task }: Props) {
+  const { isMobile, setOpenMobile } = useSidebar();
   const router = useRouter();
   const searchParams = useSearchParams();
   const taskId = searchParams.get("task");
@@ -21,11 +23,7 @@ export default function PhaseTaskButton({ task }: Props) {
     <SidebarMenuSubItem>
       <SidebarMenuSubButton
         isActive={taskId === task.taskId}
-        onClick={() => {
-          if (task.status === "EXECUTING") return;
-
-          router.push(`?task=${task.taskId}`);
-        }}
+        onClick={handleClick}
         className="cursor-pointer"
       >
         {state.isLoading && (
@@ -43,7 +41,7 @@ export default function PhaseTaskButton({ task }: Props) {
         {state.isFailed && (
           <CircleXIcon size={20} className="stroke-destructive" />
         )}
-        <div className="flex w-full items-center justify-between">
+        <div className="flex w-full items-center justify-between gap-4">
           <span className="truncate font-semibold">{task.name}</span>
           <span
             className={cn("text-muted-foreground text-xs", {
@@ -68,5 +66,13 @@ export default function PhaseTaskButton({ task }: Props) {
       isCompleted,
       isFailed,
     };
+  }
+
+  function handleClick() {
+    if (task.status === "EXECUTING") return;
+
+    router.push(`?task=${task.taskId}`);
+
+    if (isMobile) setOpenMobile(false);
   }
 }

@@ -4,7 +4,7 @@ import { FileCode2Icon } from "lucide-react";
 import { SidebarGroup, SidebarMenu, useSidebar } from "@/components/ui/sidebar";
 import { useState } from "react";
 import { WorkflowTaskType } from "@/lib/types";
-import GroupLabel from "./group-label";
+import TasksGroupLabel from "./tasks-group-label";
 import CollapsibleCategory from "./collapsible-category";
 
 const items = [
@@ -24,8 +24,8 @@ export default function TaskMenu() {
   const [stateItems, setItems] = useState(items);
 
   return (
-    <SidebarGroup>
-      <GroupLabel
+    <SidebarGroup className="group/tasks grow">
+      <TasksGroupLabel
         onExpandAll={handleExpandAll}
         onCollapseAll={handleCollapseAll}
       />

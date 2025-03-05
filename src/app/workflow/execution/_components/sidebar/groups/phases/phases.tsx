@@ -3,7 +3,7 @@ import { WorkflowTaskDb } from "@/lib/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getUniquePhaseNumbers } from "@/lib/utils";
 import CollapsiblePhase from "./collapsible-phase";
-import GroupLabel from "./group-label";
+import PhasesGroupLabel from "./phases-group-label";
 import { useCallback, useEffect, useState } from "react";
 
 type Props = {
@@ -37,8 +37,8 @@ export default function Phases({ tasks }: Props) {
   }, [tasks, getPhasesData]);
 
   return (
-    <SidebarGroup>
-      <GroupLabel
+    <SidebarGroup className="group/phases grow">
+      <PhasesGroupLabel
         onExpandAll={handleExpandAll}
         onCollapseAll={handleCollapseAll}
       />

@@ -31,6 +31,7 @@ export default function CollapsibleCategory({
   onCollapsibleTriggerClick,
 }: Props) {
   const Icon = icon;
+
   return (
     <Collapsible
       open={isOpen}

@@ -24,11 +24,11 @@ import {
 } from "@/components/ui/tooltip";
 import { useIsMobile } from "@/hooks/use-mobile";
 import TooltipWrapper from "../tooltip-wrapper";
+import { usePathname } from "next/navigation";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 const SIDEBAR_WIDTH = "16rem";
-const SIDEBAR_WIDTH_MOBILE = "18rem";
 const SIDEBAR_WIDTH_ICON = "3rem";
 const SIDEBAR_KEYBOARD_SHORTCUT = "b";
 
@@ -184,6 +184,7 @@ function Sidebar({
   collapsible?: "offcanvas" | "icon" | "none";
 }) {
   const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
+  const pathname = usePathname();
 
   if (collapsible === "none") {
     return (
@@ -201,6 +202,14 @@ function Sidebar({
   }
 
   if (isMobile) {
+    const isEditorPath = pathname.includes("/workflow/editor");
+    const isExecutionPath = pathname.includes("/workflow/execution");
+
+    let mobileSidebarWidth = "18rem";
+
+    if (isEditorPath) mobileSidebarWidth = "20rem";
+    if (isExecutionPath) mobileSidebarWidth = "25rem";
+
     return (
       <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
         <SheetHeader className="sr-only">
@@ -211,10 +220,10 @@ function Sidebar({
           data-sidebar="sidebar"
           data-slot="sidebar"
           data-mobile="true"
-          className="bg-sidebar text-sidebar-foreground w-(--sidebar-width) p-0 [&>button]:hidden"
+          className="bg-sidebar text-sidebar-foreground w-(--sidebar-width) max-w-full p-0 [&>button]:hidden"
           style={
             {
-              "--sidebar-width": SIDEBAR_WIDTH_MOBILE,
+              "--sidebar-width": mobileSidebarWidth,
             } as React.CSSProperties
           }
           side={side}

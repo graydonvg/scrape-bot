@@ -30,30 +30,32 @@ export default function TopBar({
             orientation="vertical"
             className="bg-sidebar-border mr-2 !h-4"
           />
-          <div className="flex grow basis-2/4 items-center gap-4 truncate">
+          <div className="flex w-10 grow items-center gap-4">
             <TooltipWrapper tooltipContent="Back">
               <Button
                 variant="ghost"
                 size="icon"
-                className="transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:size-8"
+                className="shrink-0 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:size-8"
                 asChild
               >
                 <Link href="/workflows">
-                  <ChevronLeftIcon className="size-6 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:size-4" />
+                  <ChevronLeftIcon className="size-6 shrink-0 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:size-4" />
                 </Link>
               </Button>
             </TooltipWrapper>
 
-            <div className="flex flex-col justify-center">
-              <p className="font-bold transition-[font-size] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:text-xs">
+            <div className="flex flex-col justify-center overflow-hidden">
+              <p className="truncate font-bold transition-[font-size] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:text-xs">
                 {title}
               </p>
               {subtitle && (
-                <p className="text-muted-foreground text-xs">{subtitle}</p>
+                <p className="text-muted-foreground truncate text-xs">
+                  {subtitle}
+                </p>
               )}
             </div>
           </div>
-          <div className="flex grow justify-end gap-4">
+          <div className="flex justify-end gap-4">
             {!hideButtons && (
               <>
                 <ExecuteWorkflowButton workflowId={workflowId} />
