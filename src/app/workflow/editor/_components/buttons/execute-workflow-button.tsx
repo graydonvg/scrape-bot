@@ -6,6 +6,7 @@ import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";
 import { USER_ERROR_MESSAGES } from "@/lib/constants";
 import executeWorkflowAction from "../../_actions/execute-workflow-action";
+import useWorkflowsStore from "@/lib/store/workflows-store";
 
 type Props = {
   workflowId: string;
@@ -13,6 +14,7 @@ type Props = {
 
 export default function ExecuteWorkflowButton({ workflowId }: Props) {
   const toastId = "execute-workflow";
+  const { setWorkflowExecutionData } = useWorkflowsStore();
   const generateExecutionPlan = useWorkflowExecutionPlan();
   const { toObject } = useReactFlow();
   const { execute, isPending } = useAction(executeWorkflowAction, {
@@ -24,6 +26,7 @@ export default function ExecuteWorkflowButton({ workflowId }: Props) {
         return toast.error(data.message, { id: toastId });
       }
 
+      setWorkflowExecutionData(null); // Clear any previous data to prevent flashing previous data before new data is fetched and added to store
       toast.success("Execution started", { id: toastId });
     },
     onError: () => {

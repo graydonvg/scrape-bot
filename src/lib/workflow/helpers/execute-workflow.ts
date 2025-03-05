@@ -47,7 +47,6 @@ export default async function executeWorkflow(
     }
 
     const tasks = workflowExecutionData[0].tasks;
-    // const environment = { phases: {} };
 
     await initializeWorkflowExecution(
       supabase,

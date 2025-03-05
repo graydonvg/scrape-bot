@@ -9,11 +9,7 @@ type Props = {
   value: ReactNode;
 };
 
-export default function ExecutionProgressMenuItem({
-  icon,
-  label,
-  value,
-}: Props) {
+export default function WorkflowExecutionDetail({ icon, label, value }: Props) {
   const { state, isMobile } = useSidebar();
   const Icon = icon;
 

@@ -8,7 +8,7 @@ import { ComponentProps } from "react";
 import AppSidebar from "@/components/sidebar/app-sidebar";
 import SidebarLogo from "@/components/sidebar/sidebar-logo";
 import { NavUserClient } from "@/components/sidebar/nav-user-client";
-import ExecutionProgress from "./execution-progress";
+import ExecutionDetails from "./execution-details";
 import { Separator } from "@/components/ui/separator";
 
 export default function WorkflowExecutionSidebar({
@@ -21,7 +21,7 @@ export default function WorkflowExecutionSidebar({
       </SidebarHeader>
       <Separator />
       <SidebarContent>
-        <ExecutionProgress />
+        <ExecutionDetails />
       </SidebarContent>
       <Separator />
       <SidebarFooter>

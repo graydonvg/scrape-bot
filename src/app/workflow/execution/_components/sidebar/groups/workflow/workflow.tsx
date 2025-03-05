@@ -12,7 +12,7 @@ import {
   WorkflowIcon,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import ExecutionProgressMenuItem from "../execution-progress-menu-item";
+import WorkflowExecutionDetail from "./workflow-execution-detail";
 import { datesToDurationString } from "@/lib/utils";
 
 type Props = {
@@ -22,7 +22,7 @@ type Props = {
   creditsConsumed: number;
 };
 
-export default function WorkflowGroup({
+export default function Workflow({
   status,
   startedAt,
   completedAt,
@@ -39,12 +39,12 @@ export default function WorkflowGroup({
         <span className="font-semibold">Workflow</span>
       </SidebarGroupLabel>
       <SidebarMenu>
-        <ExecutionProgressMenuItem
+        <WorkflowExecutionDetail
           icon={CircleDashedIcon}
           label="Status"
           value={status || "-"}
         />
-        <ExecutionProgressMenuItem
+        <WorkflowExecutionDetail
           icon={CalendarIcon}
           label="Started at"
           value={
@@ -55,7 +55,7 @@ export default function WorkflowGroup({
               : "-"
           }
         />
-        <ExecutionProgressMenuItem
+        <WorkflowExecutionDetail
           icon={ClockIcon}
           label="Duration"
           value={
@@ -66,7 +66,7 @@ export default function WorkflowGroup({
             )
           }
         />
-        <ExecutionProgressMenuItem
+        <WorkflowExecutionDetail
           icon={CoinsIcon}
           label="Credits consumed"
           value={creditsConsumed}

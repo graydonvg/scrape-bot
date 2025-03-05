@@ -40,7 +40,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
-    "react-scan": "^0.2.8",
+    "react-scan": "^0.2.9",
     "sonner": "^2.0.1",
     "zod": "^3.24.2",
     "zustand": "^5.0.3"
