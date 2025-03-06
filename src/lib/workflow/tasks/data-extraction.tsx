@@ -1,4 +1,5 @@
 import {
+  WorkflowTaskParamName,
   WorkflowTask,
   WorkflowTaskParamType,
   WorkflowTaskType,
@@ -15,18 +16,18 @@ export const getPageHtmlTask = {
   isEntryPoint: false,
   inputs: [
     {
-      name: "Web page",
+      name: WorkflowTaskParamName.WebPage,
       type: WorkflowTaskParamType.BroswerInstance,
       required: true,
     },
   ],
   outputs: [
     {
-      name: "HTML",
+      name: WorkflowTaskParamName.Html,
       type: WorkflowTaskParamType.String,
     },
     {
-      name: "Web page",
+      name: WorkflowTaskParamName.WebPage,
       type: WorkflowTaskParamType.BroswerInstance,
     },
   ],
@@ -42,20 +43,20 @@ export const extractTextFromElementTask = {
   isEntryPoint: false,
   inputs: [
     {
-      name: "HTML",
+      name: WorkflowTaskParamName.Html,
       type: WorkflowTaskParamType.String,
       required: true,
       variant: "textarea",
     },
     {
-      name: "Selector",
+      name: WorkflowTaskParamName.Selector,
       type: WorkflowTaskParamType.String,
       required: true,
     },
   ],
   outputs: [
     {
-      name: "Extracted text",
+      name: WorkflowTaskParamName.ExtractedText,
       type: WorkflowTaskParamType.String,
     },
   ],

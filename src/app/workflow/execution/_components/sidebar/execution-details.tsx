@@ -4,7 +4,7 @@ import useWorkflowsStore from "@/lib/store/workflows-store";
 import { Separator } from "@/components/ui/separator";
 import Workflow from "./groups/workflow/workflow";
 import Phases from "./groups/phases/phases";
-import { calculateTotalCreditsConsumed } from "@/lib/utils";
+import { calculateTotalCreditsConsumed } from "@/lib/workflow/helpers/calculate-credit-consumption";
 
 export default function ExecutionDetails() {
   const { workflowExecutionData } = useWorkflowsStore();

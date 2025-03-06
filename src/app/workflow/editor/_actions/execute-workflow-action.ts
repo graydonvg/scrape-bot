@@ -10,10 +10,10 @@ import { ActionReturn, WorkflowTaskDb } from "@/lib/types";
 import { Logger } from "next-axiom";
 import { LOGGER_ERROR_MESSAGES, USER_ERROR_MESSAGES } from "@/lib/constants";
 import buildWorkflowExecutionPlan from "@/lib/workflow/helpers/build-workflow-execution-plan";
-import { taskRegistry } from "@/lib/workflow/task-registry";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { redirect } from "next/navigation";
 import executeWorkflow from "@/lib/workflow/helpers/execute-workflow";
+import { taskRegistry } from "@/lib/workflow/tasks/task-registry";
 
 const executeWorkflowAction = actionClient
   .metadata({ actionName: "executeWorkflowAction" })

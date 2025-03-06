@@ -2,6 +2,7 @@ import { Node } from "@xyflow/react";
 import { Database } from "./supabase/database.types";
 import { LucideProps } from "lucide-react";
 import { ReactNode } from "react";
+import { Browser } from "puppeteer";
 
 export type User = {
   firstName: string | null;
@@ -17,15 +18,23 @@ export type ActionReturn<T = void> = {
   message: string;
 };
 
-export type WorkflowStatus = Database["public"]["Enums"]["WorkflowStatus"];
+export type WorkflowStatusDb = Database["public"]["Enums"]["WorkflowStatus"];
 
-export type Workflow = Database["public"]["Tables"]["workflows"]["Row"];
+export type WorkflowDb = Database["public"]["Tables"]["workflows"]["Row"];
 
 export type WorkflowTaskDb = Database["public"]["Tables"]["tasks"]["Row"];
 
 export enum WorkflowTaskParamType {
   String = "STRING",
   BroswerInstance = "BROWSER_INSTANCE",
+}
+
+export enum WorkflowTaskParamName {
+  WebsiteUrl = "Website URL",
+  WebPage = "Web page",
+  Html = "HTML",
+  Selector = "Selector",
+  ExtractedText = "Extracted text",
 }
 
 export enum WorkflowTaskType {
@@ -35,7 +44,7 @@ export enum WorkflowTaskType {
 }
 
 export type WorkflowTaskInput = {
-  name: string;
+  name: WorkflowTaskParamName;
   type: WorkflowTaskParamType;
   helperText?: string;
   required?: boolean;
@@ -45,7 +54,7 @@ export type WorkflowTaskInput = {
 };
 
 export type WorkflowTaskOutput = {
-  name: string;
+  name: WorkflowTaskParamName;
   type: WorkflowTaskParamType;
 };
 
@@ -89,7 +98,22 @@ export type WorkflowExecutionPlanError = {
   invalidInputs?: WorkflowNodeInvalidInputs[];
 };
 
-export type WorkflowPhase = {
+export type WorkflowExecutionPhase = {
   phaseNumber: number;
   tasks: WorkflowTaskDb[];
+};
+
+export type ExecutionPhaseContext = {
+  browser?: Browser;
+  tasks: Record<
+    string,
+    {
+      inputs: Record<string, string>;
+      outputs: Record<string, string>;
+    }
+  >;
+};
+
+export type ExecutionContext<T extends WorkflowTask> = {
+  getInput: (name: T["inputs"][number]["name"]) => string;
 };

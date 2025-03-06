@@ -1,4 +1,4 @@
-import { Workflow, WorkflowNode, WorkflowTaskType } from "@/lib/types";
+import { WorkflowDb, WorkflowNode, WorkflowTaskType } from "@/lib/types";
 import {
   ReactFlow,
   useNodesState,
@@ -29,15 +29,15 @@ import { toast } from "sonner";
 import { USER_ERROR_MESSAGES } from "@/lib/constants";
 import { useLogger } from "next-axiom";
 import DeleteableEdge from "./edges/deleteable-edge";
-import { taskRegistry } from "@/lib/workflow/task-registry";
-import { createWorkflowNode } from "@/lib/workflow/helpers/create-workflow-node";
+import createWorkflowNode from "@/lib/workflow/helpers/create-workflow-node";
+import { taskRegistry } from "@/lib/workflow/tasks/task-registry";
 
 const fitViewOptions = {
   padding: 1,
 };
 
 type Props = {
-  workflow: Partial<Workflow>;
+  workflow: Partial<WorkflowDb>;
 };
 
 export default function Flow({ workflow }: Props) {

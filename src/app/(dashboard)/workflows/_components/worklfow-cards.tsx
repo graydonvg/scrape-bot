@@ -1,12 +1,12 @@
 "use client";
 
-import { Workflow } from "@/lib/types";
+import { WorkflowDb } from "@/lib/types";
 import WorkflowCard from "./workflow-card";
 import useWorkflowsStore from "@/lib/store/workflows-store";
 import { useEffect } from "react";
 
 type Props = {
-  workflows: Workflow[];
+  workflows: WorkflowDb[];
 };
 
 export default function WorklfowCards({ workflows }: Props) {

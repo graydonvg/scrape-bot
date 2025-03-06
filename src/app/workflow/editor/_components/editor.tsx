@@ -1,12 +1,12 @@
 "use client";
 
-import { Workflow } from "@/lib/types";
+import { WorkflowDb } from "@/lib/types";
 import { ReactFlowProvider } from "@xyflow/react";
 import Flow from "./flow";
 import TopBar from "../../_components/top-bar";
 
 type Props = {
-  workflow: Partial<Workflow>;
+  workflow: Partial<WorkflowDb>;
 };
 
 export default function Editor({ workflow }: Props) {

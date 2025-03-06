@@ -1,6 +1,6 @@
 import { SidebarMenuSubButton, useSidebar } from "@/components/ui/sidebar";
 import { WorkflowTaskType } from "@/lib/types";
-import { taskRegistry } from "@/lib/workflow/task-registry";
+import { taskRegistry } from "@/lib/workflow/tasks/task-registry";
 import { GripVerticalIcon } from "lucide-react";
 import { DragEvent } from "react";
 

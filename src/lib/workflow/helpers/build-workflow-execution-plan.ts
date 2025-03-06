@@ -6,7 +6,7 @@ import {
   WorkflowExecutionPlanErrorType,
   WorkflowNodeInvalidInputs,
 } from "../../types";
-import { taskRegistry } from "../task-registry";
+import { taskRegistry } from "../tasks/task-registry";
 
 type ExecutionPlan = {
   executionPlan?: WorkflowExecutionPlan[];

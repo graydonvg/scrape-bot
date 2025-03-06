@@ -7,21 +7,27 @@ import { revalidatePath } from "next/cache";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "@/lib/supabase/database.types";
 import {
-  getUniquePhaseNumbers,
-  groupTasksByPhaseNumber,
-  wait,
-} from "@/lib/utils";
-import { WorkflowNode, WorkflowPhase } from "@/lib/types";
-import { taskRegistry } from "../task-registry";
+  ExecutionContext,
+  ExecutionPhaseContext,
+  WorkflowNode,
+  WorkflowExecutionPhase,
+  WorkflowTask,
+  WorkflowTaskParamName,
+} from "@/lib/types";
+import { executorRegistry } from "../executors/executor-registry";
+import getUniquePhaseNumbers from "./get-unique-phase-numbers";
+import { groupTasksByPhaseNumber } from "./group-tasks";
+import { taskRegistry } from "../tasks/task-registry";
 
 // TODO: Add  error handling
+
+let log = new Logger();
 
 export default async function executeWorkflow(
   userId: string,
   workflowId: string,
   executionId: string,
 ) {
-  let log = new Logger();
   log = log.with({
     context: "executeWorkflow",
     userId,
@@ -53,18 +59,15 @@ export default async function executeWorkflow(
       userId,
       workflowId,
       executionId,
-      log,
     );
 
     let creditsConsumed = 0;
     let executionFailed = false;
     const uniquePhaseNumbers = getUniquePhaseNumbers(tasks);
-    const tasksPerPhase = groupTasksByPhaseNumber(uniquePhaseNumbers, tasks);
+    const phases = groupTasksByPhaseNumber(uniquePhaseNumbers, tasks);
 
-    for (const phase of tasksPerPhase) {
-      // await wait(3000);
-      // TODO: consume credits
-      await executeWorkflowPhase(supabase, phase, log);
+    for (const phase of phases) {
+      await executeWorkflowPhase(supabase, phase);
     }
 
     await finalizeWorkflowExecution(
@@ -89,7 +92,6 @@ async function initializeWorkflowExecution(
   userId: string,
   workflowId: string,
   executionId: string,
-  log: Logger,
 ) {
   const workflowExecutionsPromise = supabase
     .from("workflowExecutions")
@@ -139,6 +141,105 @@ async function initializeWorkflowExecution(
     // TODO: Handle errors
     log.error("Error at: initializeWorkflowExecution", { errors });
   }
+}
+
+async function executeWorkflowPhase(
+  supabase: SupabaseClient<Database>,
+  phase: WorkflowExecutionPhase,
+) {
+  const startedAt = new Date().toISOString();
+  const taskIds = phase.tasks.map((task) => task.taskId);
+
+  const { error } = await supabase
+    .from("tasks")
+    .update({
+      status: "EXECUTING",
+      startedAt,
+    })
+    .in("taskId", taskIds);
+
+  if (error) {
+    // TODO: Handle error
+    log.error("Error at: executeWorkflowPhase", { error });
+  }
+
+  const phaseResults = await executePhase(phase);
+
+  await finalizePhase(supabase, phaseResults);
+}
+
+async function executePhase(phase: WorkflowExecutionPhase) {
+  const phaseResults = [];
+  const promises = [];
+
+  for (const task of phase.tasks) {
+    const node = JSON.parse(task.node as string) as WorkflowNode;
+    const executorFn = executorRegistry[node.data.type];
+
+    if (!executorFn) {
+      phaseResults.push({
+        taskId: task.taskId,
+        success: false,
+      });
+      continue; // Skip adding an invalid task to promises
+    }
+
+    const phaseContext = initializePhaseContext(task.taskId, node);
+    const executionContext = createExecutionContext(task.taskId, phaseContext);
+
+    // Wrap the promise to keep track of the taskId
+    const promise = executorFn(task.taskId, executionContext)
+      .then((result) => ({ success: result.success, taskId: task.taskId }))
+      .catch((error) => ({ success: false, taskId: task.taskId, error }));
+
+    promises.push(promise);
+  }
+
+  const promiseResults = await Promise.allSettled(promises);
+
+  for (const result of promiseResults) {
+    if (result.status === "fulfilled") {
+      if (result.value.success) {
+        phaseResults.push({
+          taskId: result.value.taskId,
+          success: true,
+        });
+      } else {
+        phaseResults.push({
+          taskId: result.value.taskId,
+          success: false,
+        });
+      }
+    }
+
+    if (result.status === "rejected") {
+      phaseResults.push({
+        taskId: result.reason.taskId,
+        success: false,
+      });
+    }
+  }
+
+  return phaseResults;
+}
+
+async function finalizePhase(
+  supabase: SupabaseClient<Database>,
+  results: { taskId: string; success: boolean }[],
+) {
+  const promises = results.map((result) =>
+    supabase
+      .from("tasks")
+      .update({
+        status: result.success ? "COMPLETED" : "FAILED",
+        completedAt: new Date().toISOString(),
+      })
+      .eq("taskId", result.taskId),
+  );
+
+  const promiseResults = await Promise.allSettled(promises);
+
+  log.info("Final results", promiseResults);
 }
 
 async function finalizeWorkflowExecution(
@@ -194,69 +295,32 @@ async function finalizeWorkflowExecution(
   }
 }
 
-async function executeWorkflowPhase(
-  supabase: SupabaseClient<Database>,
-  phase: WorkflowPhase,
-  log: Logger,
-) {
-  const startedAt = new Date().toISOString();
-  const taskIds = phase.tasks.map((task) => task.taskId);
-  const nodes: WorkflowNode[] = phase.tasks.map((task) =>
-    JSON.parse(task.node as string),
-  );
+function initializePhaseContext(taskId: string, node: WorkflowNode) {
+  const phaseContext: ExecutionPhaseContext = { tasks: {} };
 
-  const { error } = await supabase
-    .from("tasks")
-    .update({
-      status: "EXECUTING",
-      startedAt,
-    })
-    .in("taskId", taskIds);
+  phaseContext.tasks[taskId] = { inputs: {}, outputs: {} };
 
-  if (error) {
-    // TODO: Handle error
-    log.error("Error at: executeWorkflowPhase", { error });
+  const taskInputs = taskRegistry[node.data.type].inputs;
+
+  for (const input of taskInputs) {
+    const inputValue = node.data.inputs[input.name];
+
+    if (inputValue) {
+      const task = phaseContext.tasks[taskId];
+
+      task.inputs[input.name] = inputValue;
+    }
   }
 
-  let taskNumber = 1;
-  for (const node of nodes) {
-    const creditsRequired = taskRegistry[node.data.type].credits;
-
-    console.log(`Task: ${taskNumber}. Credits: ${creditsRequired}`);
-
-    taskNumber++;
-  }
-
-  const results = [];
-  for (const task of phase.tasks) {
-    await wait(2000);
-    const success = Math.random() < 0.7;
-
-    results.push({
-      taskId: task.taskId,
-      success,
-    });
-  }
-
-  await finalizePhase(supabase, results, log);
+  return phaseContext;
 }
 
-async function finalizePhase(
-  supabase: SupabaseClient<Database>,
-  results: { taskId: string; success: boolean }[],
-  log: Logger,
-) {
-  const promises = results.map((result) =>
-    supabase
-      .from("tasks")
-      .update({
-        status: result.success ? "COMPLETED" : "FAILED",
-        completedAt: new Date().toISOString(),
-      })
-      .eq("taskId", result.taskId),
-  );
-
-  const promiseResults = await Promise.allSettled(promises);
-
-  log.info("Final results", promiseResults);
+function createExecutionContext(
+  taskId: string,
+  phaseContext: ExecutionPhaseContext,
+): ExecutionContext<WorkflowTask> {
+  return {
+    getInput: (name: WorkflowTaskParamName) =>
+      phaseContext.tasks[taskId].inputs[name],
+  };
 }

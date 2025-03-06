@@ -1,4 +1,5 @@
 import {
+  WorkflowTaskParamName,
   WorkflowTask,
   WorkflowTaskParamType,
   WorkflowTaskType,
@@ -15,7 +16,7 @@ export const launchBrowserTask = {
   isEntryPoint: true,
   inputs: [
     {
-      name: "Website URL",
+      name: WorkflowTaskParamName.WebsiteUrl,
       type: WorkflowTaskParamType.String,
       helperText: "e.g. https://www.example.com",
       required: true,
@@ -24,7 +25,7 @@ export const launchBrowserTask = {
   ],
   outputs: [
     {
-      name: "Web page",
+      name: WorkflowTaskParamName.WebPage,
       type: WorkflowTaskParamType.BroswerInstance,
     },
   ],

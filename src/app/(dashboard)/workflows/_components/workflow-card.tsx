@@ -4,14 +4,14 @@ import { FileTextIcon, PencilIcon, PlayIcon } from "lucide-react";
 import Link from "next/link";
 import WorkflowActionsMenu from "./workflow-actions";
 import { Button } from "@/components/ui/button";
-import { Workflow, WorkflowStatus } from "@/lib/types";
+import { WorkflowDb, WorkflowStatusDb } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
 
 type Props = {
-  workflow: Workflow;
+  workflow: WorkflowDb;
 };
 
-const statusColors: Record<WorkflowStatus, string> = {
+const statusColors: Record<WorkflowStatusDb, string> = {
   DRAFT: "bg-yellow-400 text-yellow-600",
   PUBLISHED: "bg-primary",
 };

@@ -1,10 +1,10 @@
 import { SidebarGroup, SidebarMenu, useSidebar } from "@/components/ui/sidebar";
 import { WorkflowTaskDb } from "@/lib/types";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getUniquePhaseNumbers } from "@/lib/utils";
 import CollapsiblePhase from "./collapsible-phase";
 import PhasesGroupLabel from "./phases-group-label";
 import { useCallback, useEffect, useState } from "react";
+import getUniquePhaseNumbers from "@/lib/workflow/helpers/get-unique-phase-numbers";
 
 type Props = {
   tasks?: WorkflowTaskDb[];

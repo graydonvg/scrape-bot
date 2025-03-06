@@ -13,7 +13,7 @@ import { ActionReturn, WorkflowNode, WorkflowTaskType } from "@/lib/types";
 import { Logger } from "next-axiom";
 import { LOGGER_ERROR_MESSAGES, USER_ERROR_MESSAGES } from "@/lib/constants";
 import { Edge } from "@xyflow/react";
-import { createWorkflowNode } from "@/lib/workflow/helpers/create-workflow-node";
+import createWorkflowNode from "@/lib/workflow/helpers/create-workflow-node";
 
 const createWorkflowAction = actionClient
   .metadata({ actionName: "createWorkflowAction" })
