@@ -68,16 +68,16 @@ export default async function executeWorkflow(
     const tasks = workflowExecutionData[0].tasks;
     const uniquePhaseNumbers = getUniquePhaseNumbers(tasks);
     const phases = groupTasksByPhaseNumber(uniquePhaseNumbers, tasks);
-    // The phaseContext must be initialized here:
-
+    // The phaseContext must be declared and initialized here:
+    //
     // A:
-    // To prevent losing the browser and page instances which we need in subsequent phases.
-    // If the phaseContext is initialized in executeWorkflowPhase, the phaseContext
-    // will get recreated for each phase, and the browser and page instances
-    // set in phase 1 will be lost.
-
+    // To retain the browser and page instances needed in subsequent phases.
+    // If phaseContext is declared and initialized elsewhere (e.g., in executeWorkflowPhase),
+    // it will be recreated for each phase, causing the browser and page instances
+    // set in phase 1 to be lost.
+    //
     // B:
-    // So that we can perform a cleanup (close the browser once the execution completes)
+    // Ensures proper cleanup by closing the browser once execution completes.
     const phaseContext: ExecutionPhaseContext = { tasks: {} };
 
     for (const phase of phases) {
