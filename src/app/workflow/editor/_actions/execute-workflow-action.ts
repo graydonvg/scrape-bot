@@ -73,6 +73,7 @@ const executeWorkflowAction = actionClient
             status: "PENDING",
             trigger: "MANUAL",
             startedAt: new Date().toISOString(),
+            definition: JSON.stringify(workflowDefinition),
           })
           .select("workflowExecutionId");
 

@@ -17,7 +17,7 @@ export const getPageHtmlTask = {
   inputs: [
     {
       name: WorkflowTaskParamName.WebPage,
-      type: WorkflowTaskParamType.BroswerInstance,
+      type: WorkflowTaskParamType.BrowserInstance,
       required: true,
     },
   ],
@@ -28,7 +28,7 @@ export const getPageHtmlTask = {
     },
     {
       name: WorkflowTaskParamName.WebPage,
-      type: WorkflowTaskParamType.BroswerInstance,
+      type: WorkflowTaskParamType.BrowserInstance,
     },
   ],
 } satisfies WorkflowTask;

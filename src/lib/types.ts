@@ -2,7 +2,7 @@ import { Node } from "@xyflow/react";
 import { Database } from "./supabase/database.types";
 import { LucideProps } from "lucide-react";
 import { ReactNode } from "react";
-import { Browser } from "puppeteer";
+import { Browser, Page } from "puppeteer";
 
 export type User = {
   firstName: string | null;
@@ -26,7 +26,7 @@ export type WorkflowTaskDb = Database["public"]["Tables"]["tasks"]["Row"];
 
 export enum WorkflowTaskParamType {
   String = "STRING",
-  BroswerInstance = "BROWSER_INSTANCE",
+  BrowserInstance = "BROWSER_INSTANCE",
 }
 
 export enum WorkflowTaskParamName {
@@ -105,6 +105,7 @@ export type WorkflowExecutionPhase = {
 
 export type ExecutionPhaseContext = {
   browser?: Browser;
+  page?: Page;
   tasks: Record<
     string,
     {
@@ -116,4 +117,12 @@ export type ExecutionPhaseContext = {
 
 export type ExecutionContext<T extends WorkflowTask> = {
   getInput: (name: T["inputs"][number]["name"]) => string;
+
+  setOutput: (name: T["outputs"][number]["name"], value: string) => void;
+
+  getBrowser: () => Browser | undefined;
+  setBrowser: (browser: Browser) => void;
+
+  getPage: () => Page | undefined;
+  setPage: (page: Page) => void;
 };

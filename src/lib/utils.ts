@@ -23,6 +23,6 @@ export function datesToDurationString(start?: Date | null, end?: Date | null) {
   return `${duration.minutes || 0}m ${duration.seconds || 0}s`;
 }
 
-export async function wait(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+// export async function wait(ms: number) {
+//   return new Promise((resolve) => setTimeout(resolve, ms));
+// }

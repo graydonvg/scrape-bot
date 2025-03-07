@@ -91,6 +91,7 @@ export type Database = {
           completedAt: string | null;
           createdAt: string;
           creditsConsumed: number | null;
+          definition: Json;
           startedAt: string;
           status: Database["public"]["Enums"]["WorkflowExecutionStatus"];
           trigger: Database["public"]["Enums"]["WorkflowExecutionTrigger"];
@@ -102,6 +103,7 @@ export type Database = {
           completedAt?: string | null;
           createdAt?: string;
           creditsConsumed?: number | null;
+          definition: Json;
           startedAt: string;
           status: Database["public"]["Enums"]["WorkflowExecutionStatus"];
           trigger: Database["public"]["Enums"]["WorkflowExecutionTrigger"];
@@ -113,6 +115,7 @@ export type Database = {
           completedAt?: string | null;
           createdAt?: string;
           creditsConsumed?: number | null;
+          definition?: Json;
           startedAt?: string;
           status?: Database["public"]["Enums"]["WorkflowExecutionStatus"];
           trigger?: Database["public"]["Enums"]["WorkflowExecutionTrigger"];

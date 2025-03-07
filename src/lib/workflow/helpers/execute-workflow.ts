@@ -13,11 +13,13 @@ import {
   WorkflowExecutionPhase,
   WorkflowTask,
   WorkflowTaskParamName,
+  WorkflowTaskParamType,
 } from "@/lib/types";
 import { executorRegistry } from "../executors/executor-registry";
 import getUniquePhaseNumbers from "./get-unique-phase-numbers";
 import { groupTasksByPhaseNumber } from "./group-tasks";
 import { taskRegistry } from "../tasks/task-registry";
+import { Edge } from "@xyflow/react";
 
 // TODO: Add  error handling
 
@@ -41,7 +43,7 @@ export default async function executeWorkflow(
     const { data: workflowExecutionData, error: selectExecutionDataError } =
       await supabase
         .from("workflowExecutions")
-        .select("tasks(*)")
+        .select("definition, tasks(*)")
         .eq("userId", userId)
         .eq("workflowExecutionId", executionId);
 
@@ -52,8 +54,6 @@ export default async function executeWorkflow(
       throw new Error("Worklfow execution not found");
     }
 
-    const tasks = workflowExecutionData[0].tasks;
-
     await initializeWorkflowExecution(
       supabase,
       userId,
@@ -63,11 +63,25 @@ export default async function executeWorkflow(
 
     let creditsConsumed = 0;
     let executionFailed = false;
+    const workflowDefinition = workflowExecutionData[0].definition;
+    const edges = JSON.parse(workflowDefinition as string).edges as Edge[];
+    const tasks = workflowExecutionData[0].tasks;
     const uniquePhaseNumbers = getUniquePhaseNumbers(tasks);
     const phases = groupTasksByPhaseNumber(uniquePhaseNumbers, tasks);
+    // The phaseContext must be initialized here:
+
+    // A:
+    // To prevent losing the browser and page instances which we need in subsequent phases.
+    // If the phaseContext is initialized in executeWorkflowPhase, the phaseContext
+    // will get recreated for each phase, and the browser and page instances
+    // set in phase 1 will be lost.
+
+    // B:
+    // So that we can perform a cleanup (close the browser once the execution completes)
+    const phaseContext: ExecutionPhaseContext = { tasks: {} };
 
     for (const phase of phases) {
-      await executeWorkflowPhase(supabase, phase);
+      await executeWorkflowPhase(supabase, phase, phaseContext, edges);
     }
 
     await finalizeWorkflowExecution(
@@ -77,12 +91,12 @@ export default async function executeWorkflow(
       executionId,
       executionFailed,
       creditsConsumed,
-      log,
     );
+
+    await cleanupPhaseContext(phaseContext);
 
     revalidatePath("/workflow/execution");
   } catch (error) {
-    log.error(LOGGER_ERROR_MESSAGES.Unexpected, { error });
     throw error;
   }
 }
@@ -146,29 +160,68 @@ async function initializeWorkflowExecution(
 async function executeWorkflowPhase(
   supabase: SupabaseClient<Database>,
   phase: WorkflowExecutionPhase,
+  phaseContext: ExecutionPhaseContext,
+  edges: Edge[],
 ) {
   const startedAt = new Date().toISOString();
-  const taskIds = phase.tasks.map((task) => task.taskId);
+  const promises = [];
 
-  const { error } = await supabase
-    .from("tasks")
-    .update({
-      status: "EXECUTING",
-      startedAt,
-    })
-    .in("taskId", taskIds);
+  for (const task of phase.tasks) {
+    const node = JSON.parse(task.node as string) as WorkflowNode;
+    populatePhaseContext(node, edges, phaseContext);
 
-  if (error) {
-    // TODO: Handle error
-    log.error("Error at: executeWorkflowPhase", { error });
+    const inputKeys = Object.keys(phaseContext.tasks[node.id].inputs);
+    const inputs =
+      inputKeys.length > 0
+        ? // Using the inputs from phaseContext rather than directly from task,
+          // because the phaseContext only includes inputs provided by the user
+          // rather than inputs provided by the user AND source nodes.
+          JSON.stringify(phaseContext.tasks[node.id].inputs)
+        : // Prevent inserting empty objects into database
+          null;
+
+    const taskPromise = supabase
+      .from("tasks")
+      .update({
+        status: "EXECUTING",
+        startedAt,
+        inputs,
+      })
+      .eq("taskId", task.taskId);
+
+    promises.push(taskPromise);
   }
 
-  const phaseResults = await executePhase(phase);
+  const results = await Promise.allSettled(promises);
 
-  await finalizePhase(supabase, phaseResults);
+  const errors = [];
+
+  for (const result of results) {
+    if (result.status === "fulfilled") {
+      if (result.value.error) {
+        errors.push(result.value.error);
+      }
+    }
+
+    if (result.status === "rejected") {
+      errors.push(result.reason);
+    }
+  }
+
+  if (errors.length > 0) {
+    // TODO: Handle errors
+    log.error("Error at: executeWorkflowPhase", { errors });
+  }
+
+  const phaseResults = await executePhase(phase, phaseContext);
+
+  await finalizePhase(supabase, phaseResults, phaseContext);
 }
 
-async function executePhase(phase: WorkflowExecutionPhase) {
+async function executePhase(
+  phase: WorkflowExecutionPhase,
+  phaseContext: ExecutionPhaseContext,
+) {
   const phaseResults = [];
   const promises = [];
 
@@ -179,18 +232,28 @@ async function executePhase(phase: WorkflowExecutionPhase) {
     if (!executorFn) {
       phaseResults.push({
         taskId: task.taskId,
+        nodeId: node.id,
         success: false,
+        // TODO: Add message
       });
       continue; // Skip adding an invalid task to promises
     }
 
-    const phaseContext = initializePhaseContext(task.taskId, node);
-    const executionContext = createExecutionContext(task.taskId, phaseContext);
+    const executionContext = createExecutionContext(node, phaseContext);
 
     // Wrap the promise to keep track of the taskId
-    const promise = executorFn(task.taskId, executionContext)
-      .then((result) => ({ success: result.success, taskId: task.taskId }))
-      .catch((error) => ({ success: false, taskId: task.taskId, error }));
+    const promise = executorFn(task.taskId, node.id, executionContext)
+      .then((result) => ({
+        success: result.success,
+        taskId: task.taskId,
+        nodeId: node.id,
+      }))
+      .catch((error) => ({
+        success: false,
+        taskId: task.taskId,
+        nodeId: node.id,
+        error,
+      }));
 
     promises.push(promise);
   }
@@ -202,11 +265,13 @@ async function executePhase(phase: WorkflowExecutionPhase) {
       if (result.value.success) {
         phaseResults.push({
           taskId: result.value.taskId,
+          nodeId: result.value.nodeId,
           success: true,
         });
       } else {
         phaseResults.push({
           taskId: result.value.taskId,
+          nodeId: result.value.nodeId,
           success: false,
         });
       }
@@ -215,6 +280,7 @@ async function executePhase(phase: WorkflowExecutionPhase) {
     if (result.status === "rejected") {
       phaseResults.push({
         taskId: result.reason.taskId,
+        nodeId: result.reason.nodeId,
         success: false,
       });
     }
@@ -225,21 +291,47 @@ async function executePhase(phase: WorkflowExecutionPhase) {
 
 async function finalizePhase(
   supabase: SupabaseClient<Database>,
-  results: { taskId: string; success: boolean }[],
+  results: { taskId: string; nodeId: string; success: boolean }[],
+  phaseContext: ExecutionPhaseContext,
 ) {
-  const promises = results.map((result) =>
-    supabase
+  const promises = results.map((result) => {
+    const outputKeys = Object.keys(phaseContext.tasks[result.nodeId].outputs);
+    const outputs =
+      outputKeys.length > 0
+        ? JSON.stringify(phaseContext.tasks[result.nodeId].outputs)
+        : // Prevent inserting empty objects into database
+          null;
+
+    return supabase
       .from("tasks")
       .update({
         status: result.success ? "COMPLETED" : "FAILED",
         completedAt: new Date().toISOString(),
+        outputs,
       })
-      .eq("taskId", result.taskId),
-  );
+      .eq("taskId", result.taskId);
+  });
 
   const promiseResults = await Promise.allSettled(promises);
 
-  log.info("Final results", promiseResults);
+  const errors = [];
+
+  for (const result of promiseResults) {
+    if (result.status === "fulfilled") {
+      if (result.value.error) {
+        errors.push(result.value.error);
+      }
+    }
+
+    if (result.status === "rejected") {
+      errors.push(result.reason);
+    }
+  }
+
+  if (errors.length > 0) {
+    // TODO: Handle errors
+    log.error("Error at: finalizePhase", { errors });
+  }
 }
 
 async function finalizeWorkflowExecution(
@@ -249,7 +341,6 @@ async function finalizeWorkflowExecution(
   executionId: string,
   executionFailed: boolean,
   creditsConsumed: number,
-  log: Logger,
 ) {
   const workflowExecutionsPromise = supabase
     .from("workflowExecutions")
@@ -295,32 +386,76 @@ async function finalizeWorkflowExecution(
   }
 }
 
-function initializePhaseContext(taskId: string, node: WorkflowNode) {
-  const phaseContext: ExecutionPhaseContext = { tasks: {} };
-
-  phaseContext.tasks[taskId] = { inputs: {}, outputs: {} };
+function populatePhaseContext(
+  node: WorkflowNode,
+  edges: Edge[],
+  phaseContext: ExecutionPhaseContext,
+) {
+  phaseContext.tasks[node.id] = { inputs: {}, outputs: {} };
 
   const taskInputs = taskRegistry[node.data.type].inputs;
 
   for (const input of taskInputs) {
+    // Inputs of type BrowserInstance will be handled by a different function
+    if (input.type === WorkflowTaskParamType.BrowserInstance) continue;
+
     const inputValue = node.data.inputs[input.name];
 
+    // Only include inputs provided by the user
     if (inputValue) {
-      const task = phaseContext.tasks[taskId];
+      const task = phaseContext.tasks[node.id];
 
       task.inputs[input.name] = inputValue;
+      continue;
     }
+
+    const connectedEdge = edges.find(
+      (edge) => edge.target === node.id && edge.targetHandle === input.name,
+    );
+
+    if (!connectedEdge) {
+      // This should not happen because the workflow has been validated
+      log.error("Missing edge for input", { input, node });
+      continue;
+    }
+
+    const outputValue =
+      phaseContext.tasks[connectedEdge.source].outputs[
+        connectedEdge.sourceHandle!
+      ];
+
+    phaseContext.tasks[node.id].inputs[input.name] = outputValue;
   }
 
   return phaseContext;
 }
 
 function createExecutionContext(
-  taskId: string,
+  node: WorkflowNode,
   phaseContext: ExecutionPhaseContext,
 ): ExecutionContext<WorkflowTask> {
   return {
     getInput: (name: WorkflowTaskParamName) =>
-      phaseContext.tasks[taskId].inputs[name],
+      phaseContext.tasks[node.id].inputs[name],
+
+    setOutput: (name, value) => {
+      phaseContext.tasks[node.id].outputs[name] = value;
+    },
+
+    setBrowser: (browser) => (phaseContext.browser = browser),
+    getBrowser: () => phaseContext.browser,
+
+    setPage: (page) => (phaseContext.page = page),
+    getPage: () => phaseContext.page,
   };
+}
+
+async function cleanupPhaseContext(phaseContext: ExecutionPhaseContext) {
+  if (phaseContext.browser) {
+    try {
+      await phaseContext.browser.close();
+    } catch (error) {
+      log.error("Failed to close browser", { error });
+    }
+  }
 }

@@ -3,11 +3,14 @@ import launchBrowserExecutor from "./launch-broswer";
 import getPageHtmlExecutor from "./get-page-html";
 import extractTextFromElementExecutor from "./extract-text-from-element.ts";
 
+type ExecutorFn<T extends WorkflowTask> = (
+  taskId: string,
+  nodeId: string,
+  executionContext: ExecutionContext<T>,
+) => Promise<{ taskId: string; nodeId: string; success: boolean }>;
+
 type ExecutorRegistry = {
-  [K in WorkflowTaskType]: (
-    taskId: string,
-    executionContext: ExecutionContext<WorkflowTask>,
-  ) => Promise<{ taskId: string; success: boolean }>;
+  [K in WorkflowTaskType]: ExecutorFn<WorkflowTask & { type: K }>;
 };
 
 export const executorRegistry: ExecutorRegistry = {

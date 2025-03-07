@@ -1,5 +1,4 @@
 import { ExecutionContext, WorkflowTaskParamName } from "@/lib/types";
-import { wait } from "@/lib/utils";
 import puppeteer from "puppeteer";
 import { launchBrowserTask } from "../tasks/entry-point";
 import { Logger } from "next-axiom";
@@ -7,6 +6,7 @@ import { LOGGER_ERROR_MESSAGES } from "@/lib/constants";
 
 export default async function launchBrowserExecutor(
   taskId: string,
+  nodeId: string,
   executionContext: ExecutionContext<typeof launchBrowserTask>,
 ) {
   let log = new Logger();
@@ -19,17 +19,20 @@ export default async function launchBrowserExecutor(
       WorkflowTaskParamName.WebsiteUrl,
     );
 
-    log.info(websiteUrl);
-
     const browser = await puppeteer.launch({
-      headless: false, // open the browser window for testing
+      headless: false, // false to open the browser window for testing
     });
 
-    await wait(3000);
-    await browser.close();
-    return { taskId, success: true };
+    executionContext.setBrowser(browser);
+
+    const page = await browser.newPage();
+    await page.goto(websiteUrl);
+
+    executionContext.setPage(page);
+
+    return { taskId, nodeId, success: true };
   } catch (error) {
     log.error(LOGGER_ERROR_MESSAGES.Unexpected, { error });
-    return { taskId, success: false };
+    return { taskId, nodeId, success: false };
   }
 }

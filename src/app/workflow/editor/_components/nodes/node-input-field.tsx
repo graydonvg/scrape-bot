@@ -42,7 +42,7 @@ export default function NodeInputField({ nodeId, input, disabled }: Props) {
         />
       );
 
-    case WorkflowTaskParamType.BroswerInstance:
+    case WorkflowTaskParamType.BrowserInstance:
       return <BrowserInstanceInput input={input} />;
 
     default:

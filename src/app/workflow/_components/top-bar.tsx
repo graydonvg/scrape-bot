@@ -23,12 +23,12 @@ export default function TopBar({
 }: Props) {
   return (
     <header className="bg-sidebar flex h-16 shrink-0 items-center border-b px-4 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
-      <div className="flex w-full items-center justify-between">
-        <div className="flex w-full items-center gap-2">
+      <div className="flex size-full items-center justify-between">
+        <div className="flex size-full items-center gap-2">
           <SidebarTrigger />
           <Separator
             orientation="vertical"
-            className="bg-sidebar-border mr-2 !h-4"
+            className="bg-sidebar-border !h-[25%]"
           />
           <div className="flex w-10 grow items-center gap-4">
             <TooltipWrapper tooltipContent="Back">

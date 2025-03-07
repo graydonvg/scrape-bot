@@ -26,7 +26,7 @@ export const launchBrowserTask = {
   outputs: [
     {
       name: WorkflowTaskParamName.WebPage,
-      type: WorkflowTaskParamType.BroswerInstance,
+      type: WorkflowTaskParamType.BrowserInstance,
     },
   ],
 } satisfies WorkflowTask;
