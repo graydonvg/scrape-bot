@@ -409,6 +409,8 @@ function populatePhaseContext(
       continue;
     }
 
+    // If no user provided input exists, get the input from
+    // the souce node's output
     const connectedEdge = edges.find(
       (edge) => edge.target === node.id && edge.targetHandle === input.name,
     );
