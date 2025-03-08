@@ -1,7 +1,7 @@
-import { WorkflowTaskOutput } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { Handle, Position } from "@xyflow/react";
 import { nodeHandleColor } from "./common";
+import { WorkflowTaskOutput } from "@/lib/types/workflow";
 
 type Props = {
   output: WorkflowTaskOutput;

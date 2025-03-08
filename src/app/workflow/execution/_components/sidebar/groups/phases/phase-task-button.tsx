@@ -6,7 +6,7 @@ import {
 import { CircleCheckBigIcon, CircleXIcon, Loader2Icon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
-import { WorkflowTaskDb } from "@/lib/types";
+import { WorkflowTaskDb } from "@/lib/types/workflow";
 
 type Props = {
   task: WorkflowTaskDb;

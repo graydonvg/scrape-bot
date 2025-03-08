@@ -24,9 +24,11 @@ export default async function getTaskDetails(taskId: string) {
 
     const { data, error } = await supabase
       .from("tasks")
-      .select("*")
+      .select("*, taskLogs(*)")
       .eq("userId", user.id)
-      .eq("taskId", taskId);
+      .eq("taskId", taskId)
+      .order("timestamp", { referencedTable: "taskLogs", ascending: true });
+
     if (error) {
       log.error(LOGGER_ERROR_MESSAGES.Select, {
         error,

@@ -4,8 +4,8 @@ import useWorkflowsStore from "@/lib/store/workflows-store";
 import {
   WorkflowExecutionPlanError,
   WorkflowExecutionPlanErrorType,
-  WorkflowNode,
-} from "@/lib/types";
+} from "@/lib/types/execution";
+import { WorkflowNode } from "@/lib/types/workflow";
 import buildWorkflowExecutionPlan from "@/lib/workflow/helpers/build-workflow-execution-plan";
 import { useReactFlow } from "@xyflow/react";
 import { useLogger } from "next-axiom";

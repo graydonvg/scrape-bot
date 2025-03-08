@@ -6,8 +6,8 @@ import { actionClient } from "@/lib/safe-action";
 import { signInSchema, SignInSchemaType } from "@/lib/schemas/auth";
 import { Logger } from "next-axiom";
 import { LOGGER_ERROR_MESSAGES, USER_ERROR_MESSAGES } from "@/lib/constants";
-import { ActionReturn } from "@/lib/types";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
+import { ActionReturn } from "@/lib/types/action";
 
 const signInWithPasswordAction = actionClient
   .metadata({ actionName: "signInWithPasswordAction" })

@@ -1,9 +1,9 @@
 import {
-  WorkflowTaskParamName,
   WorkflowTask,
+  WorkflowTaskParamName,
   WorkflowTaskParamType,
   WorkflowTaskType,
-} from "@/lib/types";
+} from "@/lib/types/workflow";
 import { CodeIcon, LucideProps, TextIcon } from "lucide-react";
 
 export const getPageHtmlTask = {

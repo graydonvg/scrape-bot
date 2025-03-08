@@ -1,9 +1,9 @@
 "use client";
 
-import { WorkflowDb } from "@/lib/types";
 import { ReactFlowProvider } from "@xyflow/react";
 import Flow from "./flow";
 import TopBar from "../../_components/top-bar";
+import { WorkflowDb } from "@/lib/types/workflow";
 
 type Props = {
   workflow: Partial<WorkflowDb>;

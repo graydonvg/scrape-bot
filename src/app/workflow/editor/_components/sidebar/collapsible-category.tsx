@@ -11,7 +11,7 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import TaskMenuButton from "./task-menu-button";
-import { WorkflowTaskType } from "@/lib/types";
+import { WorkflowTaskType } from "@/lib/types/workflow";
 
 type Props = {
   category: string;

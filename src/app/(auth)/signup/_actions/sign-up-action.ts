@@ -6,7 +6,7 @@ import { actionClient } from "@/lib/safe-action";
 import { signUpSchema, SignUpSchemaType } from "@/lib/schemas/auth";
 import { Logger } from "next-axiom";
 import { LOGGER_ERROR_MESSAGES, USER_ERROR_MESSAGES } from "@/lib/constants";
-import { ActionReturn } from "@/lib/types";
+import { ActionReturn } from "@/lib/types/action";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 
 const signUpAction = actionClient

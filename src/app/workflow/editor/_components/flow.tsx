@@ -1,4 +1,3 @@
-import { WorkflowDb, WorkflowNode, WorkflowTaskType } from "@/lib/types";
 import {
   ReactFlow,
   useNodesState,
@@ -31,6 +30,11 @@ import { useLogger } from "next-axiom";
 import DeleteableEdge from "./edges/deleteable-edge";
 import createWorkflowNode from "@/lib/workflow/helpers/create-workflow-node";
 import { taskRegistry } from "@/lib/workflow/tasks/task-registry";
+import {
+  WorkflowDb,
+  WorkflowNode,
+  WorkflowTaskType,
+} from "@/lib/types/workflow";
 
 const fitViewOptions = {
   padding: 1,

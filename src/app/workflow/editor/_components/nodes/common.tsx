@@ -1,4 +1,4 @@
-import { WorkflowTaskParamType } from "@/lib/types";
+import { WorkflowTaskParamType } from "@/lib/types/workflow";
 
 export const nodeHandleColor: Record<WorkflowTaskParamType, string> = {
   [WorkflowTaskParamType.BrowserInstance]: "!bg-amber-400",

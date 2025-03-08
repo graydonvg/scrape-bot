@@ -1,4 +1,4 @@
-import { WorkflowTaskDb } from "@/lib/types";
+import { WorkflowTaskDb } from "@/lib/types/workflow";
 
 export function calculateTotalCreditsConsumed(
   tasks: Pick<WorkflowTaskDb, "creditsConsumed">[],

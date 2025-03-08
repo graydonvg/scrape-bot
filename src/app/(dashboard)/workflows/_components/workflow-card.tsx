@@ -4,8 +4,8 @@ import { FileTextIcon, PencilIcon, PlayIcon } from "lucide-react";
 import Link from "next/link";
 import WorkflowActionsMenu from "./workflow-actions";
 import { Button } from "@/components/ui/button";
-import { WorkflowDb, WorkflowStatusDb } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
+import { WorkflowDb, WorkflowStatusDb } from "@/lib/types/workflow";
 
 type Props = {
   workflow: WorkflowDb;

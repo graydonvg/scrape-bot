@@ -1,18 +1,18 @@
-import { ExecutionContext, WorkflowTaskParamName } from "@/lib/types";
+import "server-only";
+
 import puppeteer from "puppeteer";
 import { launchBrowserTask } from "../tasks/entry-point";
+import { LOGGER_ERROR_MESSAGES, USER_ERROR_MESSAGES } from "@/lib/constants";
 import { Logger } from "next-axiom";
-import { LOGGER_ERROR_MESSAGES } from "@/lib/constants";
+import { ExecutionContext } from "@/lib/types/execution";
+import { WorkflowTaskParamName } from "@/lib/types/workflow";
 
 export default async function launchBrowserExecutor(
   taskId: string,
-  nodeId: string,
   executionContext: ExecutionContext<typeof launchBrowserTask>,
+  log: Logger,
 ) {
-  let log = new Logger();
-  log = log.with({
-    context: "launchBrowserExecutor",
-  });
+  log.with({ executor: "launchBrowserExecutor" });
 
   try {
     const websiteUrl = executionContext.getInput(
@@ -30,9 +30,10 @@ export default async function launchBrowserExecutor(
 
     executionContext.setPage(page);
 
-    return { taskId, nodeId, success: true };
+    return { success: true };
   } catch (error) {
+    executionContext.logDb.ERROR(taskId, USER_ERROR_MESSAGES.Unexpected);
     log.error(LOGGER_ERROR_MESSAGES.Unexpected, { error });
-    return { taskId, nodeId, success: false };
+    return { success: false };
   }
 }

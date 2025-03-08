@@ -14,9 +14,10 @@ import {
 import { formatDistanceToNow } from "date-fns";
 import WorkflowExecutionDetail from "./workflow-execution-detail";
 import { datesToDurationString } from "@/lib/utils";
+import { WorkflowExecutionStatusDb } from "@/lib/types/execution";
 
 type Props = {
-  status?: string;
+  status?: WorkflowExecutionStatusDb;
   startedAt?: string;
   completedAt?: string | null;
   creditsConsumed: number;
@@ -31,6 +32,7 @@ export default function Workflow({
   const startedAtDate = startedAt ? new Date(startedAt) : undefined;
   const completedAtDate = completedAt ? new Date(completedAt) : undefined;
   const duration = datesToDurationString(startedAtDate, completedAtDate);
+  const formattedStatus = status?.split("_").join(" ");
 
   return (
     <SidebarGroup>
@@ -42,7 +44,7 @@ export default function Workflow({
         <WorkflowExecutionDetail
           icon={CircleDashedIcon}
           label="Status"
-          value={status || "-"}
+          value={formattedStatus || "-"}
         />
         <WorkflowExecutionDetail
           icon={CalendarIcon}

@@ -6,7 +6,7 @@ import {
   deleteWorkflowSchema,
   DeleteWorkflowSchemaType,
 } from "@/lib/schemas/workflows";
-import { ActionReturn } from "@/lib/types";
+import { ActionReturn } from "@/lib/types/action";
 import { Logger } from "next-axiom";
 import { LOGGER_ERROR_MESSAGES, USER_ERROR_MESSAGES } from "@/lib/constants";
 import { revalidatePath } from "next/cache";

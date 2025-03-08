@@ -1,47 +1,49 @@
-import { Logger } from "next-axiom";
-import { LOGGER_ERROR_MESSAGES } from "@/lib/constants";
-import { ExecutionContext, WorkflowTaskParamName } from "@/lib/types";
+import "server-only";
+
+import { LOGGER_ERROR_MESSAGES, USER_ERROR_MESSAGES } from "@/lib/constants";
 import { extractTextFromElementTask } from "../tasks/data-extraction";
 import * as cheerio from "cheerio";
+import { Logger } from "next-axiom";
+import { ExecutionContext } from "@/lib/types/execution";
+import { WorkflowTaskParamName } from "@/lib/types/workflow";
 
 export default async function extractTextFromElementExecutor(
   taskId: string,
-  nodeId: string,
   executionContext: ExecutionContext<typeof extractTextFromElementTask>,
+  log: Logger,
 ) {
-  let log = new Logger();
-  log = log.with({
-    context: "extractTextFromElementExecutor",
-  });
+  log.with({ executor: "extractTextFromElementExecutor" });
 
   try {
     const selector = executionContext.getInput(WorkflowTaskParamName.Selector);
 
     if (!selector) {
-      log.error("Selector missing");
-      return { taskId, nodeId, success: false };
+      log.error("Selector not defined");
+      executionContext.logDb.ERROR(taskId, "Selector not defined");
+      return { success: false };
     }
 
     const html = executionContext.getInput(WorkflowTaskParamName.Html);
 
     if (!html) {
-      log.error("HTML missing");
-      return { taskId, nodeId, success: false };
+      log.error("HTML not defined");
+      executionContext.logDb.ERROR(taskId, "HTML not defined");
+      return { success: false };
     }
 
     const $ = cheerio.load(html);
     const element = $(selector);
 
     if (!element) {
-      log.error("Element not found");
-      return { taskId, nodeId, success: false };
+      executionContext.logDb.ERROR(taskId, "Element not found");
+      return { success: false };
     }
 
     const extractedText = $.text(element);
 
     if (!extractedText) {
-      log.error("Element has no text");
-      return { taskId, nodeId, success: false };
+      executionContext.logDb.ERROR(taskId, "Element has no text");
+      return { success: false };
     }
 
     executionContext.setOutput(
@@ -49,9 +51,10 @@ export default async function extractTextFromElementExecutor(
       extractedText,
     );
 
-    return { taskId, nodeId, success: true };
+    return { success: true };
   } catch (error) {
+    executionContext.logDb.ERROR(taskId, USER_ERROR_MESSAGES.Unexpected);
     log.error(LOGGER_ERROR_MESSAGES.Unexpected, { error });
-    return { taskId, nodeId, success: false };
+    return { success: false };
   }
 }

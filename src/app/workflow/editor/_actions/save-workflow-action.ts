@@ -8,7 +8,7 @@ import {
 } from "@/lib/schemas/workflows";
 import { revalidatePath } from "next/cache";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
-import { ActionReturn } from "@/lib/types";
+import { ActionReturn } from "@/lib/types/action";
 import { Logger } from "next-axiom";
 import { LOGGER_ERROR_MESSAGES, USER_ERROR_MESSAGES } from "@/lib/constants";
 import { redirect } from "next/navigation";

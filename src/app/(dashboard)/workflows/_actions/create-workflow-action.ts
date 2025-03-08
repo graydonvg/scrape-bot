@@ -9,11 +9,12 @@ import {
 } from "@/lib/schemas/workflows";
 import { revalidatePath } from "next/cache";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
-import { ActionReturn, WorkflowNode, WorkflowTaskType } from "@/lib/types";
 import { Logger } from "next-axiom";
 import { LOGGER_ERROR_MESSAGES, USER_ERROR_MESSAGES } from "@/lib/constants";
 import { Edge } from "@xyflow/react";
 import createWorkflowNode from "@/lib/workflow/helpers/create-workflow-node";
+import { ActionReturn } from "@/lib/types/action";
+import { WorkflowNode, WorkflowTaskType } from "@/lib/types/workflow";
 
 const createWorkflowAction = actionClient
   .metadata({ actionName: "createWorkflowAction" })

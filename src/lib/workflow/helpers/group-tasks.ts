@@ -1,4 +1,5 @@
-import { WorkflowExecutionPhase, WorkflowTaskDb } from "@/lib/types";
+import { WorkflowExecutionPhase } from "@/lib/types/execution";
+import { WorkflowTaskDb } from "@/lib/types/workflow";
 
 export function groupTasksByPhaseNumber(
   uniquePhaseNumbers: number[],

@@ -23,7 +23,7 @@ import { USER_ERROR_MESSAGES } from "@/lib/constants";
 import useWorkflowsStore from "@/lib/store/workflows-store";
 import CustomFormLabel from "@/components/custom-form-label";
 import ButtonWithSpinner from "@/components/button-with-spinner";
-import { ActionReturn } from "@/lib/types";
+import { ActionReturn } from "@/lib/types/action";
 
 const initialState = {
   name: "",

@@ -1,12 +1,12 @@
 import { Edge } from "@xyflow/react";
+import { taskRegistry } from "../tasks/task-registry";
 import {
   WorkflowExecutionPlan,
-  WorkflowNode,
   WorkflowExecutionPlanError,
   WorkflowExecutionPlanErrorType,
   WorkflowNodeInvalidInputs,
-} from "../../types";
-import { taskRegistry } from "../tasks/task-registry";
+} from "@/lib/types/execution";
+import { WorkflowNode } from "@/lib/types/workflow";
 
 type ExecutionPlan = {
   executionPlan?: WorkflowExecutionPlan[];

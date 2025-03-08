@@ -7,7 +7,7 @@ import {
   Loader2Icon,
 } from "lucide-react";
 import { CollapsibleTrigger } from "@/components/ui/collapsible";
-import { WorkflowTaskDb } from "@/lib/types";
+import { WorkflowTaskDb } from "@/lib/types/workflow";
 
 type Props = {
   phaseNumber: number;

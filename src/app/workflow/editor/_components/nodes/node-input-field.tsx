@@ -1,12 +1,12 @@
-import {
-  WorkflowNode,
-  WorkflowTaskInput,
-  WorkflowTaskParamType,
-} from "@/lib/types";
 import StringInput from "./inputs/string-input";
 import { useReactFlow } from "@xyflow/react";
 import { useCallback } from "react";
 import BrowserInstanceInput from "./inputs/browser-instance-input";
+import {
+  WorkflowNode,
+  WorkflowTaskInput,
+  WorkflowTaskParamType,
+} from "@/lib/types/workflow";
 
 type Props = {
   nodeId: string;

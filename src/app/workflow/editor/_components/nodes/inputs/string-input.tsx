@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { WorkflowTaskInput } from "@/lib/types";
+import { WorkflowTaskInput } from "@/lib/types/workflow";
 import {
   ChangeEvent,
   ElementType,

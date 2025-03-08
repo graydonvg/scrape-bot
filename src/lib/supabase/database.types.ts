@@ -9,6 +9,41 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      taskLogs: {
+        Row: {
+          logLevel: Database["public"]["Enums"]["LogLevel"];
+          message: string;
+          taskId: string;
+          taskLogId: string;
+          timestamp: string;
+          userId: string;
+        };
+        Insert: {
+          logLevel: Database["public"]["Enums"]["LogLevel"];
+          message: string;
+          taskId?: string;
+          taskLogId?: string;
+          timestamp: string;
+          userId?: string;
+        };
+        Update: {
+          logLevel?: Database["public"]["Enums"]["LogLevel"];
+          message?: string;
+          taskId?: string;
+          taskLogId?: string;
+          timestamp?: string;
+          userId?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "taskLogs_taskId_fkey";
+            columns: ["taskId"];
+            isOneToOne: false;
+            referencedRelation: "tasks";
+            referencedColumns: ["taskId"];
+          },
+        ];
+      };
       tasks: {
         Row: {
           completedAt: string | null;
@@ -189,8 +224,14 @@ export type Database = {
       [_ in never]: never;
     };
     Enums: {
+      LogLevel: "INFO" | "ERROR";
       TaskStatus: "CREATED" | "PENDING" | "EXECUTING" | "COMPLETED" | "FAILED";
-      WorkflowExecutionStatus: "PENDING" | "EXECUTING" | "COMPLETED" | "FAILED";
+      WorkflowExecutionStatus:
+        | "PENDING"
+        | "EXECUTING"
+        | "COMPLETED"
+        | "FAILED"
+        | "PARTIALLY_FAILED";
       WorkflowExecutionTrigger: "MANUAL";
       WorkflowStatus: "DRAFT" | "PUBLISHED";
     };

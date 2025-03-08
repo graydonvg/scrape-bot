@@ -1,4 +1,4 @@
-import { WorkflowTaskInput } from "@/lib/types";
+import { WorkflowTaskInput } from "@/lib/types/workflow";
 import NodeInput from "./node-input";
 
 type Props = {

@@ -1,8 +1,8 @@
 import { SidebarMenuItem, SidebarMenuSub } from "@/components/ui/sidebar";
 import { Collapsible, CollapsibleContent } from "@/components/ui/collapsible";
-import { WorkflowTaskDb } from "@/lib/types";
 import CollapsiblePhaseTrigger from "./collapsible-phase-trigger";
 import PhaseTaskButton from "./phase-task-button";
+import { WorkflowTaskDb } from "@/lib/types/workflow";
 
 type Props = {
   phaseNumber: number;

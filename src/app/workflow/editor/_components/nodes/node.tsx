@@ -1,11 +1,11 @@
 import { NodeProps } from "@xyflow/react";
 import NodeCard from "./node-card";
 import NodeHeader from "./node-header";
-import { WorkflowNodeData } from "@/lib/types";
 import NodeInputs from "./node-inputs";
 import NodeOutputs from "./node-outputs";
 import { Badge } from "@/components/ui/badge";
 import { taskRegistry } from "@/lib/workflow/tasks/task-registry";
+import { WorkflowNodeData } from "@/lib/types/workflow";
 
 const devMode = process.env.NEXT_PUBLIC_DEV_MODE === "true";
 

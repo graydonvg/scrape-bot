@@ -20,7 +20,7 @@ import { USER_ERROR_MESSAGES } from "@/lib/constants";
 import CustomAlert from "@/components/custom-alert";
 import { Trash2Icon } from "lucide-react";
 import useWorkflowsStore from "@/lib/store/workflows-store";
-import { ActionReturn } from "@/lib/types";
+import { ActionReturn } from "@/lib/types/action";
 
 type Props = {
   open: boolean;

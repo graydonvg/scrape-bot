@@ -1,4 +1,4 @@
-import { WorkflowTaskOutput } from "@/lib/types";
+import { WorkflowTaskOutput } from "@/lib/types/workflow";
 import NodeOutput from "./node-output";
 
 type Props = {

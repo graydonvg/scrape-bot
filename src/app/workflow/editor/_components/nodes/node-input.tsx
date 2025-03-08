@@ -1,9 +1,9 @@
-import { WorkflowTaskInput } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { Handle, Position, useEdges } from "@xyflow/react";
 import NodeInputField from "./node-input-field";
 import { nodeHandleColor } from "./common";
 import useWorkflowsStore from "@/lib/store/workflows-store";
+import { WorkflowTaskInput } from "@/lib/types/workflow";
 
 type Props = {
   nodeId: string;

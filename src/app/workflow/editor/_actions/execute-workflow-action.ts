@@ -6,14 +6,15 @@ import {
   executeWorkflowSchema,
   ExecuteWorkflowSchemaType,
 } from "@/lib/schemas/workflows";
-import { ActionReturn, WorkflowTaskDb } from "@/lib/types";
 import { Logger } from "next-axiom";
 import { LOGGER_ERROR_MESSAGES, USER_ERROR_MESSAGES } from "@/lib/constants";
 import buildWorkflowExecutionPlan from "@/lib/workflow/helpers/build-workflow-execution-plan";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { redirect } from "next/navigation";
-import executeWorkflow from "@/lib/workflow/helpers/execute-workflow";
+import executeWorkflow from "@/lib/workflow/helpers/execute-workflow/execute-workflow";
 import { taskRegistry } from "@/lib/workflow/tasks/task-registry";
+import { ActionReturn } from "@/lib/types/action";
+import { WorkflowNode, WorkflowTaskDb } from "@/lib/types/workflow";
 
 const executeWorkflowAction = actionClient
   .metadata({ actionName: "executeWorkflowAction" })
@@ -91,7 +92,7 @@ const executeWorkflowAction = actionClient
           workflowExecutionData[0].workflowExecutionId;
 
         const tasks = executionPlan.flatMap((plan) => {
-          return plan.nodes.flatMap((node) => {
+          return plan.nodes.flatMap((node: WorkflowNode) => {
             return {
               workflowExecutionId,
               status: "CREATED",
@@ -104,8 +105,7 @@ const executeWorkflowAction = actionClient
 
         const { error: insertTaskError } = await supabase
           .from("tasks")
-          .insert(tasks)
-          .select("*");
+          .insert(tasks);
 
         if (insertTaskError) {
           log.error(LOGGER_ERROR_MESSAGES.Insert, {
@@ -117,7 +117,7 @@ const executeWorkflowAction = actionClient
           };
         }
 
-        executeWorkflow(user.id, workflowId, workflowExecutionId); // run in the background
+        executeWorkflow(supabase, user.id, workflowId, workflowExecutionId); // runs in the background
         redirect(`/workflow/execution/${workflowId}/${workflowExecutionId}`);
       } catch (error) {
         // When you call the redirect() function (from next/navigation), it throws a special error (with the code NEXT_REDIRECT) to immediately halt further processing and trigger the redirection. This “error” is meant to be caught internally by Next.js, not by the try/catch blocks.

@@ -1,8 +1,8 @@
 "use client";
 
-import { WorkflowDb } from "@/lib/types";
 import WorkflowCard from "./workflow-card";
 import useWorkflowsStore from "@/lib/store/workflows-store";
+import { WorkflowDb } from "@/lib/types/workflow";
 import { useEffect } from "react";
 
 type Props = {

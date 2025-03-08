@@ -3,9 +3,9 @@
 import { FileCode2Icon } from "lucide-react";
 import { SidebarGroup, SidebarMenu, useSidebar } from "@/components/ui/sidebar";
 import { useState } from "react";
-import { WorkflowTaskType } from "@/lib/types";
 import TasksGroupLabel from "./tasks-group-label";
 import CollapsibleCategory from "./collapsible-category";
+import { WorkflowTaskType } from "@/lib/types/workflow";
 
 const items = [
   {
