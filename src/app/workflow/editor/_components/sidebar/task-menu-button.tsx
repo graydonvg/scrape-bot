@@ -1,11 +1,11 @@
 import { SidebarMenuSubButton, useSidebar } from "@/components/ui/sidebar";
-import { WorkflowTaskType } from "@/lib/types/workflow";
+import { TaskType } from "@/lib/types/task";
 import { taskRegistry } from "@/lib/workflow/tasks/task-registry";
 import { GripVerticalIcon } from "lucide-react";
 import { DragEvent } from "react";
 
 type Props = {
-  taskType: WorkflowTaskType;
+  taskType: TaskType;
 };
 
 export default function TaskMenuButton({ taskType }: Props) {

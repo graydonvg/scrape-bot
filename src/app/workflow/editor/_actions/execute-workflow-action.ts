@@ -14,7 +14,8 @@ import { redirect } from "next/navigation";
 import executeWorkflow from "@/lib/workflow/helpers/execute-workflow/execute-workflow";
 import { taskRegistry } from "@/lib/workflow/tasks/task-registry";
 import { ActionReturn } from "@/lib/types/action";
-import { WorkflowNode, WorkflowTaskDb } from "@/lib/types/workflow";
+import { TaskDb } from "@/lib/types/task";
+import { WorkflowNode } from "@/lib/types/workflow";
 
 const executeWorkflowAction = actionClient
   .metadata({ actionName: "executeWorkflowAction" })
@@ -99,7 +100,7 @@ const executeWorkflowAction = actionClient
               phase: plan.phase,
               node: JSON.stringify(node),
               name: taskRegistry[node.data.type].label,
-            } as WorkflowTaskDb;
+            } as TaskDb;
           });
         });
 

@@ -1,13 +1,8 @@
-import {
-  WorkflowTask,
-  WorkflowTaskParamName,
-  WorkflowTaskParamType,
-  WorkflowTaskType,
-} from "@/lib/types/workflow";
+import { Task, TaskParamName, TaskParamType, TaskType } from "@/lib/types/task";
 import { GlobeIcon, LucideProps } from "lucide-react";
 
 export const launchBrowserTask = {
-  type: WorkflowTaskType.LaunchBrowser,
+  type: TaskType.LaunchBrowser,
   label: "Launch browser",
   credits: 5,
   icon: (props: LucideProps) => (
@@ -16,8 +11,8 @@ export const launchBrowserTask = {
   isEntryPoint: true,
   inputs: [
     {
-      name: WorkflowTaskParamName.WebsiteUrl,
-      type: WorkflowTaskParamType.String,
+      name: TaskParamName.WebsiteUrl,
+      type: TaskParamType.String,
       helperText: "e.g. https://www.example.com",
       required: true,
       hideHandle: true,
@@ -25,8 +20,8 @@ export const launchBrowserTask = {
   ],
   outputs: [
     {
-      name: WorkflowTaskParamName.WebPage,
-      type: WorkflowTaskParamType.BrowserInstance,
+      name: TaskParamName.WebPage,
+      type: TaskParamType.BrowserInstance,
     },
   ],
-} satisfies WorkflowTask;
+} satisfies Task;

@@ -29,7 +29,8 @@ export default async function getWorkflowExecutionWithTasksClient(
       .select("*, tasks(*)")
       .eq("userId", user.id)
       .eq("workflowExecutionId", workflowExecutionId)
-      .order("phase", { ascending: true, referencedTable: "tasks" });
+      .order("phase", { ascending: true, referencedTable: "tasks" })
+      .order("completedAt", { referencedTable: "tasks", ascending: true });
 
     if (error) {
       log.error(LOGGER_ERROR_MESSAGES.Select, {

@@ -14,7 +14,8 @@ import { LOGGER_ERROR_MESSAGES, USER_ERROR_MESSAGES } from "@/lib/constants";
 import { Edge } from "@xyflow/react";
 import createWorkflowNode from "@/lib/workflow/helpers/create-workflow-node";
 import { ActionReturn } from "@/lib/types/action";
-import { WorkflowNode, WorkflowTaskType } from "@/lib/types/workflow";
+import { TaskType } from "@/lib/types/task";
+import { WorkflowNode } from "@/lib/types/workflow";
 
 const createWorkflowAction = actionClient
   .metadata({ actionName: "createWorkflowAction" })
@@ -46,9 +47,7 @@ const createWorkflowAction = actionClient
           edges: [],
         };
 
-        initialWorkflow.nodes.push(
-          createWorkflowNode(WorkflowTaskType.LaunchBrowser),
-        );
+        initialWorkflow.nodes.push(createWorkflowNode(TaskType.LaunchBrowser));
 
         const { data, error } = await supabase
           .from("workflows")

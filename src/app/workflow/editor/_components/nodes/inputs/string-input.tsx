@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { WorkflowTaskInput } from "@/lib/types/workflow";
+import { TaskInput } from "@/lib/types/task";
 import {
   ChangeEvent,
   ElementType,
@@ -12,7 +12,7 @@ import {
 } from "react";
 
 type Props = {
-  input: WorkflowTaskInput;
+  input: TaskInput;
   value: string;
   onBlur: (newValue: string) => void;
   disabled: boolean;

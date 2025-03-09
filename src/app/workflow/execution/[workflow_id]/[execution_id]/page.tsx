@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import getWorkflowExecutionWithTasksServer from "../../_data-access/get-execution-with-tasks-server";
-import ExecutionViewer from "../../_components/execution-viewer";
+import ExecutionDetails from "../../_components/execution-details";
 
 export const metadata: Metadata = {
   title: "Workflow execution",
@@ -21,6 +21,6 @@ export default async function WorkflowExecutionPage({ params }: Params) {
   if (!workflowExecution) notFound();
 
   return (
-    <ExecutionViewer workflowId={workflowId} initialData={workflowExecution} />
+    <ExecutionDetails workflowId={workflowId} initialData={workflowExecution} />
   );
 }

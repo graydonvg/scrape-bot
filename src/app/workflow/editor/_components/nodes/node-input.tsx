@@ -3,11 +3,11 @@ import { Handle, Position, useEdges } from "@xyflow/react";
 import NodeInputField from "./node-input-field";
 import { nodeHandleColor } from "./common";
 import useWorkflowsStore from "@/lib/store/workflows-store";
-import { WorkflowTaskInput } from "@/lib/types/workflow";
+import { TaskInput } from "@/lib/types/task";
 
 type Props = {
   nodeId: string;
-  input: WorkflowTaskInput;
+  input: TaskInput;
 };
 
 export default function NodeInput({ nodeId, input }: Props) {

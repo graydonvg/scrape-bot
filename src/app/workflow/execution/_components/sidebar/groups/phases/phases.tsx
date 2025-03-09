@@ -4,10 +4,10 @@ import CollapsiblePhase from "./collapsible-phase";
 import PhasesGroupLabel from "./phases-group-label";
 import { useCallback, useEffect, useState } from "react";
 import getUniquePhaseNumbers from "@/lib/workflow/helpers/get-unique-phase-numbers";
-import { WorkflowTaskDb } from "@/lib/types/workflow";
+import { TaskDb } from "@/lib/types/task";
 
 type Props = {
-  tasks?: WorkflowTaskDb[];
+  tasks?: TaskDb[];
 };
 
 export default function Phases({ tasks }: Props) {

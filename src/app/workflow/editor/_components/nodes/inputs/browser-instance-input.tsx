@@ -1,7 +1,7 @@
-import { WorkflowTaskInput } from "@/lib/types/workflow";
+import { TaskInput } from "@/lib/types/task";
 
 type Props = {
-  input: WorkflowTaskInput;
+  input: TaskInput;
 };
 
 export default function BrowserInstanceInput({ input }: Props) {

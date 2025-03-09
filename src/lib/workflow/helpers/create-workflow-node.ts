@@ -1,7 +1,8 @@
-import { WorkflowNode, WorkflowTaskType } from "@/lib/types/workflow";
+import { TaskType } from "@/lib/types/task";
+import { WorkflowNode } from "@/lib/types/workflow";
 
 export default function createWorkflowNode(
-  taskType: WorkflowTaskType,
+  taskType: TaskType,
   position?: { x: number; y: number },
 ): WorkflowNode {
   return {

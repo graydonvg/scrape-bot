@@ -1,10 +1,10 @@
 import { cn } from "@/lib/utils";
 import { Handle, Position } from "@xyflow/react";
 import { nodeHandleColor } from "./common";
-import { WorkflowTaskOutput } from "@/lib/types/workflow";
+import { TaskOutput } from "@/lib/types/task";
 
 type Props = {
-  output: WorkflowTaskOutput;
+  output: TaskOutput;
 };
 
 export default function NodeOutput({ output }: Props) {

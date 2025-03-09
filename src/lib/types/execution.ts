@@ -1,7 +1,8 @@
 import { Browser, Page } from "puppeteer";
 import { Database } from "../supabase/database.types";
-import { WorkflowNode, WorkflowTask, WorkflowTaskDb } from "./workflow";
+import { Task, TaskDb } from "./task";
 import { LogCollector } from "./log";
+import { WorkflowNode } from "./workflow";
 
 export type WorkflowExecutionStatusDb =
   Database["public"]["Enums"]["WorkflowExecutionStatus"];
@@ -28,7 +29,7 @@ export type WorkflowExecutionPlanError = {
 
 export type WorkflowExecutionPhase = {
   phaseNumber: number;
-  tasks: WorkflowTaskDb[];
+  tasks: TaskDb[];
 };
 
 export type ExecutionPhaseContext = {
@@ -43,7 +44,7 @@ export type ExecutionPhaseContext = {
   >;
 };
 
-export type ExecutionContext<T extends WorkflowTask> = {
+export type ExecutionContext<T extends Task> = {
   getInput: (name: T["inputs"][number]["name"]) => string;
 
   setOutput: (name: T["outputs"][number]["name"], value: string) => void;

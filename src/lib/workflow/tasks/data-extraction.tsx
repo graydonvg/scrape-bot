@@ -1,13 +1,8 @@
-import {
-  WorkflowTask,
-  WorkflowTaskParamName,
-  WorkflowTaskParamType,
-  WorkflowTaskType,
-} from "@/lib/types/workflow";
+import { Task, TaskParamName, TaskParamType, TaskType } from "@/lib/types/task";
 import { CodeIcon, LucideProps, TextIcon } from "lucide-react";
 
 export const getPageHtmlTask = {
-  type: WorkflowTaskType.GetPageHtml,
+  type: TaskType.GetPageHtml,
   label: "Get page HTML",
   credits: 2,
   icon: (props: LucideProps) => (
@@ -16,25 +11,25 @@ export const getPageHtmlTask = {
   isEntryPoint: false,
   inputs: [
     {
-      name: WorkflowTaskParamName.WebPage,
-      type: WorkflowTaskParamType.BrowserInstance,
+      name: TaskParamName.WebPage,
+      type: TaskParamType.BrowserInstance,
       required: true,
     },
   ],
   outputs: [
     {
-      name: WorkflowTaskParamName.Html,
-      type: WorkflowTaskParamType.String,
+      name: TaskParamName.Html,
+      type: TaskParamType.String,
     },
     {
-      name: WorkflowTaskParamName.WebPage,
-      type: WorkflowTaskParamType.BrowserInstance,
+      name: TaskParamName.WebPage,
+      type: TaskParamType.BrowserInstance,
     },
   ],
-} satisfies WorkflowTask;
+} satisfies Task;
 
 export const extractTextFromElementTask = {
-  type: WorkflowTaskType.ExtractTextFromElement,
+  type: TaskType.ExtractTextFromElement,
   label: "Extract text from element",
   credits: 2,
   icon: (props: LucideProps) => (
@@ -43,21 +38,21 @@ export const extractTextFromElementTask = {
   isEntryPoint: false,
   inputs: [
     {
-      name: WorkflowTaskParamName.Html,
-      type: WorkflowTaskParamType.String,
+      name: TaskParamName.Html,
+      type: TaskParamType.String,
       required: true,
       variant: "textarea",
     },
     {
-      name: WorkflowTaskParamName.Selector,
-      type: WorkflowTaskParamType.String,
+      name: TaskParamName.Selector,
+      type: TaskParamType.String,
       required: true,
     },
   ],
   outputs: [
     {
-      name: WorkflowTaskParamName.ExtractedText,
-      type: WorkflowTaskParamType.String,
+      name: TaskParamName.ExtractedText,
+      type: TaskParamType.String,
     },
   ],
-} satisfies WorkflowTask;
+} satisfies Task;

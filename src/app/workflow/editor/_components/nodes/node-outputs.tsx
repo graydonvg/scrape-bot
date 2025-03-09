@@ -1,8 +1,8 @@
-import { WorkflowTaskOutput } from "@/lib/types/workflow";
+import { TaskOutput } from "@/lib/types/task";
 import NodeOutput from "./node-output";
 
 type Props = {
-  outputs: WorkflowTaskOutput[];
+  outputs: TaskOutput[];
 };
 
 export default function NodeOutputs({ outputs }: Props) {

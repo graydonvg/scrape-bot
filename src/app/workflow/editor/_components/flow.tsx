@@ -30,11 +30,8 @@ import { useLogger } from "next-axiom";
 import DeleteableEdge from "./edges/deleteable-edge";
 import createWorkflowNode from "@/lib/workflow/helpers/create-workflow-node";
 import { taskRegistry } from "@/lib/workflow/tasks/task-registry";
-import {
-  WorkflowDb,
-  WorkflowNode,
-  WorkflowTaskType,
-} from "@/lib/types/workflow";
+import { TaskType } from "@/lib/types/task";
+import { WorkflowDb, WorkflowNode } from "@/lib/types/workflow";
 
 const fitViewOptions = {
   padding: 1,
@@ -99,10 +96,7 @@ export default function Flow({ workflow }: Props) {
 
       const poisiton = screenToFlowPosition({ x: e.clientX, y: e.clientY });
 
-      const newNode = createWorkflowNode(
-        taskType as WorkflowTaskType,
-        poisiton,
-      );
+      const newNode = createWorkflowNode(taskType as TaskType, poisiton);
 
       setNodes((prev) => prev.concat(newNode));
     },

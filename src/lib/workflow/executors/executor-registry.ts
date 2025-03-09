@@ -4,17 +4,17 @@ import launchBrowserExecutor from "./launch-broswer";
 import getPageHtmlExecutor from "./get-page-html";
 import extractTextFromElementExecutor from "./extract-text-from-element.ts";
 import { Logger } from "next-axiom";
-import { WorkflowTask, WorkflowTaskType } from "@/lib/types/workflow";
+import { Task, TaskType } from "@/lib/types/task";
 import { ExecutionContext } from "@/lib/types/execution";
 
-type ExecutorFn<T extends WorkflowTask> = (
+type ExecutorFn<T extends Task> = (
   taskId: string,
   executionContext: ExecutionContext<T>,
   log: Logger,
 ) => Promise<{ success: boolean }>;
 
 type ExecutorRegistry = {
-  [K in WorkflowTaskType]: ExecutorFn<WorkflowTask & { type: K }>;
+  [K in TaskType]: ExecutorFn<Task & { type: K }>;
 };
 
 export const executorRegistry: ExecutorRegistry = {

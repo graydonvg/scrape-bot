@@ -6,10 +6,10 @@ import {
 import { CircleCheckBigIcon, CircleXIcon, Loader2Icon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
-import { WorkflowTaskDb } from "@/lib/types/workflow";
+import { TaskDb } from "@/lib/types/task";
 
 type Props = {
-  task: WorkflowTaskDb;
+  task: TaskDb;
 };
 
 export default function PhaseTaskButton({ task }: Props) {
@@ -22,6 +22,7 @@ export default function PhaseTaskButton({ task }: Props) {
   return (
     <SidebarMenuSubItem>
       <SidebarMenuSubButton
+        aria-disabled={state.isLoading}
         isActive={taskId === task.taskId}
         onClick={handleClick}
         className="cursor-pointer"

@@ -2,15 +2,12 @@ import StringInput from "./inputs/string-input";
 import { useReactFlow } from "@xyflow/react";
 import { useCallback } from "react";
 import BrowserInstanceInput from "./inputs/browser-instance-input";
-import {
-  WorkflowNode,
-  WorkflowTaskInput,
-  WorkflowTaskParamType,
-} from "@/lib/types/workflow";
+import { TaskInput, TaskParamType } from "@/lib/types/task";
+import { WorkflowNode } from "@/lib/types/workflow";
 
 type Props = {
   nodeId: string;
-  input: WorkflowTaskInput;
+  input: TaskInput;
   disabled: boolean;
 };
 
@@ -32,7 +29,7 @@ export default function NodeInputField({ nodeId, input, disabled }: Props) {
   );
 
   switch (input.type) {
-    case WorkflowTaskParamType.String:
+    case TaskParamType.String:
       return (
         <StringInput
           input={input}
@@ -42,7 +39,7 @@ export default function NodeInputField({ nodeId, input, disabled }: Props) {
         />
       );
 
-    case WorkflowTaskParamType.BrowserInstance:
+    case TaskParamType.BrowserInstance:
       return <BrowserInstanceInput input={input} />;
 
     default:

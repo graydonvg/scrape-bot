@@ -1,9 +1,9 @@
-import { WorkflowTaskInput } from "@/lib/types/workflow";
+import { TaskInput } from "@/lib/types/task";
 import NodeInput from "./node-input";
 
 type Props = {
   nodeId: string;
-  inputs: WorkflowTaskInput[];
+  inputs: TaskInput[];
 };
 
 export default function NodeInputs({ nodeId, inputs }: Props) {

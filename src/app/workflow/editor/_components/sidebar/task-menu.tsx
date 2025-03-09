@@ -5,17 +5,14 @@ import { SidebarGroup, SidebarMenu, useSidebar } from "@/components/ui/sidebar";
 import { useState } from "react";
 import TasksGroupLabel from "./tasks-group-label";
 import CollapsibleCategory from "./collapsible-category";
-import { WorkflowTaskType } from "@/lib/types/workflow";
+import { TaskType } from "@/lib/types/task";
 
 const items = [
   {
     category: "Data Extraction",
     icon: FileCode2Icon,
     isOpen: true,
-    taskTypes: [
-      WorkflowTaskType.GetPageHtml,
-      WorkflowTaskType.ExtractTextFromElement,
-    ],
+    taskTypes: [TaskType.GetPageHtml, TaskType.ExtractTextFromElement],
   },
 ];
 

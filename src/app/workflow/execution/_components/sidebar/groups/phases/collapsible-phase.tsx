@@ -2,11 +2,11 @@ import { SidebarMenuItem, SidebarMenuSub } from "@/components/ui/sidebar";
 import { Collapsible, CollapsibleContent } from "@/components/ui/collapsible";
 import CollapsiblePhaseTrigger from "./collapsible-phase-trigger";
 import PhaseTaskButton from "./phase-task-button";
-import { WorkflowTaskDb } from "@/lib/types/workflow";
+import { TaskDb } from "@/lib/types/task";
 
 type Props = {
   phaseNumber: number;
-  tasks?: WorkflowTaskDb[];
+  tasks?: TaskDb[];
   isOpen: boolean;
   onOpenChange: () => void;
   onCollapsibleTriggerClick: () => void;

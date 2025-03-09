@@ -5,7 +5,7 @@ import { launchBrowserTask } from "../tasks/entry-point";
 import { LOGGER_ERROR_MESSAGES, USER_ERROR_MESSAGES } from "@/lib/constants";
 import { Logger } from "next-axiom";
 import { ExecutionContext } from "@/lib/types/execution";
-import { WorkflowTaskParamName } from "@/lib/types/workflow";
+import { TaskParamName } from "@/lib/types/task";
 
 export default async function launchBrowserExecutor(
   taskId: string,
@@ -15,18 +15,20 @@ export default async function launchBrowserExecutor(
   log.with({ executor: "launchBrowserExecutor" });
 
   try {
-    const websiteUrl = executionContext.getInput(
-      WorkflowTaskParamName.WebsiteUrl,
-    );
+    const websiteUrl = executionContext.getInput(TaskParamName.WebsiteUrl);
 
     const browser = await puppeteer.launch({
-      headless: false, // false to open the browser window for testing
+      headless: true, // false to open the browser window for testing
     });
+
+    executionContext.logDb.INFO(taskId, "Browser launched successfully");
 
     executionContext.setBrowser(browser);
 
     const page = await browser.newPage();
     await page.goto(websiteUrl);
+
+    executionContext.logDb.INFO(taskId, `Visiting ${websiteUrl}`);
 
     executionContext.setPage(page);
 

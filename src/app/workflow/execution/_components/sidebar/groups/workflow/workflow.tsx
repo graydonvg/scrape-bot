@@ -29,8 +29,8 @@ export default function Workflow({
   completedAt,
   creditsConsumed,
 }: Props) {
-  const startedAtDate = startedAt ? new Date(startedAt) : undefined;
-  const completedAtDate = completedAt ? new Date(completedAt) : undefined;
+  const startedAtDate = startedAt ? new Date(startedAt) : null;
+  const completedAtDate = completedAt ? new Date(completedAt) : null;
   const duration = datesToDurationString(startedAtDate, completedAtDate);
   const formattedStatus = status?.split("_").join(" ");
 

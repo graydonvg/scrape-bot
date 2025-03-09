@@ -1,9 +1,9 @@
 import { launchBrowserTask } from "./entry-point";
 import { extractTextFromElementTask, getPageHtmlTask } from "./data-extraction";
-import { WorkflowTask, WorkflowTaskType } from "@/lib/types/workflow";
+import { Task, TaskType } from "@/lib/types/task";
 
 type TaskRegistry = {
-  [K in WorkflowTaskType]: WorkflowTask & {
+  [K in TaskType]: Task & {
     type: K;
   };
 };

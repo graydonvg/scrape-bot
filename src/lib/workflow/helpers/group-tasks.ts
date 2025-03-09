@@ -1,9 +1,9 @@
 import { WorkflowExecutionPhase } from "@/lib/types/execution";
-import { WorkflowTaskDb } from "@/lib/types/workflow";
+import { TaskDb } from "@/lib/types/task";
 
 export function groupTasksByPhaseNumber(
   uniquePhaseNumbers: number[],
-  tasks: WorkflowTaskDb[],
+  tasks: TaskDb[],
 ) {
   const groupedTasks = uniquePhaseNumbers.reduce((acc, phaseNumber) => {
     const tasksInPhase = tasks.filter((task) => task.phase === phaseNumber);

@@ -5,7 +5,7 @@ import { extractTextFromElementTask } from "../tasks/data-extraction";
 import * as cheerio from "cheerio";
 import { Logger } from "next-axiom";
 import { ExecutionContext } from "@/lib/types/execution";
-import { WorkflowTaskParamName } from "@/lib/types/workflow";
+import { TaskParamName } from "@/lib/types/task";
 
 export default async function extractTextFromElementExecutor(
   taskId: string,
@@ -15,19 +15,19 @@ export default async function extractTextFromElementExecutor(
   log.with({ executor: "extractTextFromElementExecutor" });
 
   try {
-    const selector = executionContext.getInput(WorkflowTaskParamName.Selector);
+    const selector = executionContext.getInput(TaskParamName.Selector);
 
     if (!selector) {
-      log.error("Selector not defined");
-      executionContext.logDb.ERROR(taskId, "Selector not defined");
+      log.error("Selector undefined");
+      executionContext.logDb.ERROR(taskId, "Selector undefined");
       return { success: false };
     }
 
-    const html = executionContext.getInput(WorkflowTaskParamName.Html);
+    const html = executionContext.getInput(TaskParamName.Html);
 
     if (!html) {
-      log.error("HTML not defined");
-      executionContext.logDb.ERROR(taskId, "HTML not defined");
+      log.error("HTML undefined");
+      executionContext.logDb.ERROR(taskId, "HTML undefined");
       return { success: false };
     }
 
@@ -42,14 +42,19 @@ export default async function extractTextFromElementExecutor(
     const extractedText = $.text(element);
 
     if (!extractedText) {
-      executionContext.logDb.ERROR(taskId, "Element has no text");
+      executionContext.logDb.ERROR(
+        taskId,
+        "Invalid selector or element has no text",
+      );
       return { success: false };
     }
 
-    executionContext.setOutput(
-      WorkflowTaskParamName.ExtractedText,
-      extractedText,
+    executionContext.logDb.INFO(
+      taskId,
+      "Extracted text from element successfully",
     );
+
+    executionContext.setOutput(TaskParamName.ExtractedText, extractedText);
 
     return { success: true };
   } catch (error) {

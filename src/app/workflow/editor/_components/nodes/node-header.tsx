@@ -3,7 +3,7 @@
 import TooltipWrapper from "@/components/tooltip-wrapper";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { WorkflowTaskType } from "@/lib/types/workflow";
+import { TaskType } from "@/lib/types/task";
 import createWorkflowNode from "@/lib/workflow/helpers/create-workflow-node";
 import { taskRegistry } from "@/lib/workflow/tasks/task-registry";
 import { useReactFlow } from "@xyflow/react";
@@ -16,7 +16,7 @@ import {
 
 type Props = {
   nodeId: string;
-  taskType: WorkflowTaskType;
+  taskType: TaskType;
 };
 
 export default function NodeHeader({ nodeId, taskType }: Props) {

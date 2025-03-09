@@ -4,13 +4,9 @@ import { LogCollector } from "@/lib/types/log";
 import { Edge } from "@xyflow/react";
 import { taskRegistry } from "../../tasks/task-registry";
 import { Logger } from "next-axiom";
-import {
-  WorkflowNode,
-  WorkflowTask,
-  WorkflowTaskParamName,
-  WorkflowTaskParamType,
-} from "@/lib/types/workflow";
+import { Task, TaskParamName, TaskParamType } from "@/lib/types/task";
 import { ExecutionContext, ExecutionPhaseContext } from "@/lib/types/execution";
+import { WorkflowNode } from "@/lib/types/workflow";
 
 /*
  * Populates the execution phase context for a given workflow node by setting up its input values.
@@ -38,7 +34,7 @@ export function populatePhaseContext(
 
   for (const input of taskInputs) {
     // Inputs of type BrowserInstance will be handled by a different function
-    if (input.type === WorkflowTaskParamType.BrowserInstance) continue;
+    if (input.type === TaskParamType.BrowserInstance) continue;
 
     const inputValue = node.data.inputs[input.name];
 
@@ -86,10 +82,9 @@ export function createExecutionContext(
   node: WorkflowNode,
   phaseContext: ExecutionPhaseContext,
   logCollector: LogCollector,
-): ExecutionContext<WorkflowTask> {
+): ExecutionContext<Task> {
   return {
-    getInput: (name: WorkflowTaskParamName) =>
-      phaseContext.tasks[node.id].inputs[name],
+    getInput: (name: TaskParamName) => phaseContext.tasks[node.id].inputs[name],
 
     setOutput: (name, value) => {
       phaseContext.tasks[node.id].outputs[name] = value;
