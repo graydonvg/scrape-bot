@@ -1,6 +1,6 @@
 import getUserDataServer from "@/data-access/get-user-data-server";
-import { NavUserClient } from "./nav-user-client";
 import { redirect } from "next/navigation";
+import { NavUserClient } from "./nav-user-client";
 
 export default async function NavUserServer() {
   const userData = await getUserDataServer();
