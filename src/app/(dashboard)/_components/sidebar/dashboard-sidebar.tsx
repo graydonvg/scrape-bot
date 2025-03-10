@@ -9,7 +9,7 @@ import { NavMain } from "./nav-main";
 import AppSidebar from "@/components/sidebar/app-sidebar";
 import SidebarLogo from "@/components/sidebar/sidebar-logo";
 import { Skeleton } from "@/components/ui/skeleton";
-import NavUserServer from "@/components/sidebar/nav-user-server";
+import NavUserServer from "@/components/sidebar/nav-user/nav-user-server";
 
 export default function DashboardSidebar({
   ...props

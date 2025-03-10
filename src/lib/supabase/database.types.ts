@@ -99,6 +99,8 @@ export type Database = {
       };
       users: {
         Row: {
+          avatarUrl: string | null;
+          credits: number;
           email: string;
           firstName: string | null;
           lastName: string | null;
@@ -106,6 +108,8 @@ export type Database = {
           userId: string;
         };
         Insert: {
+          avatarUrl?: string | null;
+          credits?: number;
           email: string;
           firstName?: string | null;
           lastName?: string | null;
@@ -113,6 +117,8 @@ export type Database = {
           userId: string;
         };
         Update: {
+          avatarUrl?: string | null;
+          credits?: number;
           email?: string;
           firstName?: string | null;
           lastName?: string | null;

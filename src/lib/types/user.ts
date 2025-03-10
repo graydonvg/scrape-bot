@@ -1,6 +1,6 @@
-export type User = {
-  firstName: string | null;
-  lastName: string | null;
-  email: string;
-  avatar?: string;
-};
+import { Database } from "../supabase/database.types";
+
+export type UserDb = Omit<
+  Database["public"]["Tables"]["users"]["Row"],
+  "updatedAt" | "userId"
+>;

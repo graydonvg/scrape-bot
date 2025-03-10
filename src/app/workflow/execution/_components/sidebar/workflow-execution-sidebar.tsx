@@ -7,7 +7,7 @@ import {
 import { ComponentProps } from "react";
 import AppSidebar from "@/components/sidebar/app-sidebar";
 import SidebarLogo from "@/components/sidebar/sidebar-logo";
-import { NavUserClient } from "@/components/sidebar/nav-user-client";
+import { NavUserClient } from "@/components/sidebar/nav-user/nav-user-client";
 import ExecutionDetails from "./execution-details";
 import { Separator } from "@/components/ui/separator";
 

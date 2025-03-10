@@ -7,5 +7,5 @@ export default async function NavUserServer() {
 
   if (!userData) return redirect("/signin");
 
-  return <NavUserClient user={{ avatar: "", ...userData }} />;
+  return <NavUserClient user={userData} />;
 }

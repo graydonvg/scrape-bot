@@ -30,14 +30,10 @@ import { useLogger } from "next-axiom";
 import useUserStore from "@/lib/store/user-store";
 import { useEffect } from "react";
 import getUserDataClient from "@/data-access/get-user-data-client";
+import { UserDb } from "@/lib/types/user";
 
 type Props = {
-  user?: {
-    firstName: string | null;
-    lastName: string | null;
-    email: string;
-    avatar?: string;
-  };
+  user?: UserDb | null;
 };
 
 export function NavUserClient({ user }: Props) {
@@ -47,7 +43,7 @@ export function NavUserClient({ user }: Props) {
   const supabase = createSupabaseBrowserClient();
   const { user: userStore, setUser } = useUserStore();
   const userFullName = getUserFullName();
-  const userName = userFullName.length ? userFullName : "User";
+  const userName = getUsername(userFullName);
   const avatarFallbackChars = getUserAvatarFallbackChars(userFullName);
 
   useEffect(() => {
@@ -79,14 +75,17 @@ export function NavUserClient({ user }: Props) {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage
-                  src={userStore.avatar}
-                  alt={`${userName} avatar`}
-                />
-                <AvatarFallback className="rounded-lg uppercase">
-                  {avatarFallbackChars}
-                </AvatarFallback>
+              <Avatar className="h-8 w-8 rounded-md">
+                {userStore.avatarUrl ? (
+                  <AvatarImage
+                    src={userStore.avatarUrl}
+                    alt={`${userName} avatar`}
+                  />
+                ) : (
+                  <AvatarFallback className="rounded-md uppercase">
+                    {avatarFallbackChars}
+                  </AvatarFallback>
+                )}
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">{userName}</span>
@@ -103,14 +102,17 @@ export function NavUserClient({ user }: Props) {
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage
-                    src={userStore.avatar}
-                    alt={`${userName} avatar`}
-                  />
-                  <AvatarFallback className="rounded-lg uppercase">
-                    {avatarFallbackChars}
-                  </AvatarFallback>
+                <Avatar className="h-8 w-8 rounded-md">
+                  {userStore.avatarUrl ? (
+                    <AvatarImage
+                      src={userStore.avatarUrl}
+                      alt={`${userName} avatar`}
+                    />
+                  ) : (
+                    <AvatarFallback className="rounded-md uppercase">
+                      {avatarFallbackChars}
+                    </AvatarFallback>
+                  )}
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">{userName}</span>
@@ -148,6 +150,10 @@ export function NavUserClient({ user }: Props) {
     const userFullName = `${userStore.firstName ? userStore.firstName : ""} ${userStore.lastName ? userStore.lastName : ""}`;
 
     return userFullName.trim();
+  }
+
+  function getUsername(userFullName: string) {
+    return userFullName.length ? userFullName : userStore.email.split("@")[0];
   }
 
   function getUserAvatarFallbackChars(userFullName: string) {
