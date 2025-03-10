@@ -1,12 +1,9 @@
-import TooltipWrapper from "@/components/tooltip-wrapper";
-import { Button } from "@/components/ui/button";
-import { ChevronLeftIcon } from "lucide-react";
-import Link from "next/link";
 import SaveWorkflowButton from "../editor/_components/buttons/save-workflow-button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { ThemeMenu } from "@/components/theme/theme-menu";
 import ExecuteWorkflowButton from "../editor/_components/buttons/execute-workflow-button";
+import BackButton from "./back-button";
 
 type Props = {
   title: string;
@@ -31,19 +28,7 @@ export default function TopBar({
             className="bg-sidebar-border !h-[25%]"
           />
           <div className="flex w-10 grow items-center gap-4">
-            <TooltipWrapper tooltipContent="Back">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="shrink-0 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:size-8"
-                asChild
-              >
-                <Link href="/workflows">
-                  <ChevronLeftIcon className="size-6 shrink-0 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:size-4" />
-                </Link>
-              </Button>
-            </TooltipWrapper>
-
+            <BackButton />
             <div className="flex flex-col justify-center overflow-hidden">
               <p className="truncate font-bold transition-[font-size] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:text-xs">
                 {title}

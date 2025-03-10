@@ -31,6 +31,7 @@ import useUserStore from "@/lib/store/user-store";
 import { useEffect } from "react";
 import getUserDataClient from "@/data-access/get-user-data-client";
 import { UserDb } from "@/lib/types/user";
+import { ThemeMenuItems } from "../../theme/theme-menu-items";
 
 type Props = {
   user?: UserDb | null;
@@ -134,6 +135,13 @@ export function NavUserClient({ user }: Props) {
                 <BellIcon />
                 Notifications
               </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuLabel className="font-normal">
+                Theme
+              </DropdownMenuLabel>
+              <ThemeMenuItems />
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleSignOut}>

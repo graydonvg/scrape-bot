@@ -84,7 +84,7 @@ export default function ExecutionDetails({ workflowId, initialData }: Props) {
 
       const taskToSelect = workflowExecutionData.tasks.at(-1);
 
-      router.push(`?task=${taskToSelect!.taskId}`);
+      router.replace(`?task=${taskToSelect!.taskId}`);
     }
 
     // If the entire worklfow failed, select the first task that failed.
@@ -95,7 +95,7 @@ export default function ExecutionDetails({ workflowId, initialData }: Props) {
         (task) => task.status === "FAILED",
       );
 
-      router.push(`?task=${taskToSelect!.taskId}`);
+      router.replace(`?task=${taskToSelect!.taskId}`);
     }
 
     // If the worklfow partially failed, select the last task that complete.
@@ -106,7 +106,7 @@ export default function ExecutionDetails({ workflowId, initialData }: Props) {
         (task) => task.status === "COMPLETED",
       );
 
-      router.push(`?task=${taskToSelect!.taskId}`);
+      router.replace(`?task=${taskToSelect!.taskId}`);
     }
   }, [workflowExecutionData, taskIdParam, router, workflowDidExecute]);
 

@@ -72,7 +72,7 @@ export default function PhaseTaskButton({ task }: Props) {
   function handleClick() {
     if (task.status === "EXECUTING") return;
 
-    router.push(`?task=${task.taskId}`);
+    router.replace(`?task=${task.taskId}`);
 
     if (isMobile) setOpenMobile(false);
   }

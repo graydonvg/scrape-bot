@@ -19,7 +19,7 @@ export default function ExecuteWorkflowButton({ workflowId }: Props) {
   const { toObject } = useReactFlow();
   const { execute, isPending } = useAction(executeWorkflowAction, {
     onExecute: () => {
-      toast.loading("Executing workflow...", { id: toastId });
+      toast.loading("Processing workflow...", { id: toastId });
     },
     onSuccess: ({ data }) => {
       if (data && !data.success) {
@@ -48,7 +48,7 @@ export default function ExecuteWorkflowButton({ workflowId }: Props) {
       }}
     >
       <span className="ml-2 truncate transition-[margin] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:ml-0">
-        {!isPending ? "Execute" : "Executing..."}
+        {!isPending ? "Execute" : "Processing..."}
       </span>
     </ButtonWithSpinner>
   );
