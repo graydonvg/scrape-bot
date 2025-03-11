@@ -1,5 +1,6 @@
 import {
   SidebarGroup,
+  SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
 } from "@/components/ui/sidebar";
@@ -40,40 +41,42 @@ export default function Workflow({
         <WorkflowIcon size={20} className="stroke-muted-foreground/80" />
         <span className="font-semibold">Workflow</span>
       </SidebarGroupLabel>
-      <SidebarMenu>
-        <WorkflowExecutionDetail
-          icon={CircleDashedIcon}
-          label="Status"
-          value={formattedStatus || "-"}
-        />
-        <WorkflowExecutionDetail
-          icon={CalendarIcon}
-          label="Started at"
-          value={
-            startedAtDate
-              ? formatDistanceToNow(startedAtDate, {
-                  addSuffix: true,
-                })
-              : "-"
-          }
-        />
-        <WorkflowExecutionDetail
-          icon={ClockIcon}
-          label="Duration"
-          value={
-            duration ? (
-              duration
-            ) : (
-              <Loader2Icon size={20} className="animate-spin" />
-            )
-          }
-        />
-        <WorkflowExecutionDetail
-          icon={CoinsIcon}
-          label="Credits consumed"
-          value={creditsConsumed}
-        />
-      </SidebarMenu>
+      <SidebarGroupContent>
+        <SidebarMenu>
+          <WorkflowExecutionDetail
+            icon={CircleDashedIcon}
+            label="Status"
+            value={formattedStatus || "-"}
+          />
+          <WorkflowExecutionDetail
+            icon={CalendarIcon}
+            label="Started at"
+            value={
+              startedAtDate
+                ? formatDistanceToNow(startedAtDate, {
+                    addSuffix: true,
+                  })
+                : "-"
+            }
+          />
+          <WorkflowExecutionDetail
+            icon={ClockIcon}
+            label="Duration"
+            value={
+              duration ? (
+                duration
+              ) : (
+                <Loader2Icon size={20} className="animate-spin" />
+              )
+            }
+          />
+          <WorkflowExecutionDetail
+            icon={CoinsIcon}
+            label="Credits consumed"
+            value={creditsConsumed}
+          />
+        </SidebarMenu>
+      </SidebarGroupContent>
     </SidebarGroup>
   );
 }

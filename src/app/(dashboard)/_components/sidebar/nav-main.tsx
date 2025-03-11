@@ -2,6 +2,7 @@
 
 import {
   SidebarGroup,
+  SidebarGroupContent,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -20,27 +21,29 @@ export function NavMain() {
 
   return (
     <SidebarGroup>
-      <nav>
-        <SidebarMenu>
-          {routes.map((route) => (
-            <SidebarMenuItem key={route.label}>
-              <SidebarMenuButton
-                asChild
-                tooltip={route.label}
-                isActive={activeRoute && activeRoute.href === route.href}
-                onClick={() => {
-                  if (isMobile) setOpenMobile(false);
-                }}
-              >
-                <Link href={route.href}>
-                  <route.icon />
-                  <span>{route.label}</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
-        </SidebarMenu>
-      </nav>
+      <SidebarGroupContent>
+        <nav>
+          <SidebarMenu>
+            {routes.map((route) => (
+              <SidebarMenuItem key={route.label}>
+                <SidebarMenuButton
+                  asChild
+                  tooltip={route.label}
+                  isActive={activeRoute && activeRoute.href === route.href}
+                  onClick={() => {
+                    if (isMobile) setOpenMobile(false);
+                  }}
+                >
+                  <Link href={route.href}>
+                    <route.icon />
+                    <span>{route.label}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </nav>
+      </SidebarGroupContent>
     </SidebarGroup>
   );
 }

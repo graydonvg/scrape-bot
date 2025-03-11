@@ -2,9 +2,9 @@ import { LOGGER_ERROR_MESSAGES } from "@/lib/constants";
 import { createSupabaseBrowserClient } from "@/lib/supabase/supabase-browser";
 import { Logger } from "next-axiom";
 
-export default async function getUserDataClient() {
+export default async function getUserAvailableCredits() {
   let log = new Logger();
-  log = log.with({ context: "getUserDataClient" });
+  log = log.with({ context: "getUserAvailableCredits" });
 
   try {
     const supabase = createSupabaseBrowserClient();
@@ -19,7 +19,7 @@ export default async function getUserDataClient() {
 
     const { data, error } = await supabase
       .from("users")
-      .select("email, firstName, lastName, avatarUrl")
+      .select("credits")
       .eq("userId", user.id);
 
     if (error) {

@@ -1,4 +1,9 @@
-import { SidebarGroup, SidebarMenu, useSidebar } from "@/components/ui/sidebar";
+import {
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarMenu,
+  useSidebar,
+} from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import CollapsiblePhase from "./collapsible-phase";
 import PhasesGroupLabel from "./phases-group-label";
@@ -42,35 +47,37 @@ export default function Phases({ tasks }: Props) {
         onExpandAll={handleExpandAll}
         onCollapseAll={handleCollapseAll}
       />
-      <SidebarMenu>
-        {phases.length > 0 ? (
-          phases.map((phase) => (
-            <CollapsiblePhase
-              key={phase.phaseNumber}
-              phaseNumber={phase.phaseNumber}
-              tasks={phase.tasks}
-              isOpen={phase.isOpen}
-              onOpenChange={
-                sidebarState !== "collapsed"
-                  ? () =>
-                      handleCollapsibleState(phase.phaseNumber, !phase.isOpen)
-                  : () => handleCollapsibleState(phase.phaseNumber, true)
-              }
-              onCollapsibleTriggerClick={() => {
-                if (sidebarState === "collapsed") {
-                  toggleSidebar();
+      <SidebarGroupContent>
+        <SidebarMenu>
+          {phases.length > 0 ? (
+            phases.map((phase) => (
+              <CollapsiblePhase
+                key={phase.phaseNumber}
+                phaseNumber={phase.phaseNumber}
+                tasks={phase.tasks}
+                isOpen={phase.isOpen}
+                onOpenChange={
+                  sidebarState !== "collapsed"
+                    ? () =>
+                        handleCollapsibleState(phase.phaseNumber, !phase.isOpen)
+                    : () => handleCollapsibleState(phase.phaseNumber, true)
                 }
-              }}
-            />
-          ))
-        ) : (
-          <div className="space-y-2">
-            {Array.from({ length: 3 }).map((_, index) => (
-              <Skeleton key={index} className="bg-muted h-6 w-full" />
-            ))}
-          </div>
-        )}
-      </SidebarMenu>
+                onCollapsibleTriggerClick={() => {
+                  if (sidebarState === "collapsed") {
+                    toggleSidebar();
+                  }
+                }}
+              />
+            ))
+          ) : (
+            <div className="space-y-2">
+              {Array.from({ length: 3 }).map((_, index) => (
+                <Skeleton key={index} className="bg-muted h-6 w-full" />
+              ))}
+            </div>
+          )}
+        </SidebarMenu>
+      </SidebarGroupContent>
     </SidebarGroup>
   );
 

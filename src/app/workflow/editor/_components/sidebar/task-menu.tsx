@@ -1,7 +1,12 @@
 "use client";
 
 import { FileCode2Icon } from "lucide-react";
-import { SidebarGroup, SidebarMenu, useSidebar } from "@/components/ui/sidebar";
+import {
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarMenu,
+  useSidebar,
+} from "@/components/ui/sidebar";
 import { useState } from "react";
 import TasksGroupLabel from "./tasks-group-label";
 import CollapsibleCategory from "./collapsible-category";
@@ -26,27 +31,29 @@ export default function TaskMenu() {
         onExpandAll={handleExpandAll}
         onCollapseAll={handleCollapseAll}
       />
-      <SidebarMenu>
-        {stateItems.map((item) => (
-          <CollapsibleCategory
-            key={item.category}
-            category={item.category}
-            icon={item.icon}
-            isOpen={item.isOpen}
-            taskTypes={item.taskTypes}
-            onOpenChange={
-              sidebarState !== "collapsed"
-                ? () => handleCollapsibleState(item.category, !item.isOpen)
-                : () => handleCollapsibleState(item.category, true)
-            }
-            onCollapsibleTriggerClick={() => {
-              if (sidebarState === "collapsed") {
-                toggleSidebar();
+      <SidebarGroupContent>
+        <SidebarMenu>
+          {stateItems.map((item) => (
+            <CollapsibleCategory
+              key={item.category}
+              category={item.category}
+              icon={item.icon}
+              isOpen={item.isOpen}
+              taskTypes={item.taskTypes}
+              onOpenChange={
+                sidebarState !== "collapsed"
+                  ? () => handleCollapsibleState(item.category, !item.isOpen)
+                  : () => handleCollapsibleState(item.category, true)
               }
-            }}
-          />
-        ))}
-      </SidebarMenu>
+              onCollapsibleTriggerClick={() => {
+                if (sidebarState === "collapsed") {
+                  toggleSidebar();
+                }
+              }}
+            />
+          ))}
+        </SidebarMenu>
+      </SidebarGroupContent>
     </SidebarGroup>
   );
 

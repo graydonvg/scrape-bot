@@ -10,6 +10,7 @@ import SidebarLogo from "@/components/sidebar/sidebar-logo";
 import { NavUserClient } from "@/components/sidebar/nav-user/nav-user-client";
 import ExecutionDetails from "./execution-details";
 import { Separator } from "@/components/ui/separator";
+import AvailableCredits from "@/components/sidebar/available-credits";
 
 export default function WorkflowExecutionSidebar({
   ...props
@@ -21,6 +22,8 @@ export default function WorkflowExecutionSidebar({
       </SidebarHeader>
       <Separator />
       <SidebarContent>
+        <AvailableCredits containerClassName="mt-2" />
+        <Separator />
         <ExecutionDetails />
       </SidebarContent>
       <Separator />

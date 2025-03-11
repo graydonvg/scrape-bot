@@ -10,6 +10,7 @@ import AppSidebar from "@/components/sidebar/app-sidebar";
 import SidebarLogo from "@/components/sidebar/sidebar-logo";
 import { Skeleton } from "@/components/ui/skeleton";
 import NavUserServer from "@/components/sidebar/nav-user/nav-user-server";
+import AvailableCredits from "@/components/sidebar/available-credits";
 
 export default function DashboardSidebar({
   ...props
@@ -20,6 +21,7 @@ export default function DashboardSidebar({
         <SidebarLogo />
       </SidebarHeader>
       <SidebarContent>
+        <AvailableCredits />
         <NavMain />
       </SidebarContent>
       <SidebarFooter>
