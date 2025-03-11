@@ -1,7 +1,6 @@
 "use client";
 
 import useWorkflowsStore from "@/lib/store/workflows-store";
-import { Separator } from "@/components/ui/separator";
 import Workflow from "./groups/workflow/workflow";
 import Phases from "./groups/phases/phases";
 import { calculateTotalCreditsConsumed } from "@/lib/workflow/helpers/calculate-credit-consumption";
@@ -19,7 +18,6 @@ export default function ExecutionDetails() {
         completedAt={workflowExecutionData?.completedAt}
         creditsConsumed={creditsConsumed}
       />
-      <Separator />
       <Phases tasks={tasks} />
     </>
   );

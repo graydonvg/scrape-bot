@@ -7,6 +7,8 @@ import { toast } from "sonner";
 import { USER_ERROR_MESSAGES } from "@/lib/constants";
 import executeWorkflowAction from "../../_actions/execute-workflow-action";
 import useWorkflowsStore from "@/lib/store/workflows-store";
+import { useSidebar } from "@/components/ui/sidebar";
+import TooltipWrapper from "@/components/tooltip-wrapper";
 
 type Props = {
   workflowId: string;
@@ -14,6 +16,7 @@ type Props = {
 
 export default function ExecuteWorkflowButton({ workflowId }: Props) {
   const toastId = "execute-workflow";
+  const { isMobile, state } = useSidebar();
   const { setWorkflowExecutionData } = useWorkflowsStore();
   const generateExecutionPlan = useWorkflowExecutionPlan();
   const { toObject } = useReactFlow();
@@ -35,21 +38,26 @@ export default function ExecuteWorkflowButton({ workflowId }: Props) {
   });
 
   return (
-    <ButtonWithSpinner
-      disabled={isPending}
-      className="h-9 w-[102px] gap-0 overflow-hidden transition-[width,height,padding] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-8 group-has-data-[collapsible=icon]/sidebar-wrapper:w-8 group-has-data-[collapsible=icon]/sidebar-wrapper:has-[>svg]:px-2"
-      startIcon={<PlayIcon />}
-      onClick={() => {
-        const plan = generateExecutionPlan();
-
-        if (plan) {
-          execute({ workflowId, definition: JSON.stringify(toObject()) });
-        }
-      }}
+    <TooltipWrapper
+      hidden={state !== "collapsed" || isMobile}
+      tooltipContent="Execute workflow"
     >
-      <span className="ml-2 truncate transition-[margin] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:ml-0">
-        {!isPending ? "Execute" : "Processing..."}
-      </span>
-    </ButtonWithSpinner>
+      <ButtonWithSpinner
+        disabled={isPending}
+        className="h-9 w-[102px] gap-0 overflow-hidden transition-[width,height,padding] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-8 group-has-data-[collapsible=icon]/sidebar-wrapper:w-8 group-has-data-[collapsible=icon]/sidebar-wrapper:has-[>svg]:px-2"
+        startIcon={<PlayIcon />}
+        onClick={() => {
+          const plan = generateExecutionPlan();
+
+          if (plan) {
+            execute({ workflowId, definition: JSON.stringify(toObject()) });
+          }
+        }}
+      >
+        <span className="ml-2 truncate transition-[margin] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:ml-0">
+          {!isPending ? "Execute" : "Processing..."}
+        </span>
+      </ButtonWithSpinner>
+    </TooltipWrapper>
   );
 }

@@ -21,9 +21,8 @@ export default function WorkflowEditorSidebar({
         <SidebarLogo />
       </SidebarHeader>
       <Separator />
-      <SidebarContent>
-        <AvailableCredits containerClassName="mt-2" />
-        <Separator />
+      <SidebarContent className="divide-y">
+        <AvailableCredits containerClassName="p-4 transition-[padding] group-data-[collapsible=icon]:p-2!" />
         <TaskMenu />
       </SidebarContent>
       <Separator />

@@ -5,6 +5,8 @@ import saveWorkflowAction from "../../_actions/save-workflow-action";
 import { toast } from "sonner";
 import { USER_ERROR_MESSAGES } from "@/lib/constants";
 import ButtonWithSpinner from "@/components/button-with-spinner";
+import { useSidebar } from "@/components/ui/sidebar";
+import TooltipWrapper from "@/components/tooltip-wrapper";
 
 type Props = {
   workflowId: string;
@@ -12,6 +14,7 @@ type Props = {
 
 export default function SaveWorkflowButton({ workflowId }: Props) {
   const toastId = "save-workflow";
+  const { isMobile, state } = useSidebar();
   const { toObject } = useReactFlow();
   const { execute, isPending } = useAction(saveWorkflowAction, {
     onExecute: () => {
@@ -30,17 +33,22 @@ export default function SaveWorkflowButton({ workflowId }: Props) {
   });
 
   return (
-    <ButtonWithSpinner
-      className="bg-success text-success-foreground hover:bg-success/90 h-9 w-[81px] gap-0 overflow-hidden transition-[width,height,padding] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-8 group-has-data-[collapsible=icon]/sidebar-wrapper:w-8 group-has-data-[collapsible=icon]/sidebar-wrapper:has-[>svg]:px-2"
-      loading={isPending}
-      startIcon={<SaveIcon />}
-      onClick={() =>
-        execute({ workflowId, definition: JSON.stringify(toObject()) })
-      }
+    <TooltipWrapper
+      hidden={state !== "collapsed" || isMobile}
+      tooltipContent="Save workflow"
     >
-      <span className="ml-2 truncate transition-[margin] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:ml-0">
-        {!isPending ? "Save" : "Saving..."}
-      </span>
-    </ButtonWithSpinner>
+      <ButtonWithSpinner
+        className="bg-success text-success-foreground hover:bg-success/90 h-9 w-[81px] gap-0 overflow-hidden transition-[width,height,padding] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-8 group-has-data-[collapsible=icon]/sidebar-wrapper:w-8 group-has-data-[collapsible=icon]/sidebar-wrapper:has-[>svg]:px-2"
+        loading={isPending}
+        startIcon={<SaveIcon />}
+        onClick={() =>
+          execute({ workflowId, definition: JSON.stringify(toObject()) })
+        }
+      >
+        <span className="ml-2 truncate transition-[margin] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:ml-0">
+          {!isPending ? "Save" : "Saving..."}
+        </span>
+      </ButtonWithSpinner>
+    </TooltipWrapper>
   );
 }

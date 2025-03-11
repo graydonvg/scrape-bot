@@ -8,7 +8,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "../ui/sidebar";
-import { CoinsIcon } from "lucide-react";
+import { CoinsIcon, Loader2Icon } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import getUserAvailableCredits from "@/data-access/get-user-available-credits";
 
@@ -28,7 +28,11 @@ export default function AvailableCredits({ containerClassName }: Props) {
       <SidebarGroupContent>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton variant="outline" tooltip="Credits" asChild>
+            <SidebarMenuButton
+              variant="outline"
+              tooltip={`Credits: ${query.data ? query.data.credits : "-"}`}
+              asChild
+            >
               <Link
                 href="/billing"
                 className="flex items-center justify-center group-data-[collapsible=icon]:justify-start"
@@ -37,7 +41,13 @@ export default function AvailableCredits({ containerClassName }: Props) {
                   size={20}
                   className="stroke-sidebar-primary dark:stroke-blue-500"
                 />
-                <span>{query.data?.credits}</span>
+                {query.isLoading && (
+                  <Loader2Icon size={20} className="animate-spin" />
+                )}
+                {!query.isLoading && query.data && (
+                  <span className="font-semibold">{query.data.credits}</span>
+                )}
+                {!query.isLoading && !query.data && "-"}
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

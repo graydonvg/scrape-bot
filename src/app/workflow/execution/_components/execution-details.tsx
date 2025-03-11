@@ -46,20 +46,11 @@ export default function ExecutionDetails({ workflowId, initialData }: Props) {
   const workflowExecutionData = executionDetails.data;
   const taskData = taskDetails.data;
 
-  const taskNode = taskData
-    ? (JSON.parse(taskData.node as string) as WorkflowNode)
-    : null;
-
-  const inputIncludesBrowserInstance = taskNode
-    ? taskRegistry[taskNode.data.type].inputs.some(
-        (input) => input.type === TaskParamType.BrowserInstance,
-      )
-    : false;
-  const outputIncludesBrowserInstance = taskNode
-    ? taskRegistry[taskNode.data.type].outputs.some(
-        (input) => input.type === TaskParamType.BrowserInstance,
-      )
-    : false;
+  const workflowExecutionStatus = getWorkflowExecutionStatus();
+  const inputIncludesBrowserInstance =
+    checkParamIncludesBrowserInstance("inputs");
+  const outputIncludesBrowserInstance =
+    checkParamIncludesBrowserInstance("outputs");
 
   useEffect(() => {
     if (workflowExecutionData) setWorkflowExecutionData(workflowExecutionData);
@@ -79,7 +70,7 @@ export default function ExecutionDetails({ workflowId, initialData }: Props) {
     // Tasks are ordered by phase and completedAt in the query.
 
     // If the entire workflow completed, select the last task that complete.
-    if (workflowExecutionData.status === "COMPLETED" && !taskIdParam) {
+    if (workflowExecutionStatus.isCompleted && !taskIdParam) {
       setWorkflowDidExecute(false);
 
       const taskToSelect = workflowExecutionData.tasks.at(-1);
@@ -88,7 +79,7 @@ export default function ExecutionDetails({ workflowId, initialData }: Props) {
     }
 
     // If the entire worklfow failed, select the first task that failed.
-    if (workflowExecutionData.status === "FAILED" && !taskIdParam) {
+    if (workflowExecutionStatus.isFailed && !taskIdParam) {
       setWorkflowDidExecute(false);
 
       const taskToSelect = workflowExecutionData.tasks.find(
@@ -99,7 +90,7 @@ export default function ExecutionDetails({ workflowId, initialData }: Props) {
     }
 
     // If the worklfow partially failed, select the last task that complete.
-    if (workflowExecutionData.status === "PARTIALLY_FAILED" && !taskIdParam) {
+    if (workflowExecutionStatus.isPartiallyFailed && !taskIdParam) {
       setWorkflowDidExecute(false);
 
       const taskToSelect = workflowExecutionData.tasks.findLast(
@@ -108,7 +99,13 @@ export default function ExecutionDetails({ workflowId, initialData }: Props) {
 
       router.replace(`?task=${taskToSelect!.taskId}`);
     }
-  }, [workflowExecutionData, taskIdParam, router, workflowDidExecute]);
+  }, [
+    workflowExecutionData,
+    workflowExecutionStatus,
+    taskIdParam,
+    router,
+    workflowDidExecute,
+  ]);
 
   return (
     <div className="flex size-full flex-col overflow-hidden">
@@ -119,28 +116,26 @@ export default function ExecutionDetails({ workflowId, initialData }: Props) {
         hideButtons
       />
       <section className="flex grow">
-        {!workflowExecutionData?.tasks.some(
-          (task) => task.status === "COMPLETED",
-        ) && (
+        {workflowExecutionStatus.isLoading && (
           <div className="flex-center size-full flex-col gap-2">
-            <span className="font-bold">Executing...</span>
+            <div className="flex flex-col gap-1 text-center">
+              <p className="text-3xl font-bold">Execution in progress</p>
+              <p className="text-muted-foreground text-xl">Please wait...</p>
+            </div>
           </div>
         )}
-        {workflowExecutionData?.tasks.some(
-          (task) => task.status === "COMPLETED",
-        ) &&
-          !taskIdParam && (
-            <div className="flex-center size-full flex-col gap-2">
-              <div className="flex flex-col gap-1 text-center">
-                <p className="font-bold">No task selected</p>
-                <p className="textxm text-muted-foreground">
-                  Select a task to view details
-                </p>
-              </div>
+        {!workflowExecutionStatus.isLoading && !taskIdParam && (
+          <div className="flex-center size-full flex-col gap-2">
+            <div className="flex flex-col gap-1 text-center">
+              <p className="text-3xl font-bold">Execution completed</p>
+              <p className="text-muted-foreground text-xl">
+                Select a task to view details
+              </p>
             </div>
-          )}
+          </div>
+        )}
         {taskData && (
-          <div className="container flex flex-col gap-4 overflow-auto py-4">
+          <div className="container flex flex-col gap-4 overflow-auto">
             <div className="flex items-center gap-2">
               <TaskBadge
                 icon={CircleDashedIcon}
@@ -196,4 +191,35 @@ export default function ExecutionDetails({ workflowId, initialData }: Props) {
       </section>
     </div>
   );
+
+  function checkParamIncludesBrowserInstance(param: "inputs" | "outputs") {
+    const taskNode = taskData
+      ? (JSON.parse(taskData.node as string) as WorkflowNode)
+      : null;
+
+    return taskNode
+      ? taskRegistry[taskNode.data.type][param].some(
+          (input) => input.type === TaskParamType.BrowserInstance,
+        )
+      : false;
+  }
+
+  function getWorkflowExecutionStatus() {
+    const isPending = workflowExecutionData?.status === "PENDING";
+    const isExecuting = workflowExecutionData?.status === "EXECUTING";
+    const isCompleted = workflowExecutionData?.status === "COMPLETED";
+    const isFailed = workflowExecutionData?.status === "FAILED";
+    const isPartiallyFailed =
+      workflowExecutionData?.status === "PARTIALLY_FAILED";
+    const isLoading = isPending || isExecuting;
+
+    return {
+      isLoading,
+      isPending,
+      isExecuting,
+      isCompleted,
+      isFailed,
+      isPartiallyFailed,
+    };
+  }
 }
