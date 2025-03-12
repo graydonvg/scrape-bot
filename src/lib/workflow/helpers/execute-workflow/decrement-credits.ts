@@ -12,6 +12,8 @@ export default async function deductCredits(
   logCollector: LogCollector,
   log: Logger,
 ) {
+  log = log.with({ function: "deductCredits" });
+
   try {
     const { data: success, error } = await supabase.rpc("update_user_credits", {
       p_user_id: userId,

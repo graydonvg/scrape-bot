@@ -24,7 +24,7 @@ export default function AvailableCredits({ containerClassName }: Props) {
     queryKey: ["available-credits"],
     queryFn: () => getUserAvailableCredits(),
     refetchInterval: () =>
-      workflowExecutionData?.status === "EXECUTING" ? 30 * 1000 : false, // 30 seconds or false
+      workflowExecutionData?.status === "EXECUTING" ? 1000 : false,
   });
 
   return (
@@ -53,7 +53,9 @@ export default function AvailableCredits({ containerClassName }: Props) {
                     <CountUpComponent value={query.data.credits} />
                   </span>
                 )}
-                {!query.isLoading && !query.data && "-"}
+                {!query.isLoading &&
+                  (query.data === undefined || query.data === null) &&
+                  "-"}
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

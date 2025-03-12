@@ -23,6 +23,8 @@ export default async function executeWorkflowPhase(
   edges: Edge[],
   log: Logger,
 ) {
+  log = log.with({ function: "executeWorkflowPhase" });
+
   // Create a log collector for each phase.
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   //                 ***THESE LOGS ARE AVAILABLE TO THE USER***

@@ -24,6 +24,8 @@ export default async function executePhase(
   logCollector: LogCollector,
   log: Logger,
 ) {
+  log = log.with({ function: "executePhase" });
+
   const phaseResults: PhaseResult[] = [];
   const executorPromises = [];
 

@@ -16,6 +16,7 @@ import { formatDistanceToNow } from "date-fns";
 import WorkflowExecutionDetail from "./workflow-execution-detail";
 import { datesToDurationString } from "@/lib/utils";
 import { WorkflowExecutionStatusDb } from "@/lib/types/execution";
+import CountUpComponent from "@/components/count-up-component";
 
 type Props = {
   status?: WorkflowExecutionStatusDb;
@@ -73,7 +74,7 @@ export default function Workflow({
           <WorkflowExecutionDetail
             icon={CoinsIcon}
             label="Credits consumed"
-            value={creditsConsumed}
+            value={<CountUpComponent value={creditsConsumed} />}
           />
         </SidebarMenu>
       </SidebarGroupContent>

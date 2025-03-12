@@ -15,6 +15,8 @@ export default async function finalizeWorkflowExecution(
   creditsConsumed: number,
   log: Logger,
 ) {
+  log = log.with({ function: "finalizeWorkflowExecution" });
+
   const workflowExecutionsPromise = supabase
     .from("workflowExecutions")
     .update({

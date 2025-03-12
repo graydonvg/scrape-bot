@@ -26,7 +26,7 @@ export function populatePhaseContext(
   log: Logger,
   taskId: string,
 ) {
-  log = log.with({ context: "populatePhaseContext" });
+  log = log.with({ function: "populatePhaseContext" });
 
   phaseContext.tasks[node.id] = { inputs: {}, outputs: {} };
 
@@ -105,6 +105,8 @@ export async function cleanupPhaseContext(
   log: Logger,
 ) {
   if (phaseContext.browser) {
+    log = log.with({ function: "cleanupPhaseContext" });
+
     try {
       await phaseContext.browser.close();
     } catch (error) {

@@ -15,6 +15,8 @@ export default async function finalizePhase(
   logCollector: LogCollector,
   log: Logger,
 ) {
+  log = log.with({ function: "finalizePhase" });
+
   const taskPromises = phaseResults.map((result) => {
     const outputKeys = Object.keys(phaseContext.tasks[result.nodeId].outputs);
     const outputs =

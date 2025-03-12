@@ -12,6 +12,8 @@ export default async function initializeWorkflowExecution(
   executionId: string,
   log: Logger,
 ) {
+  log = log.with({ function: "initializeWorkflowExecution" });
+
   const workflowExecutionsPromise = supabase
     .from("workflowExecutions")
     .update({ startedAt: new Date().toISOString(), status: "EXECUTING" })

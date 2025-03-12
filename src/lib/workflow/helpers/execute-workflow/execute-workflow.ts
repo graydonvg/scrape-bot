@@ -63,7 +63,6 @@ export default async function executeWorkflow(
     const tasks = workflowExecutionData[0].tasks;
     const uniquePhaseNumbers = getUniquePhaseNumbers(tasks);
     const phases = groupTasksByPhaseNumber(uniquePhaseNumbers, tasks);
-
     /*
  		 * The phaseContext must be declared and initialized here:
  		 * - To retain the browser and page instances needed in subsequent phases.
