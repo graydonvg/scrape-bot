@@ -11,12 +11,19 @@ import { useSidebar } from "@/components/ui/sidebar";
 import TooltipWrapper from "@/components/tooltip-wrapper";
 import useUserStore from "@/lib/store/user-store";
 import { calculateTotalCreditsRequired } from "@/lib/utils";
+import { Dispatch, SetStateAction } from "react";
 
 type Props = {
   workflowId: string;
+  isLoading: boolean;
+  setIsLoading: Dispatch<SetStateAction<boolean>>;
 };
 
-export default function ExecuteWorkflowButton({ workflowId }: Props) {
+export default function ExecuteWorkflowButton({
+  workflowId,
+  isLoading,
+  setIsLoading,
+}: Props) {
   const toastId = "execute-workflow";
   const { isMobile, state } = useSidebar();
   const { user } = useUserStore();
@@ -25,6 +32,7 @@ export default function ExecuteWorkflowButton({ workflowId }: Props) {
   const { toObject } = useReactFlow();
   const { execute, isPending } = useAction(executeWorkflowAction, {
     onExecute: () => {
+      setIsLoading(true);
       toast.loading("Processing workflow...", { id: toastId });
     },
     onSuccess: ({ data }) => {
@@ -32,10 +40,12 @@ export default function ExecuteWorkflowButton({ workflowId }: Props) {
         return toast.error(data.message, { id: toastId });
       }
 
+      setIsLoading(false);
       setWorkflowExecutionData(null); // Clear any previous data to prevent flashing previous data before new data is fetched and added to store
       toast.success("Execution started", { id: toastId });
     },
     onError: () => {
+      setIsLoading(false);
       toast.error(USER_ERROR_MESSAGES.Unexpected, { id: toastId });
     },
   });
@@ -46,7 +56,8 @@ export default function ExecuteWorkflowButton({ workflowId }: Props) {
       tooltipContent="Execute workflow"
     >
       <ButtonWithSpinner
-        disabled={isPending}
+        loading={isPending}
+        disabled={isLoading}
         className="h-9 w-[102px] gap-0 overflow-hidden transition-[width,height,padding] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-8 group-has-data-[collapsible=icon]/sidebar-wrapper:w-8 group-has-data-[collapsible=icon]/sidebar-wrapper:has-[>svg]:px-2"
         startIcon={<PlayIcon />}
         onClick={() => {
@@ -64,7 +75,7 @@ export default function ExecuteWorkflowButton({ workflowId }: Props) {
         }}
       >
         <span className="ml-2 truncate transition-[margin] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:ml-0">
-          {!isPending ? "Execute" : "Processing..."}
+          Execute
         </span>
       </ButtonWithSpinner>
     </TooltipWrapper>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import TopBar from "../../_components/top-bar";
+import TopBar from "../../_components/top-bar/top-bar";
 import getWorkflowExecutionWithPhases from "../_data-access/get-execution-with-tasks-server";
 import { useEffect, useState } from "react";
 import useWorkflowsStore from "@/lib/store/workflows-store";

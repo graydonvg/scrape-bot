@@ -2,7 +2,7 @@
 
 import { ReactFlowProvider } from "@xyflow/react";
 import Flow from "./flow";
-import TopBar from "../../_components/top-bar";
+import TopBar from "../../_components/top-bar/top-bar";
 import { WorkflowDb } from "@/lib/types/workflow";
 
 type Props = {

@@ -1,8 +1,7 @@
-import SaveWorkflowButton from "../editor/_components/buttons/save-workflow-button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
-import ExecuteWorkflowButton from "../editor/_components/buttons/execute-workflow-button";
 import BackButton from "./back-button";
+import ActionButtons from "./action-buttons";
 
 type Props = {
   title: string;
@@ -40,12 +39,7 @@ export default function TopBar({
                 )}
               </div>
             </div>
-            {!hideButtons && (
-              <div className="flex justify-end gap-4">
-                <SaveWorkflowButton workflowId={workflowId} />
-                <ExecuteWorkflowButton workflowId={workflowId} />
-              </div>
-            )}
+            {!hideButtons && <ActionButtons workflowId={workflowId} />}
           </div>
         </div>
       </header>
