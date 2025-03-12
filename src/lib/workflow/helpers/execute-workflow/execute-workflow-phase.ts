@@ -89,6 +89,8 @@ export default async function executeWorkflowPhase(
   }
 
   const phaseResults = await executePhase(
+    supabase,
+    userId,
     phase,
     phaseContext,
     logCollector,
@@ -104,6 +106,10 @@ export default async function executeWorkflowPhase(
     log,
   );
 
+  const creditsConsumed = phaseResults.reduce(
+    (acc, result) => acc + result.creditsConsumed,
+    0,
+  );
   let success: boolean | "partial" = true;
 
   const hasSuccess = phaseResults.some((result) => result.success);
@@ -115,5 +121,5 @@ export default async function executeWorkflowPhase(
     success = false;
   }
 
-  return { success };
+  return { success, creditsConsumed };
 }

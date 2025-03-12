@@ -32,6 +32,14 @@ export type WorkflowExecutionPhase = {
   tasks: TaskDb[];
 };
 
+export type PhaseResult = {
+  success: boolean;
+  taskId: string;
+  nodeId: string;
+  creditsConsumed: number;
+  error?: unknown;
+};
+
 export type ExecutionPhaseContext = {
   browser?: Browser;
   page?: Page;

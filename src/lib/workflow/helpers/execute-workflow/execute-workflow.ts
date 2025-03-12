@@ -56,7 +56,7 @@ export default async function executeWorkflow(
       log,
     );
 
-    let creditsConsumed = 0;
+    let totalCreditsConsumed = 0;
     let status: WorkflowExecutionStatusDb = "COMPLETED";
     const workflowDefinition = workflowExecutionData[0].definition;
     const edges = JSON.parse(workflowDefinition as string).edges as Edge[];
@@ -75,7 +75,7 @@ export default async function executeWorkflow(
     const phaseContext: ExecutionPhaseContext = { tasks: {} };
 
     for (const phase of phases) {
-      const { success } = await executeWorkflowPhase(
+      const { success, creditsConsumed } = await executeWorkflowPhase(
         supabase,
         userId,
         phase,
@@ -83,6 +83,8 @@ export default async function executeWorkflow(
         edges,
         log,
       );
+
+      totalCreditsConsumed += creditsConsumed;
 
       if (success === false) {
         status = "FAILED";
@@ -99,7 +101,7 @@ export default async function executeWorkflow(
       workflowId,
       executionId,
       status,
-      creditsConsumed,
+      totalCreditsConsumed,
       log,
     );
 

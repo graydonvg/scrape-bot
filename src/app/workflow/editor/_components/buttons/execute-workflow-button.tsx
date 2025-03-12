@@ -9,6 +9,8 @@ import executeWorkflowAction from "../../_actions/execute-workflow-action";
 import useWorkflowsStore from "@/lib/store/workflows-store";
 import { useSidebar } from "@/components/ui/sidebar";
 import TooltipWrapper from "@/components/tooltip-wrapper";
+import useUserStore from "@/lib/store/user-store";
+import { calculateTotalCreditsRequired } from "@/lib/utils";
 
 type Props = {
   workflowId: string;
@@ -17,6 +19,7 @@ type Props = {
 export default function ExecuteWorkflowButton({ workflowId }: Props) {
   const toastId = "execute-workflow";
   const { isMobile, state } = useSidebar();
+  const { user } = useUserStore();
   const { setWorkflowExecutionData } = useWorkflowsStore();
   const generateExecutionPlan = useWorkflowExecutionPlan();
   const { toObject } = useReactFlow();
@@ -47,9 +50,15 @@ export default function ExecuteWorkflowButton({ workflowId }: Props) {
         className="h-9 w-[102px] gap-0 overflow-hidden transition-[width,height,padding] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-8 group-has-data-[collapsible=icon]/sidebar-wrapper:w-8 group-has-data-[collapsible=icon]/sidebar-wrapper:has-[>svg]:px-2"
         startIcon={<PlayIcon />}
         onClick={() => {
-          const plan = generateExecutionPlan();
+          const executionPlan = generateExecutionPlan();
 
-          if (plan) {
+          if (executionPlan) {
+            const totalCreditsRequired =
+              calculateTotalCreditsRequired(executionPlan);
+
+            if (user.credits < totalCreditsRequired)
+              return toast.error(USER_ERROR_MESSAGES.InsufficientCredits);
+
             execute({ workflowId, definition: JSON.stringify(toObject()) });
           }
         }}

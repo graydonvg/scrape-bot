@@ -16,6 +16,7 @@ import { taskRegistry } from "@/lib/workflow/tasks/task-registry";
 import { ActionReturn } from "@/lib/types/action";
 import { TaskDb } from "@/lib/types/task";
 import { WorkflowNode } from "@/lib/types/workflow";
+import { calculateTotalCreditsRequired } from "@/lib/utils";
 
 const executeWorkflowAction = actionClient
   .metadata({ actionName: "executeWorkflowAction" })
@@ -65,6 +66,29 @@ const executeWorkflowAction = actionClient
 
         const executionPlan = result.executionPlan;
 
+        const { data: selectCreditsData, error: selectCreditsError } =
+          await supabase.from("users").select("credits").eq("userId", user.id);
+
+        if (selectCreditsError) {
+          log.error(LOGGER_ERROR_MESSAGES.Select, {
+            error: selectCreditsError,
+          });
+          return {
+            success: false,
+            message: USER_ERROR_MESSAGES.Unexpected,
+          };
+        }
+
+        const totalCreditsRequired =
+          calculateTotalCreditsRequired(executionPlan);
+
+        if (selectCreditsData[0].credits < totalCreditsRequired) {
+          return {
+            success: false,
+            message: USER_ERROR_MESSAGES.InsufficientCredits,
+          };
+        }
+
         const {
           data: workflowExecutionData,
           error: insertWorkflowExecutionError,
@@ -92,7 +116,7 @@ const executeWorkflowAction = actionClient
         const workflowExecutionId =
           workflowExecutionData[0].workflowExecutionId;
 
-        const tasks = executionPlan.flatMap((plan) => {
+        const tasksToInsert = executionPlan.flatMap((plan) => {
           return plan.nodes.flatMap((node: WorkflowNode) => {
             return {
               workflowExecutionId,
@@ -106,7 +130,7 @@ const executeWorkflowAction = actionClient
 
         const { error: insertTaskError } = await supabase
           .from("tasks")
-          .insert(tasks);
+          .insert(tasksToInsert);
 
         if (insertTaskError) {
           log.error(LOGGER_ERROR_MESSAGES.Insert, {

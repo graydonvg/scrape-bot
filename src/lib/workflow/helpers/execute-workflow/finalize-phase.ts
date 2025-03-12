@@ -5,23 +5,22 @@ import { Database } from "@/lib/supabase/database.types";
 import { LogCollector } from "@/lib/types/log";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Logger } from "next-axiom";
-import { ExecutionPhaseContext } from "@/lib/types/execution";
+import { ExecutionPhaseContext, PhaseResult } from "@/lib/types/execution";
 
 export default async function finalizePhase(
   supabase: SupabaseClient<Database>,
   userId: string,
-  results: { taskId: string; nodeId: string; success: boolean }[],
+  phaseResults: PhaseResult[],
   phaseContext: ExecutionPhaseContext,
   logCollector: LogCollector,
   log: Logger,
 ) {
-  const taskPromises = results.map((result) => {
+  const taskPromises = phaseResults.map((result) => {
     const outputKeys = Object.keys(phaseContext.tasks[result.nodeId].outputs);
     const outputs =
-      outputKeys.length > 0
+      outputKeys.length > 0 && result.success && result.creditsConsumed > 0
         ? JSON.stringify(phaseContext.tasks[result.nodeId].outputs)
-        : // Prevent inserting empty objects into database
-          null;
+        : null;
 
     return supabase
       .from("tasks")
@@ -29,6 +28,7 @@ export default async function finalizePhase(
         status: result.success ? "COMPLETED" : "FAILED",
         completedAt: new Date().toISOString(),
         outputs,
+        creditsConsumed: result.creditsConsumed,
       })
       .eq("userId", userId)
       .eq("taskId", result.taskId);

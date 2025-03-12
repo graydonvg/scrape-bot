@@ -11,16 +11,20 @@ import {
 import { CoinsIcon, Loader2Icon } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import getUserAvailableCredits from "@/data-access/get-user-available-credits";
+import CountUpComponent from "../count-up-component";
+import useWorkflowsStore from "@/lib/store/workflows-store";
 
 type Props = {
   containerClassName?: string;
 };
 
 export default function AvailableCredits({ containerClassName }: Props) {
+  const { workflowExecutionData } = useWorkflowsStore();
   const query = useQuery({
     queryKey: ["available-credits"],
     queryFn: () => getUserAvailableCredits(),
-    refetchInterval: 30 * 1000, // 30 seconds
+    refetchInterval: () =>
+      workflowExecutionData?.status === "EXECUTING" ? 30 * 1000 : false, // 30 seconds or false
   });
 
   return (
@@ -45,7 +49,9 @@ export default function AvailableCredits({ containerClassName }: Props) {
                   <Loader2Icon size={20} className="animate-spin" />
                 )}
                 {!query.isLoading && query.data && (
-                  <span className="font-semibold">{query.data.credits}</span>
+                  <span className="font-semibold">
+                    <CountUpComponent value={query.data.credits} />
+                  </span>
                 )}
                 {!query.isLoading && !query.data && "-"}
               </Link>

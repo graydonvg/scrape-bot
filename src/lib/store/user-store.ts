@@ -1,17 +1,19 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { User } from "../types/user";
+import { UserDb } from "../types/user";
 
 type UserStore = {
-  user: User;
-  setUser: (user: User) => void;
+  user: UserDb;
+  setUser: (user: UserDb) => void;
   clearUser: () => void;
 };
 
-const initialData = {
+const initialData: UserDb = {
   firstName: "",
   lastName: "",
   email: "",
+  avatarUrl: "",
+  credits: 0,
 };
 
 const useUserStore = create<UserStore>()(
