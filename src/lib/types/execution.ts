@@ -32,12 +32,19 @@ export type WorkflowExecutionPhase = {
   tasks: TaskDb[];
 };
 
+export type ExecutorFunctionErrorType = "user" | "server";
+
+export type ExecutorFunctionReturn =
+  | { success: true }
+  | { success: false; errorType: ExecutorFunctionErrorType };
+
 export type PhaseResult = {
   success: boolean;
   taskId: string;
   nodeId: string;
   creditsConsumed: number;
   error?: unknown;
+  errorType?: ExecutorFunctionErrorType;
 };
 
 export type ExecutionPhaseContext = {

@@ -106,10 +106,6 @@ export default async function executeWorkflowPhase(
     log,
   );
 
-  const creditsConsumed = phaseResults.reduce(
-    (acc, result) => acc + result.creditsConsumed,
-    0,
-  );
   let success: boolean | "partial" = true;
 
   const hasSuccess = phaseResults.some((result) => result.success);
@@ -120,6 +116,11 @@ export default async function executeWorkflowPhase(
   } else if (!hasSuccess) {
     success = false;
   }
+
+  const creditsConsumed = phaseResults.reduce(
+    (acc, result) => acc + result.creditsConsumed,
+    0,
+  );
 
   return { success, creditsConsumed };
 }

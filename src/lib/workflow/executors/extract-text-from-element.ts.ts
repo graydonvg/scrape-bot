@@ -4,14 +4,17 @@ import { LOGGER_ERROR_MESSAGES, USER_ERROR_MESSAGES } from "@/lib/constants";
 import { extractTextFromElementTask } from "../tasks/data-extraction";
 import * as cheerio from "cheerio";
 import { Logger } from "next-axiom";
-import { ExecutionContext } from "@/lib/types/execution";
+import {
+  ExecutionContext,
+  ExecutorFunctionReturn,
+} from "@/lib/types/execution";
 import { TaskParamName } from "@/lib/types/task";
 
 export default async function extractTextFromElementExecutor(
   taskId: string,
   executionContext: ExecutionContext<typeof extractTextFromElementTask>,
   log: Logger,
-) {
+): Promise<ExecutorFunctionReturn> {
   log.with({ executor: "extractTextFromElementExecutor" });
 
   try {
@@ -20,7 +23,7 @@ export default async function extractTextFromElementExecutor(
     if (!selector) {
       log.error("Selector undefined");
       executionContext.logDb.ERROR(taskId, "Selector undefined");
-      return { success: false };
+      return { success: false, errorType: "server" };
     }
 
     const html = executionContext.getInput(TaskParamName.Html);
@@ -28,7 +31,7 @@ export default async function extractTextFromElementExecutor(
     if (!html) {
       log.error("HTML undefined");
       executionContext.logDb.ERROR(taskId, "HTML undefined");
-      return { success: false };
+      return { success: false, errorType: "server" };
     }
 
     const $ = cheerio.load(html);
@@ -36,7 +39,7 @@ export default async function extractTextFromElementExecutor(
 
     if (!element) {
       executionContext.logDb.ERROR(taskId, "Element not found");
-      return { success: false };
+      return { success: false, errorType: "user" };
     }
 
     const extractedText = $.text(element);
@@ -46,7 +49,7 @@ export default async function extractTextFromElementExecutor(
         taskId,
         "Invalid selector or element has no text",
       );
-      return { success: false };
+      return { success: false, errorType: "user" };
     }
 
     executionContext.logDb.INFO(
@@ -60,6 +63,6 @@ export default async function extractTextFromElementExecutor(
   } catch (error) {
     executionContext.logDb.ERROR(taskId, USER_ERROR_MESSAGES.Unexpected);
     log.error(LOGGER_ERROR_MESSAGES.Unexpected, { error });
-    return { success: false };
+    return { success: false, errorType: "server" };
   }
 }

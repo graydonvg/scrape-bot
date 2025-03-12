@@ -52,15 +52,31 @@ export default async function executePhase(
     );
 
     // Wrap the promise to keep track of the task details
-    const executorPromise = executorFn(task.taskId, executionContext, log)
-      .then((result) => ({
-        success: result.success,
-        taskId: task.taskId,
-        nodeId: node.id,
-        creditsConsumed: creditsRequired,
-      }))
+    const executorPromise: Promise<PhaseResult> = executorFn(
+      task.taskId,
+      executionContext,
+      log,
+    )
+      .then((result) => {
+        if (!result.success) {
+          return {
+            success: false,
+            errorType: result.errorType,
+            taskId: task.taskId,
+            nodeId: node.id,
+            creditsConsumed: creditsRequired,
+          };
+        }
+        return {
+          success: true,
+          taskId: task.taskId,
+          nodeId: node.id,
+          creditsConsumed: creditsRequired,
+        };
+      })
       .catch((error) => ({
         success: false,
+        errorType: "server",
         taskId: task.taskId,
         nodeId: node.id,
         creditsConsumed: 0,
@@ -73,7 +89,12 @@ export default async function executePhase(
   const executorPromiseResults = await Promise.allSettled(executorPromises);
 
   for (const result of executorPromiseResults) {
-    if (result.status === "fulfilled" && result.value.success) {
+    if (
+      result.status === "fulfilled" &&
+      // If an error occurs and the fault lies with the user (invalid input),
+      // credits must still be deducted since the task was executed.
+      (result.value.success || result.value?.errorType === "user")
+    ) {
       // Credit balance gets checked client and server side before executing.
       // Deduct credits only if the task was executed successfully to
       // prevent deducting credits from the user if a server error occured.
@@ -89,12 +110,25 @@ export default async function executePhase(
       );
 
       if (deductCreditsSuccess) {
-        phaseResults.push({
-          success: true,
-          taskId: result.value.taskId,
-          nodeId: result.value.nodeId,
-          creditsConsumed: result.value.creditsConsumed,
-        });
+        if (result.value?.errorType === "user") {
+          // If an error occurs and the fault lies with the user (invalid input),
+          // credits must still be deducted since the task was executed.
+          // success = false to indicate to the user that an error occured
+          // even though the task is considered 'successful'
+          phaseResults.push({
+            success: false,
+            taskId: result.value.taskId,
+            nodeId: result.value.nodeId,
+            creditsConsumed: result.value.creditsConsumed,
+          });
+        } else {
+          phaseResults.push({
+            success: true,
+            taskId: result.value.taskId,
+            nodeId: result.value.nodeId,
+            creditsConsumed: result.value.creditsConsumed,
+          });
+        }
       } else {
         phaseResults.push({
           success: false,
