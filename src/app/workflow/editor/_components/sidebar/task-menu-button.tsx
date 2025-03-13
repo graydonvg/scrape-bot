@@ -29,8 +29,10 @@ export default function TaskMenuButton({ taskType }: Props) {
         onDragStart={(e) => handleDragStart(e)}
         className="w-full space-x-4"
       >
-        <div className="flex items-center gap-2">
-          <task.icon size={16} />
+        <div className="flex min-w-0 items-center gap-2">
+          <div className="shrink-0">
+            <task.icon size={16} />
+          </div>
           <span className="truncate">{task.label}</span>
         </div>
         <GripVerticalIcon size={16} />

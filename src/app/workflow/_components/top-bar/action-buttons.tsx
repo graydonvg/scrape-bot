@@ -12,7 +12,7 @@ export default function ActionButtons({ workflowId }: Props) {
   const [isLoading, setIsLoading] = useState(false);
 
   return (
-    <div className="flex justify-end gap-4">
+    <>
       <SaveWorkflowButton
         workflowId={workflowId}
         isLoading={isLoading}
@@ -23,6 +23,6 @@ export default function ActionButtons({ workflowId }: Props) {
         isLoading={isLoading}
         setIsLoading={setIsLoading}
       />
-    </div>
+    </>
   );
 }

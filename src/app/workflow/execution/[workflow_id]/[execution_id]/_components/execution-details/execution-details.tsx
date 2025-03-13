@@ -1,25 +1,26 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import TopBar from "../../_components/top-bar/top-bar";
-import getWorkflowExecutionWithPhases from "../_data-access/get-execution-with-tasks-server";
 import { useEffect, useState } from "react";
 import useWorkflowsStore from "@/lib/store/workflows-store";
-import getWorkflowExecutionWithTasksClient from "../_data-access/get-execution-with-tasks-client";
 import { useRouter, useSearchParams } from "next/navigation";
-import getTaskDetails from "../_data-access/get-task-details";
 import { CircleDashedIcon, ClockIcon, CoinsIcon } from "lucide-react";
 import { cn, datesToDurationString } from "@/lib/utils";
-import TaskParameterCard from "./task-parameter-card/task-parameter-card";
 import { taskRegistry } from "@/lib/workflow/tasks/task-registry";
 import { WorkflowNode } from "@/lib/types/workflow";
 import { TaskParamType } from "@/lib/types/task";
 import TaskLogs from "./task-logs";
 import TaskBadge from "./task-badge";
+import getWorkflowExecutionWithTasksClient from "@/app/workflow/execution/[workflow_id]/[execution_id]/_data-access/get-execution-with-tasks-client";
+import getTaskDetails from "@/app/workflow/execution/[workflow_id]/[execution_id]/_data-access/get-task-details";
+import TopBar from "@/app/workflow/_components/top-bar/top-bar";
+import TaskParameterCard from "./task-parameter-card/task-parameter-card";
+import TaskDetailsSkeleton from "./task-details-skeleton";
+import ExecutionStatusMessage from "./execution-status-message";
 
 type Props = {
   workflowId: string;
-  initialData: Awaited<ReturnType<typeof getWorkflowExecutionWithPhases>>;
+  initialData: Awaited<ReturnType<typeof getWorkflowExecutionWithTasksClient>>;
 };
 
 export default function ExecutionDetails({ workflowId, initialData }: Props) {
@@ -30,7 +31,7 @@ export default function ExecutionDetails({ workflowId, initialData }: Props) {
   const [workflowDidExecute, setWorkflowDidExecute] = useState(false);
   const workflowExecutionId = initialData!.workflowExecutionId;
 
-  const executionDetails = useQuery({
+  const executionQuery = useQuery({
     queryKey: ["execution", workflowExecutionId],
     initialData,
     queryFn: () => getWorkflowExecutionWithTasksClient(workflowExecutionId),
@@ -38,13 +39,13 @@ export default function ExecutionDetails({ workflowId, initialData }: Props) {
       query.state.data?.status === "EXECUTING" ? 1000 : false,
   });
 
-  const taskDetails = useQuery({
+  const taskQuery = useQuery({
     queryKey: ["taskDetails", taskIdParam],
     enabled: taskIdParam !== null,
     queryFn: () => getTaskDetails(taskIdParam!),
   });
-  const workflowExecutionData = executionDetails.data;
-  const taskData = taskDetails.data;
+  const workflowExecutionData = executionQuery.data;
+  const taskData = taskQuery.data;
 
   const workflowExecutionStatus = getWorkflowExecutionStatus();
   const inputIncludesBrowserInstance =
@@ -109,33 +110,28 @@ export default function ExecutionDetails({ workflowId, initialData }: Props) {
   ]);
 
   return (
-    <div className="flex size-full flex-col">
+    <>
       <TopBar
         workflowId={workflowId}
         title="Workflow execution"
         subtitle={`Execution ID: ${workflowExecutionId}`}
-        hideButtons
+        hideActionButtons
       />
-      <section className="flex grow">
+      <section className="size-full">
         {workflowExecutionStatus.isLoading && (
-          <div className="flex-center size-full flex-col gap-2">
-            <div className="flex flex-col gap-1 text-center">
-              <p className="text-3xl font-bold">Execution in progress</p>
-              <p className="text-muted-foreground text-xl">Please wait...</p>
-            </div>
-          </div>
+          <ExecutionStatusMessage
+            title="Execution in progress"
+            message="Please wait..."
+          />
         )}
         {!workflowExecutionStatus.isLoading && !taskIdParam && (
-          <div className="flex-center size-full flex-col gap-2">
-            <div className="flex flex-col gap-1 text-center">
-              <p className="text-3xl font-bold">Execution completed</p>
-              <p className="text-muted-foreground text-xl">
-                Select a task to view details
-              </p>
-            </div>
-          </div>
+          <ExecutionStatusMessage
+            title="Execution completed"
+            message="Fetching task details..."
+          />
         )}
-        {taskData && (
+        {taskIdParam && taskQuery.isLoading && <TaskDetailsSkeleton />}
+        {!taskQuery.isLoading && taskData && (
           <div className="container flex flex-col gap-4">
             <div className="flex items-center gap-2">
               <TaskBadge
@@ -200,7 +196,7 @@ export default function ExecutionDetails({ workflowId, initialData }: Props) {
           </div>
         )}
       </section>
-    </div>
+    </>
   );
 
   function getLaunchBrowserTaskStatus() {

@@ -7,7 +7,7 @@ type Props = {
 
 export default function NodeOutputs({ outputs }: Props) {
   return (
-    <div className="divide-background divide-y-2 rounded-b-md">
+    <div className="divide-background divide-y-2 rounded-b-xl">
       {outputs.map((output) => (
         <NodeOutput key={output.name} output={output} />
       ))}

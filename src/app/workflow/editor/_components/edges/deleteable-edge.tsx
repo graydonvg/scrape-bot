@@ -20,7 +20,7 @@ export default function DeleteableEdge(props: EdgeProps) {
         style={{
           ...props.style,
         }}
-        className="!stroke-success !stroke-2"
+        className="!stroke-primary !stroke-2"
       />
       <EdgeLabelRenderer>
         <div

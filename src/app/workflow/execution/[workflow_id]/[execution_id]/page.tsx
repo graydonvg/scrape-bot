@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import getWorkflowExecutionWithTasksServer from "../../_data-access/get-execution-with-tasks-server";
-import ExecutionDetails from "../../_components/execution-details";
+import getWorkflowExecutionWithTasksServer from "./_data-access/get-execution-with-tasks-server";
+import ExecutionDetails from "./_components/execution-details/execution-details";
 
 export const metadata: Metadata = {
   title: "Workflow execution",

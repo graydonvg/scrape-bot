@@ -18,7 +18,7 @@ export default function Node(props: NodeProps) {
     <NodeCard nodeId={props.id} isSelected={props.selected}>
       {devMode && <Badge>Dev: {props.id}</Badge>}
       <NodeHeader taskType={taskType} nodeId={props.id} />
-      <div className="divide-background bg-muted divide-y-2 rounded-md">
+      <div className="divide-background bg-muted divide-y-2 rounded-xl">
         <NodeInputs nodeId={props.id} inputs={task.inputs} />
         <NodeOutputs outputs={task.outputs} />
       </div>

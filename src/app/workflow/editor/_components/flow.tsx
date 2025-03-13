@@ -114,7 +114,7 @@ export default function Flow({ workflow }: Props) {
               type: MarkerType.ArrowClosed,
               width: 16,
               height: 16,
-              color: "var(--success)",
+              color: "var(--primary)",
             },
           },
           edges,

@@ -16,7 +16,15 @@ import { formatDistanceToNow } from "date-fns";
 import WorkflowExecutionDetail from "./workflow-execution-detail";
 import { datesToDurationString } from "@/lib/utils";
 import { WorkflowExecutionStatusDb } from "@/lib/types/execution";
-import CountUpComponent from "@/components/count-up-component";
+import AnimatedCounter from "@/components/animated-counter";
+
+const statusColors: Record<WorkflowExecutionStatusDb, string> = {
+  PENDING: "text-muted-foreground",
+  EXECUTING: "text-violet-500",
+  COMPLETED: "text-success dark:text-green-500",
+  FAILED: "text-destructive",
+  PARTIALLY_FAILED: "text-warning",
+};
 
 type Props = {
   status?: WorkflowExecutionStatusDb;
@@ -47,7 +55,13 @@ export default function Workflow({
           <WorkflowExecutionDetail
             icon={CircleDashedIcon}
             label="Status"
-            value={formattedStatus || "-"}
+            value={
+              status ? (
+                <span className={statusColors[status]}>{formattedStatus}</span>
+              ) : (
+                "-"
+              )
+            }
           />
           <WorkflowExecutionDetail
             icon={CalendarIcon}
@@ -74,7 +88,7 @@ export default function Workflow({
           <WorkflowExecutionDetail
             icon={CoinsIcon}
             label="Credits consumed"
-            value={<CountUpComponent value={creditsConsumed} />}
+            value={<AnimatedCounter value={creditsConsumed} />}
           />
         </SidebarMenu>
       </SidebarGroupContent>

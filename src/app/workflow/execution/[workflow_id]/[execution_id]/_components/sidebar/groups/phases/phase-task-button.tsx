@@ -4,7 +4,6 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { CircleCheckBigIcon, CircleXIcon, Loader2Icon } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 import { TaskDb } from "@/lib/types/task";
 
@@ -42,17 +41,7 @@ export default function PhaseTaskButton({ task }: Props) {
         {state.isFailed && (
           <CircleXIcon size={20} className="stroke-destructive" />
         )}
-        <div className="flex w-full items-center justify-between gap-4">
-          <span className="truncate font-semibold">{task.name}</span>
-          <span
-            className={cn("text-muted-foreground text-xs", {
-              "text-success dark:text-green-500": state.isCompleted,
-              "text-destructive": state.isFailed,
-            })}
-          >
-            {task.status}
-          </span>
-        </div>
+        <span className="truncate font-semibold">{task.name}</span>
       </SidebarMenuSubButton>
     </SidebarMenuSubItem>
   );

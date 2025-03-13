@@ -7,7 +7,7 @@ type Props = {
   value: number;
 };
 
-export default function CountUpComponent({ value }: Props) {
+export default function AnimatedCounter({ value }: Props) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {

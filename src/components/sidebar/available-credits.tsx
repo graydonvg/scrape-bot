@@ -11,7 +11,7 @@ import {
 import { CoinsIcon, Loader2Icon } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import getUserAvailableCredits from "@/data-access/get-user-available-credits";
-import CountUpComponent from "../count-up-component";
+import AnimatedCounter from "../animated-counter";
 import useWorkflowsStore from "@/lib/store/workflows-store";
 
 type Props = {
@@ -50,7 +50,7 @@ export default function AvailableCredits({ containerClassName }: Props) {
                 )}
                 {!query.isLoading && query.data && (
                   <span className="font-semibold">
-                    <CountUpComponent value={query.data.credits} />
+                    <AnimatedCounter value={query.data.credits} />
                   </span>
                 )}
                 {!query.isLoading &&

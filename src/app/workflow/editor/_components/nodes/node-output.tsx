@@ -9,7 +9,7 @@ type Props = {
 
 export default function NodeOutput({ output }: Props) {
   return (
-    <div className="relative flex w-full justify-end rounded-b-md px-4 py-3">
+    <div className="relative flex w-full justify-end px-4 py-3">
       <Handle
         id={output.name}
         type="source"
