@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import AnimatedCounter from "@/components/animated-counter";
 import getAllWorkflowExecutionsServer from "../../_data-access/get-all-workflow-executions-server";
 import getAllWorkflowExecutionsClient from "../../_data-access/get-all-workflow-executions-client";
+import useWorkflowsStore from "@/lib/store/workflows-store";
 
 type Props = {
   workflowId: string;
@@ -22,6 +23,7 @@ export default function ExecutionsTableBody({
   initialData,
 }: Props) {
   const router = useRouter();
+  const { setWorkflowExecutionData } = useWorkflowsStore();
   const query = useQuery({
     queryKey: ["executions", workflowId],
     initialData,
@@ -55,8 +57,9 @@ export default function ExecutionsTableBody({
             key={execution.workflowExecutionId}
             className="cursor-pointer"
             onClick={() =>
-              router.push(
-                `/workflow/execution/${workflowId}/${execution.workflowExecutionId}?task=${execution.tasks[0].taskId}`,
+              hanldeClick(
+                execution.workflowExecutionId,
+                execution.tasks[0].taskId,
               )
             }
           >
@@ -102,4 +105,12 @@ export default function ExecutionsTableBody({
       })}
     </TableBody>
   );
+
+  function hanldeClick(workflowExecutionId: string, taskId: string) {
+    setWorkflowExecutionData(null);
+
+    router.push(
+      `/workflow/execution/${workflowId}/${workflowExecutionId}?task=${taskId}`,
+    );
+  }
 }
