@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import getAllWorkflowExecutionsServer from "./_data-access/get-all-workflow-executions-server";
-import ExecutionHistory from "./_components/execution-history/execution-history";
+import ExecutionHistory from "./_components/execution-history";
 
 export const metadata: Metadata = {
   title: "Workflow executions",

@@ -1,5 +1,5 @@
 import { Table, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import getAllWorkflowExecutionsServer from "../../_data-access/get-all-workflow-executions-server";
+import getAllWorkflowExecutionsServer from "../_data-access/get-all-workflow-executions-server";
 import ExecutionsTableBody from "./executions-table-body";
 
 type Props = {

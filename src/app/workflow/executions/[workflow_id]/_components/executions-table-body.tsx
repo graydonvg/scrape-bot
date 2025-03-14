@@ -9,8 +9,8 @@ import { CoinsIcon } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { useRouter } from "next/navigation";
 import AnimatedCounter from "@/components/animated-counter";
-import getAllWorkflowExecutionsServer from "../../_data-access/get-all-workflow-executions-server";
-import getAllWorkflowExecutionsClient from "../../_data-access/get-all-workflow-executions-client";
+import getAllWorkflowExecutionsServer from "../_data-access/get-all-workflow-executions-server";
+import getAllWorkflowExecutionsClient from "../_data-access/get-all-workflow-executions-client";
 import useWorkflowsStore from "@/lib/store/workflows-store";
 
 type Props = {
@@ -52,6 +52,7 @@ export default function ExecutionsTableBody({
         const formattedStartedAt = startedAtDate
           ? formatDistanceToNow(startedAtDate, { addSuffix: true })
           : "-";
+
         return (
           <TableRow
             key={execution.workflowExecutionId}

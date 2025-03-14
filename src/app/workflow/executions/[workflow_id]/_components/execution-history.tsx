@@ -1,7 +1,7 @@
 import TopBar from "@/app/workflow/_components/top-bar/top-bar";
 import NoResultsFound from "@/components/no-results-found";
+import getAllWorkflowExecutionsServer from "../_data-access/get-all-workflow-executions-server";
 import ExecutionsTable from "./executions-table";
-import getAllWorkflowExecutionsServer from "../../_data-access/get-all-workflow-executions-server";
 
 type Props = {
   workflowId: string;

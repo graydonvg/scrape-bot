@@ -38,12 +38,12 @@ export default function ExecutionDetails({ workflowId, initialData }: Props) {
     refetchInterval: (query) =>
       query.state.data?.status === "EXECUTING" ? 1000 : false,
   });
-
   const taskQuery = useQuery({
     queryKey: ["taskDetails", taskIdParam],
     enabled: taskIdParam !== null,
     queryFn: () => getTaskDetails(taskIdParam!),
   });
+
   const workflowExecutionData = executionQuery.data;
   const taskData = taskQuery.data;
 
@@ -80,23 +80,16 @@ export default function ExecutionDetails({ workflowId, initialData }: Props) {
       router.replace(`?task=${taskToSelect!.taskId}`);
     }
 
-    // If the entire worklfow failed, select the first task that failed.
-    if (workflowExecutionStatus.isFailed && !taskIdParam) {
+    // If a task failed, select the first task that failed.
+    if (
+      (workflowExecutionStatus.isFailed ||
+        workflowExecutionStatus.isPartiallyFailed) &&
+      !taskIdParam
+    ) {
       setWorkflowDidExecute(false);
 
       const taskToSelect = workflowExecutionData.tasks.find(
         (task) => task.status === "FAILED",
-      );
-
-      router.replace(`?task=${taskToSelect!.taskId}`);
-    }
-
-    // If the worklfow partially failed, select the last task that complete.
-    if (workflowExecutionStatus.isPartiallyFailed && !taskIdParam) {
-      setWorkflowDidExecute(false);
-
-      const taskToSelect = workflowExecutionData.tasks.findLast(
-        (task) => task.status === "COMPLETED",
       );
 
       router.replace(`?task=${taskToSelect!.taskId}`);
