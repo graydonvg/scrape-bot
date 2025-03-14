@@ -2,7 +2,6 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import BackButton from "./back-button";
 import ActionButtons from "./action-buttons";
-import NavTabs from "./nav-tabs";
 
 type Props = {
   title: string;
@@ -46,9 +45,6 @@ export default function TopBar({
             </div>
           </div>
         </div>
-        <nav>
-          <NavTabs workflowId={workflowId} />
-        </nav>
         <div className="flex h-full flex-1 items-center justify-end gap-2">
           {!hideActionButtons && <ActionButtons workflowId={workflowId} />}
         </div>

@@ -31,7 +31,7 @@ import useUserStore from "@/lib/store/user-store";
 import { useEffect } from "react";
 import getUserDataClient from "@/data-access/get-user-data-client";
 import { UserDb } from "@/lib/types/user";
-import { ThemeMenuItems } from "../../theme/theme-menu-items";
+import { ThemeMenuItems } from "./theme-menu-items";
 
 type Props = {
   user?: UserDb | null;

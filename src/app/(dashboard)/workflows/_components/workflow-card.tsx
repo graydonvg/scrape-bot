@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { FileTextIcon, PencilIcon, PlayIcon } from "lucide-react";
 import Link from "next/link";
-import WorkflowActionsMenu from "./workflow-actions";
+import WorkflowActionsMenu from "./workflow-actions-menu";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { WorkflowDb, WorkflowStatusDb } from "@/lib/types/workflow";

@@ -1,5 +1,4 @@
 import BreadcrumbHeader from "@/components/breadcrumb-header";
-import { ThemeMenu } from "@/components/theme/theme-menu";
 import { cookies } from "next/headers";
 import { ReactNode } from "react";
 import { Separator } from "@/components/ui/separator";
@@ -29,7 +28,6 @@ export default async function DashboardLayout({ children }: Props) {
               <Separator orientation="vertical" className="mr-2 !h-[25%]" />
               <BreadcrumbHeader />
             </div>
-            <ThemeMenu />
           </div>
         </header>
         <Separator orientation="horizontal" />

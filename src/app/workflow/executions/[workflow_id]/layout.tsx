@@ -1,5 +1,4 @@
 import Logo from "@/components/logo";
-import { ThemeMenu } from "@/components/theme/theme-menu";
 import { ReactNode } from "react";
 
 type Props = {
@@ -14,7 +13,6 @@ export default async function WorkflowExecutionHistoryLayout({
       {children}
       <footer className="bg-sidebar flex h-16 items-center justify-between border-t px-4">
         <Logo isLink />
-        <ThemeMenu />
       </footer>
     </div>
   );

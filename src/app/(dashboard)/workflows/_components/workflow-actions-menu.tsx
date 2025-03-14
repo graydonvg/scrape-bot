@@ -11,9 +11,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { MoreVerticalIcon, Trash2Icon } from "lucide-react";
+import { HistoryIcon, MoreVerticalIcon, Trash2Icon } from "lucide-react";
 import DeleteWorkflowDialog from "./delete-workflow-dialog";
 import { useState } from "react";
+import Link from "next/link";
 
 type Props = {
   workflowName: string;
@@ -39,6 +40,12 @@ export default function WorkflowActionsMenu({
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
+          <Link href={`/workflow/executions/${workflowId}`}>
+            <DropdownMenuItem>
+              <HistoryIcon />
+              Executions
+            </DropdownMenuItem>
+          </Link>
           <DropdownMenuItem
             onClick={() => setOpenDeleteDialog(true)}
             className="text-destructive focus:text-destructive flex items-center gap-2"
