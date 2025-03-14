@@ -1,6 +1,3 @@
-"use client";
-
-import { useQuery } from "@tanstack/react-query";
 import { TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { datesToDurationString } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -8,39 +5,21 @@ import ExecutionStatusIndicator from "./execution-status-indicator";
 import { CoinsIcon } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { useRouter } from "next/navigation";
-import AnimatedCounter from "@/components/animated-counter";
-import getAllWorkflowExecutionsServer from "../_data-access/get-all-workflow-executions-server";
-import getAllWorkflowExecutionsClient from "../_data-access/get-all-workflow-executions-client";
+import getAllWorkflowExecutionsClient from "../../_data-access/get-all-workflow-executions-client";
 import useWorkflowsStore from "@/lib/store/workflows-store";
 
 type Props = {
   workflowId: string;
-  initialData: Awaited<ReturnType<typeof getAllWorkflowExecutionsServer>>;
+  queryData: Awaited<ReturnType<typeof getAllWorkflowExecutionsClient>>;
 };
 
-export default function ExecutionsTableBody({
-  workflowId,
-  initialData,
-}: Props) {
+export default function ExecutionsTableBody({ workflowId, queryData }: Props) {
   const router = useRouter();
   const { setWorkflowExecutionData } = useWorkflowsStore();
-  const query = useQuery({
-    queryKey: ["executions", workflowId],
-    initialData,
-    queryFn: () => getAllWorkflowExecutionsClient(workflowId),
-    refetchInterval: (query) => {
-      return query.state.data?.some(
-        (execution) =>
-          execution.status === "PENDING" || execution.status === "EXECUTING",
-      )
-        ? 1000
-        : false;
-    },
-  });
 
   return (
     <TableBody>
-      {query.data?.map((execution) => {
+      {queryData?.workflowExecutions.map((execution) => {
         const startedAtDate = execution.startedAt
           ? new Date(execution.startedAt)
           : null;
@@ -93,7 +72,7 @@ export default function ExecutionsTableBody({
                   className="stroke-primary dark:stroke-blue-500"
                 />
                 <span className="font-semibold">
-                  {<AnimatedCounter value={execution.creditsConsumed ?? 0} />}
+                  {execution.creditsConsumed ?? "-"}
                 </span>
                 <span className="text-muted-foreground col-start-2 text-xs">
                   Credits

@@ -28,14 +28,19 @@ export default async function getAllWorkflowExecutionsServer(
 
     log = log.with({ userId: user.id });
 
-    const { data, error } = await supabase
+    const {
+      data: workflowExecutions,
+      count,
+      error,
+    } = await supabase
       .from("workflowExecutions")
-      .select("*, tasks(taskId)")
+      .select("*, tasks(taskId)", { count: "exact" })
       .eq("userId", user.id)
       .eq("workflowId", workflowId)
       .order("startedAt", { ascending: false })
       .order("phase", { ascending: true, referencedTable: "tasks" })
-      .limit(1, { foreignTable: "tasks" });
+      .limit(1, { foreignTable: "tasks" })
+      .range(0, 4);
 
     if (error) {
       log.error(LOGGER_ERROR_MESSAGES.Select, {
@@ -44,7 +49,7 @@ export default async function getAllWorkflowExecutionsServer(
       return null;
     }
 
-    return data;
+    return { workflowExecutions, count };
   } catch (error) {
     // When you call the redirect() function (from next/navigation), it throws a special error (with the code NEXT_REDIRECT) to immediately halt further processing and trigger the redirection. This “error” is meant to be caught internally by Next.js, not by the try/catch blocks.
     // Throw the “error” to trigger the redirection

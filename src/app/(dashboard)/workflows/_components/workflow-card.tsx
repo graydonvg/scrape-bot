@@ -20,7 +20,7 @@ export default function WorkflowCard({ workflow }: Props) {
   const isDraft = workflow.status === "DRAFT";
 
   return (
-    <Card className="hover:dark:shadow-primary/30 hover:shadow-md">
+    <Card className="hover:dark:shadow-primary/30 rounded-md hover:shadow-md">
       <CardContent className="flex h-[100px] items-center justify-between p-4">
         <div className="flex items-center gap-3">
           <Badge

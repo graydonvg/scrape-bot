@@ -4,6 +4,8 @@ import { createSupabaseBrowserClient } from "@/lib/supabase/supabase-browser";
 
 export default async function getAllWorkflowExecutionsClient(
   workflowId: string,
+  rangeStart: number,
+  rangeEnd: number,
 ) {
   let log = new Logger();
   log = log.with({
@@ -24,14 +26,19 @@ export default async function getAllWorkflowExecutionsClient(
 
     log = log.with({ userId: user.id });
 
-    const { data, error } = await supabase
+    const {
+      data: workflowExecutions,
+      count,
+      error,
+    } = await supabase
       .from("workflowExecutions")
-      .select("*, tasks(taskId)")
+      .select("*, tasks(taskId)", { count: "exact" })
       .eq("userId", user.id)
       .eq("workflowId", workflowId)
       .order("startedAt", { ascending: false })
       .order("phase", { ascending: true, referencedTable: "tasks" })
-      .limit(1, { foreignTable: "tasks" });
+      .limit(1, { foreignTable: "tasks" })
+      .range(rangeStart, rangeEnd);
 
     if (error) {
       log.error(LOGGER_ERROR_MESSAGES.Select, {
@@ -40,7 +47,7 @@ export default async function getAllWorkflowExecutionsClient(
       return null;
     }
 
-    return data;
+    return { workflowExecutions, count };
   } catch (error) {
     log.error(LOGGER_ERROR_MESSAGES.Unexpected, { error });
     return null;

@@ -8,11 +8,14 @@ export default function Loading() {
       <div className="flex-center size-full grow">
         <div className="container">
           <div className="rounded-xl border">
-            <div className="relative h-[calc(100vh-194.3px)] space-y-2 divide-y">
-              <Skeleton className="h-10 w-full rounded-b-none" />
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Skeleton key={i} className="h-[62px] w-full" />
-              ))}
+            <div className="flex h-[calc(100vh-194.3px)] flex-col justify-between">
+              <div className="space-y-1 divide-y">
+                <Skeleton className="h-10 w-full rounded-b-none" />
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Skeleton key={i} className="h-[62px] w-full rounded-none" />
+                ))}
+              </div>
+              <Skeleton className="h-[52px] w-full rounded-t-none border-t" />
             </div>
           </div>
         </div>
