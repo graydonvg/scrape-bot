@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import getWorkflowExecutionWithTasksClient from "@/app/workflow/execution/[workflow_id]/[execution_id]/_data-access/get-execution-with-tasks-client";
+import getWorkflowExecutionWithTasksClient from "@/app/(app)/workflows/workflow/execution/[workflow_id]/[execution_id]/_data-access/get-execution-with-tasks-client";
 import { WorkflowNodeInvalidInputs } from "../types/execution";
 
 type WorkflowsState = {

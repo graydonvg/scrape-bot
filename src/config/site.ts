@@ -16,17 +16,17 @@ export const siteConfig = {
       icon: HomeIcon,
     },
     {
-      href: "workflows",
+      href: "/workflows",
       label: "Workflows",
       icon: Layers2Icon,
     },
     {
-      href: "credentials",
+      href: "/credentials",
       label: "Credentials",
       icon: ShieldCheckIcon,
     },
     {
-      href: "billing",
+      href: "/billing",
       label: "Billing",
       icon: CreditCardIcon,
     },

@@ -6,6 +6,8 @@ type UserStore = {
   user: UserDb;
   setUser: (user: UserDb) => void;
   clearUser: () => void;
+  isUserMenuOpen: boolean;
+  setIsUserMenuOpen: (isUserMenuOpen: boolean) => void;
 };
 
 const initialData: UserDb = {
@@ -25,6 +27,8 @@ const useUserStore = create<UserStore>()(
         set({
           user: initialData,
         }),
+      isUserMenuOpen: false,
+      setIsUserMenuOpen: (isUserMenuOpen) => set({ isUserMenuOpen }),
     }),
     {
       name: "user-storage",

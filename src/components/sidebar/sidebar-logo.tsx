@@ -16,7 +16,7 @@ export default function SidebarLogo() {
   return (
     <SidebarMenu>
       <SidebarMenuItem className="flex items-center justify-between">
-        <SidebarMenuButton size="lg" className="hover:bg-sidebar w-fit">
+        <SidebarMenuButton size="lg" className="hover:bg-sidebar">
           <Logo isLink />
         </SidebarMenuButton>
         {isMobile && (

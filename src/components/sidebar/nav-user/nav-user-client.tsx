@@ -32,6 +32,7 @@ import { useEffect } from "react";
 import getUserDataClient from "@/data-access/get-user-data-client";
 import { UserDb } from "@/lib/types/user";
 import { ThemeMenuItems } from "./theme-menu-items";
+import useSidebarOpensOnHover from "@/hooks/use-sidebar-opens-on-hover";
 
 type Props = {
   user?: UserDb | null;
@@ -40,12 +41,13 @@ type Props = {
 export function NavUserClient({ user }: Props) {
   const log = useLogger();
   const router = useRouter();
-  const { isMobile } = useSidebar();
+  const { isMobile, setOpen } = useSidebar();
   const supabase = createSupabaseBrowserClient();
-  const { user: userStore, setUser } = useUserStore();
+  const { user: userStore, setUser, setIsUserMenuOpen } = useUserStore();
   const userFullName = getUserFullName();
   const userName = getUsername(userFullName);
   const avatarFallbackChars = getUserAvatarFallbackChars(userFullName);
+  const sidebarOpensOnHover = useSidebarOpensOnHover();
 
   useEffect(() => {
     if (user) setUser(user);
@@ -70,7 +72,13 @@ export function NavUserClient({ user }: Props) {
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <DropdownMenu>
+        <DropdownMenu
+          onOpenChange={(open) => {
+            if (!sidebarOpensOnHover) return;
+            setOpen(open);
+            setIsUserMenuOpen(open);
+          }}
+        >
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"

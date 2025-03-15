@@ -1,14 +1,17 @@
-"use client";
-
 import { ReactNode } from "react";
 import { ThemeProvider } from "./theme-provider";
 import ReactQueryProvider from "./react-query-provider";
+import { SidebarProvider } from "../ui/sidebar";
+import { cookies } from "next/headers";
 
 type Props = {
   children: ReactNode;
 };
 
-export default function Providers({ children }: Props) {
+export default async function Providers({ children }: Props) {
+  const cookieStore = await cookies();
+  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
+
   return (
     <ReactQueryProvider>
       <ThemeProvider
@@ -17,7 +20,7 @@ export default function Providers({ children }: Props) {
         enableSystem
         disableTransitionOnChange
       >
-        {children}
+        <SidebarProvider defaultOpen={defaultOpen}>{children}</SidebarProvider>
       </ThemeProvider>
     </ReactQueryProvider>
   );
