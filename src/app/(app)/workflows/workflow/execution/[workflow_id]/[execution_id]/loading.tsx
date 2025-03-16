@@ -15,10 +15,13 @@ export default function Loading() {
             />
             <span className="font-semibold">Workflow</span>
           </SidebarGroupLabel>
-          <Skeleton className="bg-accent h-[calc(20%-(var(--spacing)*2))] w-full" />
-          <Skeleton className="bg-accent h-[calc(20%-(var(--spacing)*2))] w-full" />
-          <Skeleton className="bg-accent h-[calc(20%-(var(--spacing)*2))] w-full" />
-          <Skeleton className="bg-accent h-[calc(20%-(var(--spacing)*2))] w-full" />
+
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Skeleton
+              key={i}
+              className="bg-accent h-[calc(20%-(var(--spacing)*2))] w-full"
+            />
+          ))}
         </div>
         <Separator />
         <div className="grow space-y-2 p-4">
@@ -32,8 +35,8 @@ export default function Loading() {
             </div>
           </SidebarGroupLabel>
           <div className="space-y-2">
-            {Array.from({ length: 3 }).map((_, index) => (
-              <Skeleton key={index} className="bg-accent h-9 w-full" />
+            {Array.from({ length: 3 }).map((_, i) => (
+              <Skeleton key={i} className="bg-accent h-9 w-full" />
             ))}
           </div>
         </div>

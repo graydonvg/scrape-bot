@@ -31,7 +31,6 @@ import useUserStore from "@/lib/store/user-store";
 import { useEffect } from "react";
 import { UserDb } from "@/lib/types/user";
 import { ThemeMenuItems } from "./theme-menu-items";
-import useSidebarOpensOnHover from "@/hooks/use-sidebar-opens-on-hover";
 
 type Props = {
   user: UserDb;
@@ -40,13 +39,17 @@ type Props = {
 export function NavUserClient({ user }: Props) {
   const log = useLogger();
   const router = useRouter();
-  const { isMobile, setOpen, setIsUserMenuOpen } = useSidebar();
+  const {
+    isMobile,
+    setIsMenuOpen,
+    setIsMouseOverSidebar,
+    opensOnHover: sidebarOpensOnHover,
+  } = useSidebar();
   const supabase = createSupabaseBrowserClient();
   const { setUserCreditBalance } = useUserStore();
   const userFullName = getUserFullName();
   const userName = getUsername(userFullName);
   const avatarFallbackChars = getUserAvatarFallbackChars(userFullName);
-  const sidebarOpensOnHover = useSidebarOpensOnHover();
 
   useEffect(() => {
     if (user) setUserCreditBalance(user.credits);
@@ -58,8 +61,7 @@ export function NavUserClient({ user }: Props) {
         <DropdownMenu
           onOpenChange={(open) => {
             if (!sidebarOpensOnHover) return;
-            setOpen(open);
-            setIsUserMenuOpen(open);
+            setIsMenuOpen(open);
           }}
         >
           <DropdownMenuTrigger asChild>
@@ -91,6 +93,7 @@ export function NavUserClient({ user }: Props) {
             side={isMobile ? "bottom" : "right"}
             align="end"
             sideOffset={4}
+            onMouseEnter={() => setIsMouseOverSidebar(false)}
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">

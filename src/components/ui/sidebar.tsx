@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useIsMobile } from "@/hooks/use-mobile";
 import TooltipWrapper from "../tooltip-wrapper";
+import { usePathname } from "next/navigation";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
@@ -31,6 +32,7 @@ const SIDEBAR_WIDTH = "16rem";
 const MOBILE_SIDEBAR_WIDTH = "16rem";
 const SIDEBAR_WIDTH_ICON = "3rem";
 const SIDEBAR_KEYBOARD_SHORTCUT = "b";
+const opensOnHoverPaths = ["/editor", "/execution/"];
 
 type SidebarContext = {
   state: "expanded" | "collapsed";
@@ -40,8 +42,11 @@ type SidebarContext = {
   setOpenMobile: (open: boolean) => void;
   isMobile: boolean;
   toggleSidebar: () => void;
-  isUserMenuOpen: boolean;
-  setIsUserMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isMenuOpen: boolean;
+  setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isMouseOverSidebar: boolean;
+  setIsMouseOverSidebar: React.Dispatch<React.SetStateAction<boolean>>;
+  opensOnHover: boolean;
 };
 
 const SidebarContext = React.createContext<SidebarContext | null>(null);
@@ -77,7 +82,12 @@ const SidebarProvider = React.forwardRef<
   ) => {
     const isMobile = useIsMobile();
     const [openMobile, setOpenMobile] = React.useState(false);
-    const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false);
+    const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+    const [isMouseOverSidebar, setIsMouseOverSidebar] = React.useState(false);
+    const pathname = usePathname();
+    const opensOnHover = opensOnHoverPaths.some((path) =>
+      pathname.includes(path),
+    );
 
     // This is the internal state of the sidebar.
     // We use openProp and setOpenProp for control from outside the component.
@@ -135,8 +145,11 @@ const SidebarProvider = React.forwardRef<
         openMobile,
         setOpenMobile,
         toggleSidebar,
-        isUserMenuOpen,
-        setIsUserMenuOpen,
+        isMenuOpen,
+        setIsMenuOpen,
+        isMouseOverSidebar,
+        setIsMouseOverSidebar,
+        opensOnHover,
       }),
       [
         state,
@@ -146,8 +159,11 @@ const SidebarProvider = React.forwardRef<
         openMobile,
         setOpenMobile,
         toggleSidebar,
-        isUserMenuOpen,
-        setIsUserMenuOpen,
+        isMenuOpen,
+        setIsMenuOpen,
+        isMouseOverSidebar,
+        setIsMouseOverSidebar,
+        opensOnHover,
       ],
     );
 

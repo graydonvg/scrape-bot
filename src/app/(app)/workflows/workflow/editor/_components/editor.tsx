@@ -11,7 +11,7 @@ type Props = {
 
 export default function Editor({ workflow }: Props) {
   return (
-    <div className="bg-sidebar fixed inset-0 top-12 flex grow">
+    <div className="bg-sidebar fixed inset-0 top-12 flex">
       {/* <TopBar
         workflowId={workflow.workflowId!}
         title="Workflow editor"

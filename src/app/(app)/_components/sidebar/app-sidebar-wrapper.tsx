@@ -1,47 +1,74 @@
 "use client";
 
 import { Sidebar, useSidebar } from "@/components/ui/sidebar";
-import useSidebarOpensOnHover from "@/hooks/use-sidebar-opens-on-hover";
-import { ComponentProps, ReactNode, useEffect, useState } from "react";
+import { ComponentProps, ReactNode, useEffect, useRef } from "react";
 
 type Props = {
   children: ReactNode;
 } & ComponentProps<typeof Sidebar>;
 
 export default function AppSidebarWrapper({ children, ...props }: Props) {
-  const sidebarOpensOnHover = useSidebarOpensOnHover();
-  const { setOpen, isUserMenuOpen } = useSidebar();
-  const [isHovering, setIsHovering] = useState(false);
+  const {
+    setOpen,
+    isMenuOpen,
+    isMouseOverSidebar,
+    setIsMouseOverSidebar,
+    opensOnHover,
+  } = useSidebar();
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   function handleMouseEnter() {
-    if (sidebarOpensOnHover) {
-      setIsHovering(true);
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
+    if (opensOnHover) {
+      setIsMouseOverSidebar(true);
       setOpen(true);
     }
   }
 
   function handleMouseLeave() {
-    if (sidebarOpensOnHover && !isUserMenuOpen) {
-      setIsHovering(false);
-      setOpen(false);
+    if (opensOnHover && !isMenuOpen) {
+      setIsMouseOverSidebar(false);
+
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => {
+        setOpen(false);
+      }, 0);
     }
   }
 
   useEffect(() => {
-    if (isUserMenuOpen) return;
+    if (isMenuOpen) return;
 
-    if (sidebarOpensOnHover && !isHovering) setOpen(false);
-    if (!sidebarOpensOnHover && isHovering) setIsHovering(false);
-    if (!sidebarOpensOnHover) setOpen(true);
-  }, [sidebarOpensOnHover, setOpen, isHovering, isUserMenuOpen]);
+    if (opensOnHover && !isMouseOverSidebar) {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => {
+        setOpen(false);
+      }, 0);
+    }
+
+    if (!opensOnHover && isMouseOverSidebar) setIsMouseOverSidebar(false);
+
+    if (!opensOnHover) setOpen(true);
+
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, [
+    opensOnHover,
+    setOpen,
+    isMouseOverSidebar,
+    isMenuOpen,
+    setIsMouseOverSidebar,
+  ]);
 
   return (
     <Sidebar
       collapsible="icon"
-      {...props}
       variant="sidebar"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      {...props}
     >
       {children}
     </Sidebar>
