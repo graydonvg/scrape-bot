@@ -67,9 +67,9 @@ export default function Phases({ tasks }: Props) {
               />
             ))
           ) : (
-            <div className="space-y-2">
+            <div className="space-y-2 px-2">
               {Array.from({ length: 3 }).map((_, index) => (
-                <Skeleton key={index} className="bg-muted h-6 w-full" />
+                <Skeleton key={index} className="bg-accent h-9 w-full" />
               ))}
             </div>
           )}

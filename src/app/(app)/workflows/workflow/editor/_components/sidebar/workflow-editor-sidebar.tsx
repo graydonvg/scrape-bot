@@ -16,7 +16,6 @@ import {
   NetworkIcon,
   TagIcon,
 } from "lucide-react";
-import AnimatedCounter from "@/components/animated-counter";
 import WorkflowExecutionDetail from "@/components/workflow-execution-detail";
 import Link from "next/link";
 

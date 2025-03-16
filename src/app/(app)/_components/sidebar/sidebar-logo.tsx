@@ -1,13 +1,13 @@
 "use client";
 
+import Logo from "@/components/logo";
+import { Button } from "@/components/ui/button";
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import Logo from "../logo";
-import { Button } from "../ui/button";
 import { XIcon } from "lucide-react";
 
 export default function SidebarLogo() {

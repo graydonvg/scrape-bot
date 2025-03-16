@@ -6,11 +6,11 @@ import {
 } from "@/components/ui/sidebar";
 import { ComponentProps, Suspense } from "react";
 import { NavMain } from "./nav-main";
-import SidebarLogo from "@/components/app-sidebar/sidebar-logo";
 import { Skeleton } from "@/components/ui/skeleton";
-import NavUserServer from "@/components/app-sidebar/nav-user/nav-user-server";
+import NavUserServer from "@/app/(app)/_components/sidebar/nav-user/nav-user-server";
 import { Separator } from "@/components/ui/separator";
 import AppSidebarWrapper from "./app-sidebar-wrapper";
+import SidebarLogo from "./sidebar-logo";
 
 export default function AppSidebar({
   ...props
