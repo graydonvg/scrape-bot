@@ -24,7 +24,7 @@ export default function PhaseTaskButton({ task }: Props) {
         aria-disabled={state.isLoading}
         isActive={taskId === task.taskId}
         onClick={handleClick}
-        className="cursor-pointer"
+        className="h-fit cursor-pointer p-2"
       >
         {state.isLoading && (
           <Loader2Icon
@@ -41,7 +41,7 @@ export default function PhaseTaskButton({ task }: Props) {
         {state.isFailed && (
           <CircleXIcon size={20} className="stroke-destructive" />
         )}
-        <span className="truncate font-semibold">{task.name}</span>
+        <span className="font-semibold !whitespace-normal">{task.name}</span>
       </SidebarMenuSubButton>
     </SidebarMenuSubItem>
   );

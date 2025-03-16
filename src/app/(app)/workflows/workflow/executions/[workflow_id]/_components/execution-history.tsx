@@ -1,6 +1,10 @@
 import NoResultsFound from "@/components/no-results-found";
 import getAllWorkflowExecutionsServer from "../_data-access/get-all-workflow-executions-server";
 import ExecutionsTable from "./executions-table/executions-table";
+import PageHeader from "@/components/page-header";
+import { Button } from "@/components/ui/button";
+import { PencilIcon } from "lucide-react";
+import Link from "next/link";
 
 type Props = {
   workflowId: string;
@@ -10,14 +14,17 @@ type Props = {
 export default function ExecutionHistory({ workflowId, initialData }: Props) {
   return (
     <div className="flex h-full flex-col">
-      <div className="mb-8 flex items-center justify-between">
-        <div className="mr-6 flex shrink-0 flex-col">
-          <h1 className="text-3xl font-bold">Executions</h1>
-          <p className="text-muted-foreground">
-            A list of all the workflow&apos;s executions
-          </p>
-        </div>
-      </div>
+      <PageHeader
+        title="Worklfow Executions"
+        subtitle="A list of all the workflow's executions"
+      >
+        <Link href={`/workflows/workflow/editor/${workflowId}`}>
+          <Button>
+            <PencilIcon />
+            Edit Workflow
+          </Button>
+        </Link>
+      </PageHeader>
 
       {initialData?.workflowExecutions.length === 0 ? (
         <NoResultsFound

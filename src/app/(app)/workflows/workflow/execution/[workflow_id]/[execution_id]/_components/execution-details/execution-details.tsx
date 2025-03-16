@@ -19,6 +19,7 @@ import TaskDetailsSkeleton from "./task-details-skeleton";
 import ExecutionStatusMessage from "./execution-status-message";
 import TaskMenu from "@/app/(app)/workflows/workflow/editor/_components/sidebar/task-menu";
 import WorkflowExecutionSidebar from "../sidebar/workflow-execution-sidebar";
+import PageHeader from "@/components/page-header";
 
 type Props = {
   workflowId: string;
@@ -105,7 +106,7 @@ export default function ExecutionDetails({ workflowId, initialData }: Props) {
   ]);
 
   return (
-    <div className="fixed inset-0 top-12 left-[300px] flex grow md:left-[348px]">
+    <div className="fixed inset-0 top-12 left-[300px] flex grow md:left-[368px]">
       {/* <TopBar
         workflowId={workflowId}
         title="Workflow execution"
@@ -129,7 +130,12 @@ export default function ExecutionDetails({ workflowId, initialData }: Props) {
         {taskIdParam && taskQuery.isLoading && <TaskDetailsSkeleton />}
         {!taskQuery.isLoading && taskData && (
           <div className="container flex flex-col gap-4">
-            <div className="flex items-center gap-2">
+            <PageHeader
+              title="Task Details"
+              subtitle="Details for the executed task"
+              containerClassName="mb-6"
+            />
+            <div className="flex flex-wrap items-center gap-2">
               <TaskBadge
                 icon={CircleDashedIcon}
                 label="Status"

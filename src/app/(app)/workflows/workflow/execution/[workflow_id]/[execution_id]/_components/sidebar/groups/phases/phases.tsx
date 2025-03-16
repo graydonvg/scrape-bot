@@ -2,7 +2,6 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarMenu,
-  useSidebar,
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import CollapsiblePhase from "./collapsible-phase";
@@ -16,7 +15,6 @@ type Props = {
 };
 
 export default function Phases({ tasks }: Props) {
-  const { state: sidebarState, toggleSidebar } = useSidebar();
   const [phases, setPhases] = useState<ReturnType<typeof getPhasesData>>([]);
 
   const getPhasesData = useCallback(() => {
@@ -42,11 +40,18 @@ export default function Phases({ tasks }: Props) {
   }, [tasks, getPhasesData]);
 
   return (
-    <SidebarGroup className="group/phases grow">
-      <PhasesGroupLabel
-        onExpandAll={handleExpandAll}
-        onCollapseAll={handleCollapseAll}
-      />
+    <SidebarGroup
+      className="group/phases relative h-full overflow-y-auto pt-0 pb-4"
+      style={{
+        scrollbarWidth: "thin",
+      }}
+    >
+      <div className="bg-sidebar sticky top-0 z-10 pt-4 pb-2">
+        <PhasesGroupLabel
+          onExpandAll={handleExpandAll}
+          onCollapseAll={handleCollapseAll}
+        />
+      </div>
       <SidebarGroupContent>
         <SidebarMenu>
           {phases.length > 0 ? (
@@ -56,17 +61,9 @@ export default function Phases({ tasks }: Props) {
                 phaseNumber={phase.phaseNumber}
                 tasks={phase.tasks}
                 isOpen={phase.isOpen}
-                onOpenChange={
-                  sidebarState !== "collapsed"
-                    ? () =>
-                        handleCollapsibleState(phase.phaseNumber, !phase.isOpen)
-                    : () => handleCollapsibleState(phase.phaseNumber, true)
+                onOpenChange={() =>
+                  handleCollapsibleState(phase.phaseNumber, !phase.isOpen)
                 }
-                onCollapsibleTriggerClick={() => {
-                  if (sidebarState === "collapsed") {
-                    toggleSidebar();
-                  }
-                }}
               />
             ))
           ) : (

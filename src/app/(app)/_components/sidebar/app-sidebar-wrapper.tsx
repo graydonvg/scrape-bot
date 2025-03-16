@@ -2,7 +2,6 @@
 
 import { Sidebar, useSidebar } from "@/components/ui/sidebar";
 import useSidebarOpensOnHover from "@/hooks/use-sidebar-opens-on-hover";
-import useUserStore from "@/lib/store/user-store";
 import { ComponentProps, ReactNode, useEffect, useState } from "react";
 
 type Props = {
@@ -11,9 +10,8 @@ type Props = {
 
 export default function AppSidebarWrapper({ children, ...props }: Props) {
   const sidebarOpensOnHover = useSidebarOpensOnHover();
-  const { setOpen } = useSidebar();
+  const { setOpen, isUserMenuOpen } = useSidebar();
   const [isHovering, setIsHovering] = useState(false);
-  const { isUserMenuOpen } = useUserStore();
 
   function handleMouseEnter() {
     if (sidebarOpensOnHover) {
@@ -34,6 +32,7 @@ export default function AppSidebarWrapper({ children, ...props }: Props) {
 
     if (sidebarOpensOnHover && !isHovering) setOpen(false);
     if (!sidebarOpensOnHover && isHovering) setIsHovering(false);
+    if (!sidebarOpensOnHover) setOpen(true);
   }, [sidebarOpensOnHover, setOpen, isHovering, isUserMenuOpen]);
 
   return (

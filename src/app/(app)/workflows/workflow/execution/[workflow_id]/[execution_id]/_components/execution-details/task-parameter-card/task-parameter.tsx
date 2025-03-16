@@ -19,13 +19,13 @@ export default function TaskParameter({ label, value }: Props) {
 
   return (
     <div className="flex items-center">
-      <Label className="mr-2 basis-1/3 whitespace-nowrap">{label}:</Label>
+      <Label className="mr-4 basis-1/3 whitespace-nowrap">{label}:</Label>
       <div className="relative flex basis-2/3 items-center">
         <Input
           ref={inputRef}
           readOnly
           value={value}
-          className="pointer-events-none truncate pr-12"
+          className="pointer-events-none min-w-40 truncate pr-12"
         />
         {!copied ? (
           <TooltipWrapper tooltipContent="Copy to clipboard">

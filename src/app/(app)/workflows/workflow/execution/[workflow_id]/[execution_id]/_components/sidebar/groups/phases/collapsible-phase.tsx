@@ -9,7 +9,6 @@ type Props = {
   tasks?: TaskDb[];
   isOpen: boolean;
   onOpenChange: () => void;
-  onCollapsibleTriggerClick: () => void;
 };
 
 export default function CollapsiblePhase({
@@ -17,7 +16,6 @@ export default function CollapsiblePhase({
   tasks,
   isOpen,
   onOpenChange,
-  onCollapsibleTriggerClick,
 }: Props) {
   return (
     <Collapsible
@@ -27,11 +25,7 @@ export default function CollapsiblePhase({
       asChild
     >
       <SidebarMenuItem>
-        <CollapsiblePhaseTrigger
-          phaseNumber={phaseNumber}
-          tasks={tasks}
-          onClick={onCollapsibleTriggerClick}
-        />
+        <CollapsiblePhaseTrigger phaseNumber={phaseNumber} tasks={tasks} />
         <CollapsibleContent>
           <SidebarMenuSub>
             {tasks?.map((task, index) => (

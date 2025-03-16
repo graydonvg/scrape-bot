@@ -29,45 +29,28 @@ import { toast } from "sonner";
 import { useLogger } from "next-axiom";
 import useUserStore from "@/lib/store/user-store";
 import { useEffect } from "react";
-import getUserDataClient from "@/data-access/get-user-data-client";
 import { UserDb } from "@/lib/types/user";
 import { ThemeMenuItems } from "./theme-menu-items";
 import useSidebarOpensOnHover from "@/hooks/use-sidebar-opens-on-hover";
 
 type Props = {
-  user?: UserDb | null;
+  user: UserDb;
 };
 
 export function NavUserClient({ user }: Props) {
   const log = useLogger();
   const router = useRouter();
-  const { isMobile, setOpen } = useSidebar();
+  const { isMobile, setOpen, setIsUserMenuOpen } = useSidebar();
   const supabase = createSupabaseBrowserClient();
-  const { user: userStore, setUser, setIsUserMenuOpen } = useUserStore();
+  const { setUserCreditBalance } = useUserStore();
   const userFullName = getUserFullName();
   const userName = getUsername(userFullName);
   const avatarFallbackChars = getUserAvatarFallbackChars(userFullName);
   const sidebarOpensOnHover = useSidebarOpensOnHover();
 
   useEffect(() => {
-    if (user) setUser(user);
-
-    // User data is persisted in local storage to reduce number of requests
-    // If local storage is cleared, refetch the user data and add it back to store
-    if (!user) {
-      async function fetchUserData() {
-        const userData = await getUserDataClient();
-
-        if (userData) {
-          setUser(userData);
-        } else {
-          router.push("/signin");
-        }
-      }
-
-      fetchUserData();
-    }
-  }, [user, setUser, router]);
+    if (user) setUserCreditBalance(user.credits);
+  }, [user, setUserCreditBalance]);
 
   return (
     <SidebarMenu>
@@ -85,9 +68,9 @@ export function NavUserClient({ user }: Props) {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-md">
-                {userStore.avatarUrl ? (
+                {user.avatarUrl ? (
                   <AvatarImage
-                    src={userStore.avatarUrl}
+                    src={user.avatarUrl}
                     alt={`${userName} avatar`}
                   />
                 ) : (
@@ -98,7 +81,7 @@ export function NavUserClient({ user }: Props) {
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">{userName}</span>
-                <span className="truncate text-xs">{userStore.email}</span>
+                <span className="truncate text-xs">{user.email}</span>
               </div>
               <ChevronsUpDownIcon className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -112,9 +95,9 @@ export function NavUserClient({ user }: Props) {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-md">
-                  {userStore.avatarUrl ? (
+                  {user.avatarUrl ? (
                     <AvatarImage
-                      src={userStore.avatarUrl}
+                      src={user.avatarUrl}
                       alt={`${userName} avatar`}
                     />
                   ) : (
@@ -125,7 +108,7 @@ export function NavUserClient({ user }: Props) {
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">{userName}</span>
-                  <span className="truncate text-xs">{userStore.email}</span>
+                  <span className="truncate text-xs">{user.email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
@@ -163,13 +146,13 @@ export function NavUserClient({ user }: Props) {
   );
 
   function getUserFullName() {
-    const userFullName = `${userStore.firstName ? userStore.firstName : ""} ${userStore.lastName ? userStore.lastName : ""}`;
+    const userFullName = `${user.firstName ? user.firstName : ""} ${user.lastName ? user.lastName : ""}`;
 
     return userFullName.trim();
   }
 
   function getUsername(userFullName: string) {
-    return userFullName.length ? userFullName : userStore.email.split("@")[0];
+    return userFullName.length ? userFullName : user.email.split("@")[0];
   }
 
   function getUserAvatarFallbackChars(userFullName: string) {
@@ -179,7 +162,7 @@ export function NavUserClient({ user }: Props) {
           .slice(0, 2)
           .map((name) => name.charAt(0))
           .join("")
-      : userStore.email.charAt(0);
+      : user.email.charAt(0);
   }
 
   async function handleSignOut() {

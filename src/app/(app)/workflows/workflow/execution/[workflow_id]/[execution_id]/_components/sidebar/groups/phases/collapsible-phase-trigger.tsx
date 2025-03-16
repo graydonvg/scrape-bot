@@ -12,19 +12,14 @@ import { TaskDb } from "@/lib/types/task";
 type Props = {
   phaseNumber: number;
   tasks?: TaskDb[];
-  onClick: () => void;
 };
 
-export default function CollapsiblePhaseTrigger({
-  phaseNumber,
-  tasks,
-  onClick,
-}: Props) {
+export default function CollapsiblePhaseTrigger({ phaseNumber, tasks }: Props) {
   const state = getPhaseState();
 
   return (
-    <CollapsibleTrigger onClick={onClick} asChild>
-      <SidebarMenuButton tooltip={`Phase: ${phaseNumber}`}>
+    <CollapsibleTrigger asChild>
+      <SidebarMenuButton>
         {state.isLoading && (
           <Loader2Icon
             size={20}

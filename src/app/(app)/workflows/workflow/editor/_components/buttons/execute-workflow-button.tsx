@@ -26,7 +26,7 @@ export default function ExecuteWorkflowButton({
 }: Props) {
   const toastId = "execute-workflow";
   const { isMobile, state } = useSidebar();
-  const { user } = useUserStore();
+  const { userCreditBalance } = useUserStore();
   const { setWorkflowExecutionData } = useWorkflowsStore();
   const generateExecutionPlan = useWorkflowExecutionPlan();
   const { toObject } = useReactFlow();
@@ -67,7 +67,7 @@ export default function ExecuteWorkflowButton({
             const totalCreditsRequired =
               calculateTotalCreditsRequired(executionPlan);
 
-            if (user.credits < totalCreditsRequired)
+            if (userCreditBalance < totalCreditsRequired)
               return toast.error(USER_ERROR_MESSAGES.InsufficientCredits);
 
             execute({ workflowId, definition: JSON.stringify(toObject()) });

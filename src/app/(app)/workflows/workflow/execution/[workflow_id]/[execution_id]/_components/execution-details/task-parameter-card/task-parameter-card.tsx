@@ -35,7 +35,7 @@ export default function TaskParameterCard({
         <CardDescription>{subtitle}</CardDescription>
       </CardHeader>
       <CardContent className="py-4">
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 overflow-x-auto">
           {(!params || Object.keys(params).length === 0) &&
             !includesBrowserInstance && (
               <p className="text-sm">{fallbackText}</p>

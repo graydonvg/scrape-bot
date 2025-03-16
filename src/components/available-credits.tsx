@@ -20,11 +20,7 @@ export default function AvailableCredits() {
 
   return (
     <TooltipWrapper tooltipContent="Available credits">
-      <Button
-        variant="outline"
-        asChild
-        className="h-9 transition-[height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-8"
-      >
+      <Button variant="outline" asChild className="bg-background" size="sm">
         <Link
           href="/billing"
           className="flex items-center justify-center group-data-[collapsible=icon]:justify-start"

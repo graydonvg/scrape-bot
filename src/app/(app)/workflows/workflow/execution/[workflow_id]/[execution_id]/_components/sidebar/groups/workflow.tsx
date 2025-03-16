@@ -10,13 +10,13 @@ import {
   ClockIcon,
   CoinsIcon,
   Loader2Icon,
-  WorkflowIcon,
+  NetworkIcon,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import WorkflowExecutionDetail from "./workflow-execution-detail";
 import { datesToDurationString } from "@/lib/utils";
 import { WorkflowExecutionStatusDb } from "@/lib/types/execution";
 import AnimatedCounter from "@/components/animated-counter";
+import WorkflowExecutionDetail from "@/components/workflow-execution-detail";
 
 const statusColors: Record<WorkflowExecutionStatusDb, string> = {
   PENDING: "text-muted-foreground",
@@ -45,9 +45,12 @@ export default function Workflow({
   const formattedStatus = status?.split("_").join(" ");
 
   return (
-    <SidebarGroup>
+    <SidebarGroup className="py-4">
       <SidebarGroupLabel className="text-muted-foreground flex-center gap-2 text-base">
-        <WorkflowIcon size={20} className="stroke-muted-foreground/80" />
+        <NetworkIcon
+          size={20}
+          className="stroke-muted-foreground/80 -rotate-90"
+        />
         <span className="font-semibold">Workflow</span>
       </SidebarGroupLabel>
       <SidebarGroupContent>
