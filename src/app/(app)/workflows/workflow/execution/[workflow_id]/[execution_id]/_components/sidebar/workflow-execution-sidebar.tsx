@@ -1,11 +1,18 @@
-import useWorkflowsStore from "@/lib/store/workflows-store";
 import Phases from "./groups/phases/phases";
 import { calculateTotalCreditsConsumed } from "@/lib/workflow/helpers/calculate-credit-consumption";
 import { Separator } from "@/components/ui/separator";
 import Workflow from "./groups/workflow";
+import getWorkflowExecutionWithTasksClient from "../../_data-access/get-execution-with-tasks-client";
 
-export default function WorkflowExecutionSidebar() {
-  const { workflowExecutionData } = useWorkflowsStore();
+type Props = {
+  workflowExecutionData: Awaited<
+    ReturnType<typeof getWorkflowExecutionWithTasksClient>
+  >;
+};
+
+export default function WorkflowExecutionSidebar({
+  workflowExecutionData,
+}: Props) {
   const tasks = workflowExecutionData?.tasks;
   const creditsConsumed = calculateTotalCreditsConsumed(tasks || []);
 

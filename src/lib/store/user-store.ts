@@ -7,8 +7,7 @@ type UserStore = {
 
 const useUserStore = create<UserStore>()((set) => ({
   userCreditBalance: 0,
-  setUserCreditBalance: (creditBalance) =>
-    set({ userCreditBalance: creditBalance }),
+  setUserCreditBalance: (userCreditBalance) => set({ userCreditBalance }),
 }));
 
 export default useUserStore;

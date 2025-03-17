@@ -1,6 +1,9 @@
 import { create } from "zustand";
-import getWorkflowExecutionWithTasksClient from "@/app/(app)/workflows/workflow/execution/[workflow_id]/[execution_id]/_data-access/get-execution-with-tasks-client";
-import { WorkflowNodeInvalidInputs } from "../types/execution";
+import { persist } from "zustand/middleware";
+import {
+  WorkflowExecutionStatusDb,
+  WorkflowNodeInvalidInputs,
+} from "../types/execution";
 
 type WorkflowsState = {
   existingWorkflowNames: string[];
@@ -8,26 +11,34 @@ type WorkflowsState = {
   invalidInputs: WorkflowNodeInvalidInputs[] | null;
   setInvalidInputs: (invalidInputs: WorkflowNodeInvalidInputs[]) => void;
   clearErrors: () => void;
-  workflowExecutionData: Awaited<
-    ReturnType<typeof getWorkflowExecutionWithTasksClient>
-  > | null;
-  setWorkflowExecutionData: (
-    workflowExecutionData: Awaited<
-      ReturnType<typeof getWorkflowExecutionWithTasksClient>
-    > | null,
+  workflowExecutionStatus: WorkflowExecutionStatusDb | null;
+  setWorkflowExecutionStatus: (
+    workflowExecutionStatus: WorkflowExecutionStatusDb | null,
   ) => void;
+  selectedTaskId: string | null;
+  setSelectedTaskId: (selectedTaskId: string | null) => void;
 };
 
-const useWorkflowsStore = create<WorkflowsState>((set) => ({
-  existingWorkflowNames: [],
-  setExistingWorkflowNames: (workflowNames) =>
-    set({ existingWorkflowNames: workflowNames }),
-  invalidInputs: null,
-  setInvalidInputs: (invalidInputs) => set({ invalidInputs }),
-  clearErrors: () => set({ invalidInputs: null }),
-  workflowExecutionData: null,
-  setWorkflowExecutionData: (workflowExecutionData) =>
-    set({ workflowExecutionData: workflowExecutionData }),
-}));
+const useWorkflowsStore = create<WorkflowsState>()(
+  persist(
+    (set) => ({
+      existingWorkflowNames: [],
+      setExistingWorkflowNames: (workflowNames) =>
+        set({ existingWorkflowNames: workflowNames }),
+      invalidInputs: null,
+      setInvalidInputs: (invalidInputs) => set({ invalidInputs }),
+      clearErrors: () => set({ invalidInputs: null }),
+      workflowExecutionStatus: null,
+      setWorkflowExecutionStatus: (workflowExecutionStatus) =>
+        set({ workflowExecutionStatus }),
+      selectedTaskId: null,
+      setSelectedTaskId: (selectedTaskId) => set({ selectedTaskId }),
+    }),
+    {
+      name: "workflows-storage", // Storage key
+      partialize: (state) => ({ selectedTaskId: state.selectedTaskId }), // Persist only selectedTaskId
+    },
+  ),
+);
 
 export default useWorkflowsStore;

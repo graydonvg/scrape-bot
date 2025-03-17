@@ -209,9 +209,8 @@ function Sidebar({
 
   // Open the sidebar on mouse enter if sidebarOpensOnHover=true
   const handleMouseEnter = React.useCallback(() => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-
     if (sidebarOpensOnHover) {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
       setIsMouseOverSidebar(true);
       setSidebarOpen(true);
     }
@@ -232,7 +231,7 @@ function Sidebar({
     }
   }, [isMenuOpen, setSidebarOpen, sidebarOpensOnHover, isMouseOverSidebar]);
 
-  // Attach event listeners to dropdown menu triggers, if any, to prevent
+  // Observe changes to data-state attribute of dropdown menu triggers, if any, to prevent
   // the sidebar from closing while the menu is open.
   React.useEffect(() => {
     if (!collapsibleSidebarRef.current || !sidebarOpensOnHover) return;

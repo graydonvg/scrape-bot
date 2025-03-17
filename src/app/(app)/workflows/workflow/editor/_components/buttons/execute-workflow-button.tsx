@@ -6,12 +6,12 @@ import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";
 import { USER_ERROR_MESSAGES } from "@/lib/constants";
 import executeWorkflowAction from "../../_actions/execute-workflow-action";
-import useWorkflowsStore from "@/lib/store/workflows-store";
 import { useSidebar } from "@/components/ui/sidebar";
 import TooltipWrapper from "@/components/tooltip-wrapper";
 import useUserStore from "@/lib/store/user-store";
 import { calculateTotalCreditsRequired } from "@/lib/utils";
 import { Dispatch, SetStateAction } from "react";
+import useWorkflowsStore from "@/lib/store/workflows-store";
 
 type Props = {
   workflowId: string;
@@ -27,11 +27,12 @@ export default function ExecuteWorkflowButton({
   const toastId = "execute-workflow";
   const { isMobile, state } = useSidebar();
   const { userCreditBalance } = useUserStore();
-  const { setWorkflowExecutionData } = useWorkflowsStore();
   const generateExecutionPlan = useWorkflowExecutionPlan();
+  const { setSelectedTaskId } = useWorkflowsStore();
   const { toObject } = useReactFlow();
   const { execute, isPending } = useAction(executeWorkflowAction, {
     onExecute: () => {
+      setSelectedTaskId(null);
       setIsLoading(true);
       toast.loading("Processing workflow...", { id: toastId });
     },
@@ -41,7 +42,6 @@ export default function ExecuteWorkflowButton({
       }
 
       setIsLoading(false);
-      setWorkflowExecutionData(null); // Clear any previous data to prevent flashing previous data before new data is fetched and added to store
       toast.success("Execution started", { id: toastId });
     },
     onError: () => {

@@ -4,8 +4,8 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { CircleCheckBigIcon, CircleXIcon, Loader2Icon } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
 import { TaskDb } from "@/lib/types/task";
+import useWorkflowsStore from "@/lib/store/workflows-store";
 
 type Props = {
   task: TaskDb;
@@ -13,16 +13,14 @@ type Props = {
 
 export default function PhaseTaskButton({ task }: Props) {
   const { isMobile, setOpenMobile } = useSidebar();
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const taskId = searchParams.get("task");
+  const { selectedTaskId, setSelectedTaskId } = useWorkflowsStore();
   const state = getTaskState();
 
   return (
     <SidebarMenuSubItem>
       <SidebarMenuSubButton
         aria-disabled={state.isLoading}
-        isActive={taskId === task.taskId}
+        isActive={selectedTaskId === task.taskId}
         onClick={handleClick}
         className="h-fit cursor-pointer p-2"
       >
@@ -61,7 +59,7 @@ export default function PhaseTaskButton({ task }: Props) {
   function handleClick() {
     if (task.status === "EXECUTING") return;
 
-    router.replace(`?task=${task.taskId}`);
+    setSelectedTaskId(task.taskId);
 
     if (isMobile) setOpenMobile(false);
   }

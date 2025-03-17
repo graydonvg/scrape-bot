@@ -10,12 +10,12 @@ import { Button } from "./ui/button";
 import TooltipWrapper from "./tooltip-wrapper";
 
 export default function AvailableCredits() {
-  const { workflowExecutionData } = useWorkflowsStore();
+  const { workflowExecutionStatus } = useWorkflowsStore();
   const query = useQuery({
     queryKey: ["available-credits"],
     queryFn: () => getUserAvailableCredits(),
     refetchInterval: () =>
-      workflowExecutionData?.status === "EXECUTING" ? 1000 : false,
+      workflowExecutionStatus === "EXECUTING" ? 1000 : false,
   });
 
   return (

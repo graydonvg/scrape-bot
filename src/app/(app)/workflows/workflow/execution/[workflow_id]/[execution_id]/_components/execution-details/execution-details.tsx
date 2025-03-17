@@ -27,10 +27,8 @@ type Props = {
 };
 
 export default function ExecutionDetails({ workflowId, initialData }: Props) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const taskIdParam = searchParams.get("task");
-  const { setWorkflowExecutionData } = useWorkflowsStore();
+  const { selectedTaskId, setSelectedTaskId, setWorkflowExecutionStatus } =
+    useWorkflowsStore();
   const [workflowDidExecute, setWorkflowDidExecute] = useState(false);
   const workflowExecutionId = initialData!.workflowExecutionId;
 
@@ -42,9 +40,9 @@ export default function ExecutionDetails({ workflowId, initialData }: Props) {
       query.state.data?.status === "EXECUTING" ? 1000 : false,
   });
   const taskQuery = useQuery({
-    queryKey: ["taskDetails", taskIdParam],
-    enabled: taskIdParam !== null,
-    queryFn: () => getTaskDetails(taskIdParam!),
+    queryKey: ["taskDetails", selectedTaskId],
+    enabled: selectedTaskId !== null,
+    queryFn: () => getTaskDetails(selectedTaskId!),
   });
 
   const workflowExecutionData = executionQuery.data;
@@ -58,8 +56,10 @@ export default function ExecutionDetails({ workflowId, initialData }: Props) {
   const launchBrowserTaskStatus = getLaunchBrowserTaskStatus();
 
   useEffect(() => {
-    if (workflowExecutionData) setWorkflowExecutionData(workflowExecutionData);
-  }, [workflowExecutionData, setWorkflowExecutionData]);
+    if (workflowExecutionData)
+      // Used to enable refetch interval to update available credits during execution.
+      setWorkflowExecutionStatus(workflowExecutionData.status);
+  }, [workflowExecutionData, setWorkflowExecutionStatus]);
 
   useEffect(() => {
     if (!workflowExecutionData) return;
@@ -75,19 +75,19 @@ export default function ExecutionDetails({ workflowId, initialData }: Props) {
     // Tasks are ordered by phase and completedAt in the query.
 
     // If the entire workflow completed, select the last task that complete.
-    if (workflowExecutionStatus.isCompleted && !taskIdParam) {
+    if (workflowExecutionStatus.isCompleted && !selectedTaskId) {
       setWorkflowDidExecute(false);
 
       const taskToSelect = workflowExecutionData.tasks.at(-1);
 
-      router.replace(`?task=${taskToSelect!.taskId}`);
+      setSelectedTaskId(taskToSelect!.taskId);
     }
 
     // If a task failed, select the first task that failed.
     if (
       (workflowExecutionStatus.isFailed ||
         workflowExecutionStatus.isPartiallyFailed) &&
-      !taskIdParam
+      !selectedTaskId
     ) {
       setWorkflowDidExecute(false);
 
@@ -95,14 +95,14 @@ export default function ExecutionDetails({ workflowId, initialData }: Props) {
         (task) => task.status === "FAILED",
       );
 
-      router.replace(`?task=${taskToSelect!.taskId}`);
+      setSelectedTaskId(taskToSelect!.taskId);
     }
   }, [
     workflowExecutionData,
     workflowExecutionStatus,
-    taskIdParam,
-    router,
+    selectedTaskId,
     workflowDidExecute,
+    setSelectedTaskId,
   ]);
 
   return (
@@ -113,7 +113,7 @@ export default function ExecutionDetails({ workflowId, initialData }: Props) {
         subtitle={`Execution ID: ${workflowExecutionId}`}
         hideActionButtons
       /> */}
-      <WorkflowExecutionSidebar />
+      <WorkflowExecutionSidebar workflowExecutionData={workflowExecutionData} />
       <div className="size-full">
         {workflowExecutionStatus.isLoading && (
           <ExecutionStatusMessage
@@ -121,13 +121,13 @@ export default function ExecutionDetails({ workflowId, initialData }: Props) {
             message="Please wait..."
           />
         )}
-        {!workflowExecutionStatus.isLoading && !taskIdParam && (
+        {!workflowExecutionStatus.isLoading && !selectedTaskId && (
           <ExecutionStatusMessage
             title="Execution completed"
-            message="Fetching task details..."
+            message="Select a task to view details"
           />
         )}
-        {taskIdParam && taskQuery.isLoading && <TaskDetailsSkeleton />}
+        {selectedTaskId && taskQuery.isLoading && <TaskDetailsSkeleton />}
         {!taskQuery.isLoading && taskData && (
           <div className="container flex flex-col gap-4">
             <PageHeader

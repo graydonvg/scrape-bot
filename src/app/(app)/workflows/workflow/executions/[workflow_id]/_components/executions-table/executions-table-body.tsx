@@ -15,7 +15,7 @@ type Props = {
 
 export default function ExecutionsTableBody({ workflowId, queryData }: Props) {
   const router = useRouter();
-  const { setWorkflowExecutionData } = useWorkflowsStore();
+  const { setSelectedTaskId } = useWorkflowsStore();
 
   return (
     <TableBody>
@@ -87,10 +87,10 @@ export default function ExecutionsTableBody({ workflowId, queryData }: Props) {
   );
 
   function hanldeClick(workflowExecutionId: string, taskId: string) {
-    setWorkflowExecutionData(null);
+    setSelectedTaskId(taskId);
 
     router.push(
-      `/workflows/workflow/execution/${workflowId}/${workflowExecutionId}?task=${taskId}`,
+      `/workflows/workflow/execution/${workflowId}/${workflowExecutionId}`,
     );
   }
 }
