@@ -39,12 +39,7 @@ type Props = {
 export function NavUserClient({ user }: Props) {
   const log = useLogger();
   const router = useRouter();
-  const {
-    isMobile,
-    setIsMenuOpen,
-    setIsMouseOverSidebar,
-    opensOnHover: sidebarOpensOnHover,
-  } = useSidebar();
+  const { isMobile } = useSidebar();
   const supabase = createSupabaseBrowserClient();
   const { setUserCreditBalance } = useUserStore();
   const userFullName = getUserFullName();
@@ -58,12 +53,7 @@ export function NavUserClient({ user }: Props) {
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <DropdownMenu
-          onOpenChange={(open) => {
-            if (!sidebarOpensOnHover) return;
-            setIsMenuOpen(open);
-          }}
-        >
+        <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
@@ -93,7 +83,6 @@ export function NavUserClient({ user }: Props) {
             side={isMobile ? "bottom" : "right"}
             align="end"
             sideOffset={4}
-            onMouseEnter={() => setIsMouseOverSidebar(false)}
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">

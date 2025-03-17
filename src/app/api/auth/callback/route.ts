@@ -28,6 +28,8 @@ export async function GET(request: Request) {
   let log = new Logger();
   log = log.with({ context: "api/auth/callback" });
 
+  console.log("called");
+
   try {
     const { searchParams, origin } = new URL(request.url);
     const code = searchParams.get("code");

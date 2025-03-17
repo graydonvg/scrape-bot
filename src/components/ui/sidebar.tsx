@@ -32,7 +32,7 @@ const SIDEBAR_WIDTH = "16rem";
 const MOBILE_SIDEBAR_WIDTH = "16rem";
 const SIDEBAR_WIDTH_ICON = "3rem";
 const SIDEBAR_KEYBOARD_SHORTCUT = "b";
-const opensOnHoverPaths = ["/editor", "/execution/"];
+const SIDEBAR_OPENS_ON_HOVER_PATHS = ["/editor", "/execution/"];
 
 type SidebarContext = {
   state: "expanded" | "collapsed";
@@ -42,11 +42,7 @@ type SidebarContext = {
   setOpenMobile: (open: boolean) => void;
   isMobile: boolean;
   toggleSidebar: () => void;
-  isMenuOpen: boolean;
-  setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  isMouseOverSidebar: boolean;
-  setIsMouseOverSidebar: React.Dispatch<React.SetStateAction<boolean>>;
-  opensOnHover: boolean;
+  sidebarOpensOnHover: boolean;
 };
 
 const SidebarContext = React.createContext<SidebarContext | null>(null);
@@ -82,10 +78,8 @@ const SidebarProvider = React.forwardRef<
   ) => {
     const isMobile = useIsMobile();
     const [openMobile, setOpenMobile] = React.useState(false);
-    const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-    const [isMouseOverSidebar, setIsMouseOverSidebar] = React.useState(false);
     const pathname = usePathname();
-    const opensOnHover = opensOnHoverPaths.some((path) =>
+    const sidebarOpensOnHover = SIDEBAR_OPENS_ON_HOVER_PATHS.some((path) =>
       pathname.includes(path),
     );
 
@@ -145,11 +139,7 @@ const SidebarProvider = React.forwardRef<
         openMobile,
         setOpenMobile,
         toggleSidebar,
-        isMenuOpen,
-        setIsMenuOpen,
-        isMouseOverSidebar,
-        setIsMouseOverSidebar,
-        opensOnHover,
+        sidebarOpensOnHover,
       }),
       [
         state,
@@ -159,11 +149,7 @@ const SidebarProvider = React.forwardRef<
         openMobile,
         setOpenMobile,
         toggleSidebar,
-        isMenuOpen,
-        setIsMenuOpen,
-        isMouseOverSidebar,
-        setIsMouseOverSidebar,
-        opensOnHover,
+        sidebarOpensOnHover,
       ],
     );
 
@@ -207,7 +193,130 @@ function Sidebar({
   variant?: "sidebar" | "floating" | "inset";
   collapsible?: "offcanvas" | "icon" | "none";
 }) {
-  const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
+  const {
+    isMobile,
+    state,
+    openMobile,
+    setOpenMobile,
+    setOpen: setSidebarOpen,
+    sidebarOpensOnHover,
+  } = useSidebar();
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [isMouseOverSidebar, setIsMouseOverSidebar] = React.useState(false);
+  const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+  const observersRef = React.useRef<MutationObserver[]>([]);
+  const collapsibleSidebarRef = React.useRef<HTMLDivElement | null>(null);
+
+  // Open the sidebar on mouse enter if sidebarOpensOnHover=true
+  const handleMouseEnter = React.useCallback(() => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
+    if (sidebarOpensOnHover) {
+      setIsMouseOverSidebar(true);
+      setSidebarOpen(true);
+    }
+  }, [setSidebarOpen, sidebarOpensOnHover]);
+
+  // Close the sidebar on mouse leave if sidebarOpensOnHover=true
+  const handleMouseLeave = React.useCallback(() => {
+    if (sidebarOpensOnHover && !isMenuOpen) {
+      if (isMouseOverSidebar) setIsMouseOverSidebar(false);
+
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      // The setTimeout defers the sidebar closing until the next event loop tick.
+      // This delay allows any pending DOM updates (like the dropdown menu's close transition)
+      // to fully register and complete. Without deferring the state change, the sidebar's CSS
+      // collapse transition would be interrupted, resulting in an immediate, jarring close.
+
+      timeoutRef.current = setTimeout(() => setSidebarOpen(false), 0);
+    }
+  }, [isMenuOpen, setSidebarOpen, sidebarOpensOnHover, isMouseOverSidebar]);
+
+  // Attach event listeners to dropdown menu triggers, if any, to prevent
+  // the sidebar from closing while the menu is open.
+  React.useEffect(() => {
+    if (!collapsibleSidebarRef.current || !sidebarOpensOnHover) return;
+    if (observersRef.current.length > 0) {
+      // Cleanup existing observers when the sidebar state changes
+      observersRef.current.forEach((observer) => observer.disconnect());
+      observersRef.current = [];
+    }
+
+    if (state === "expanded") {
+      // Get all dropdown menu triggers in the sidebar
+      const dropdownMenuTriggers =
+        collapsibleSidebarRef.current.querySelectorAll(
+          '[data-slot="dropdown-menu-trigger"]',
+        );
+
+      // When a dropdown menu opens, the onMouseLeave event is triggered.
+      // Check if any dropdown menus are open to prevent closing the sidebar.
+      function handleMutation(mutationsList: MutationRecord[]) {
+        mutationsList.forEach((mutation) => {
+          if (
+            mutation.target instanceof HTMLElement &&
+            mutation.attributeName === "data-state"
+          ) {
+            const isMenuOpen = mutation.target.dataset.state === "open";
+
+            setIsMenuOpen(isMenuOpen);
+            setIsMouseOverSidebar(false);
+          }
+        });
+      }
+
+      // Observe changes in the dropwdown menu trigger data-state attribute
+      dropdownMenuTriggers.forEach((trigger) => {
+        if (trigger instanceof HTMLElement) {
+          const observer = new MutationObserver(handleMutation);
+
+          observer.observe(trigger, {
+            attributes: true,
+            attributeFilter: ["data-state"],
+          });
+
+          observersRef.current.push(observer);
+        }
+      });
+    }
+
+    // Cleanup
+    return () => {
+      observersRef.current.forEach((observer) => observer.disconnect());
+      observersRef.current = [];
+    };
+  }, [state, setIsMouseOverSidebar, sidebarOpensOnHover]);
+
+  // Automatically handle the open/close state of the sidebar depending on the path.
+  // See SIDEBAR_OPENS_ON_HOVER_PATHS above.
+  React.useEffect(() => {
+    if (isMenuOpen) return;
+
+    // Close the sidebar when navigating to a page included in SIDEBAR_OPENS_ON_HOVER_PATHS.
+    // This also ensures that the sidebar returns to it's closed state after a
+    // dropdown menu is closed.
+    if (sidebarOpensOnHover && !isMouseOverSidebar) {
+      handleMouseLeave();
+    }
+
+    // Open the sidebar when navigating to a page NOT included in SIDEBAR_OPENS_ON_HOVER_PATHS.
+    if (!sidebarOpensOnHover) {
+      setIsMouseOverSidebar(false);
+      setSidebarOpen(true);
+    }
+
+    // Cleanup
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, [
+    sidebarOpensOnHover,
+    isMouseOverSidebar,
+    isMenuOpen,
+    setIsMouseOverSidebar,
+    setSidebarOpen,
+    handleMouseLeave,
+  ]);
 
   if (collapsible === "none") {
     return (
@@ -251,6 +360,9 @@ function Sidebar({
 
   return (
     <div
+      ref={collapsibleSidebarRef}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       className="group peer text-sidebar-foreground hidden md:block"
       data-state={state}
       data-collapsible={state === "collapsed" ? collapsible : ""}

@@ -7,16 +7,15 @@ import {
 import { ComponentProps, Suspense } from "react";
 import { NavMain } from "./nav-main";
 import { Skeleton } from "@/components/ui/skeleton";
-import NavUserServer from "@/app/(app)/_components/sidebar/nav-user/nav-user-server";
+import NavUserServer from "@/app/(app)/_components/app-sidebar/nav-user/nav-user-server";
 import { Separator } from "@/components/ui/separator";
-import AppSidebarWrapper from "./app-sidebar-wrapper";
 import SidebarLogo from "./sidebar-logo";
 
 export default function AppSidebar({
   ...props
 }: ComponentProps<typeof Sidebar>) {
   return (
-    <AppSidebarWrapper {...props}>
+    <Sidebar collapsible="icon" variant="sidebar" {...props}>
       <SidebarHeader>
         <SidebarLogo />
       </SidebarHeader>
@@ -34,6 +33,6 @@ export default function AppSidebar({
           <NavUserServer />
         </Suspense>
       </SidebarFooter>
-    </AppSidebarWrapper>
+    </Sidebar>
   );
 }
