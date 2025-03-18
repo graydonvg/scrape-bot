@@ -1,15 +1,12 @@
-import PageHeader from "@/components/page-header";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Loading() {
   return (
     <div className="flex h-full flex-col">
-      <PageHeader
-        title="Worklfow Executions"
-        subtitle="A list of all the workflow's executions"
-      >
-        <Skeleton className="h-9 w-[141px]" />
-      </PageHeader>
+      <div className="mb-8 flex h-[60px] flex-col gap-2">
+        <Skeleton className="h-2/3 w-[250px]" />
+        <Skeleton className="h-1/3 w-[283.5px]" />
+      </div>
 
       <div className="flex h-[calc(100vh-222.3px)] flex-col justify-between transition-[height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-[calc(100vh-206.3px)]">
         <div className="space-y-1 divide-y">

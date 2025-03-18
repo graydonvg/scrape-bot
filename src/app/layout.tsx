@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { fontInter } from "@/fonts/inter-font";
 import { siteConfig } from "@/config/site";
 import Providers from "@/components/providers/providers";
+import { ReactNode } from "react";
 
 export const viewport: Viewport = {
   themeColor: [
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>

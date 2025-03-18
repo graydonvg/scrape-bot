@@ -12,7 +12,6 @@ type Params = {
 };
 
 export default async function WorkflowExecutionPage({ params }: Params) {
-  const workflowId = (await params).workflow_id;
   const executionId = (await params).execution_id;
 
   const workflowExecution =
@@ -20,7 +19,5 @@ export default async function WorkflowExecutionPage({ params }: Params) {
 
   if (!workflowExecution) notFound();
 
-  return (
-    <ExecutionDetails workflowId={workflowId} initialData={workflowExecution} />
-  );
+  return <ExecutionDetails initialData={workflowExecution} />;
 }

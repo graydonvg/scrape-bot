@@ -32,7 +32,9 @@ export default async function getAllWorkflowExecutionsClient(
       error,
     } = await supabase
       .from("workflowExecutions")
-      .select("*, tasks(taskId)", { count: "exact" })
+      .select("*, tasks(taskId), ...workflows!inner(workflowName:name)", {
+        count: "exact",
+      })
       .eq("userId", user.id)
       .eq("workflowId", workflowId)
       .order("startedAt", { ascending: false })

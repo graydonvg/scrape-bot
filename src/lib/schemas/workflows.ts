@@ -34,3 +34,10 @@ export const executeWorkflowSchema = z.object({
 });
 
 export type ExecuteWorkflowSchemaType = z.infer<typeof executeWorkflowSchema>;
+
+export const renameWorkflowSchema = z.object({
+  workflowId: z.string().uuid(),
+  workflowName: z.string(),
+});
+
+export type RenameWorkflowSchemaType = z.infer<typeof renameWorkflowSchema>;

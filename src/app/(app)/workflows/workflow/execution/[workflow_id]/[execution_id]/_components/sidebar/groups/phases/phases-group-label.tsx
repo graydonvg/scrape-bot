@@ -13,8 +13,8 @@ export default function PhasesGroupLabel({
   onExpandAll,
 }: Props) {
   return (
-    <SidebarGroupLabel className="text-muted-foreground relative text-base">
-      <div className="absolute-center flex items-center gap-2">
+    <SidebarGroupLabel className="text-muted-foreground text-base">
+      <div className="flex items-center gap-2">
         <ListOrdered size={20} className="stroke-muted-foreground/80" />
         <span className="font-semibold">Phases</span>
       </div>

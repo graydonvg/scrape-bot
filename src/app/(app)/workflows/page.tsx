@@ -20,9 +20,7 @@ export default function WorkflowsPage() {
       <div className="relative size-full">
         <ScrollArea className="h-[calc(100vh-222.3px)] transition-[height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-[calc(100vh-206.3px)]">
           <Suspense fallback={<WorkflowsSkeleton />}>
-            <div className="px-4">
-              <Workflows />
-            </div>
+            <Workflows />
           </Suspense>
         </ScrollArea>
       </div>

@@ -3,7 +3,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import useWorkflowsStore from "@/lib/store/workflows-store";
-import { useRouter, useSearchParams } from "next/navigation";
 import { CircleDashedIcon, ClockIcon, CoinsIcon } from "lucide-react";
 import { cn, datesToDurationString } from "@/lib/utils";
 import { taskRegistry } from "@/lib/workflow/tasks/task-registry";
@@ -13,20 +12,18 @@ import TaskLogs from "./task-logs";
 import TaskBadge from "./task-badge";
 import getWorkflowExecutionWithTasksClient from "@/app/(app)/workflows/workflow/execution/[workflow_id]/[execution_id]/_data-access/get-execution-with-tasks-client";
 import getTaskDetails from "@/app/(app)/workflows/workflow/execution/[workflow_id]/[execution_id]/_data-access/get-task-details";
-import TopBar from "@/app/(app)/workflows/workflow/_components/top-bar/top-bar";
 import TaskParameterCard from "./task-parameter-card/task-parameter-card";
 import TaskDetailsSkeleton from "./task-details-skeleton";
 import ExecutionStatusMessage from "./execution-status-message";
-import TaskMenu from "@/app/(app)/workflows/workflow/editor/_components/sidebar/task-menu";
 import WorkflowExecutionSidebar from "../sidebar/workflow-execution-sidebar";
 import PageHeader from "@/components/page-header";
+import { notFound } from "next/navigation";
 
 type Props = {
-  workflowId: string;
   initialData: Awaited<ReturnType<typeof getWorkflowExecutionWithTasksClient>>;
 };
 
-export default function ExecutionDetails({ workflowId, initialData }: Props) {
+export default function ExecutionDetails({ initialData }: Props) {
   const { selectedTaskId, setSelectedTaskId, setWorkflowExecutionStatus } =
     useWorkflowsStore();
   const [workflowDidExecute, setWorkflowDidExecute] = useState(false);
@@ -105,14 +102,10 @@ export default function ExecutionDetails({ workflowId, initialData }: Props) {
     setSelectedTaskId,
   ]);
 
+  if (!workflowExecutionData) notFound();
+
   return (
     <div className="fixed inset-0 top-12 left-[300px] flex grow md:left-[368px]">
-      {/* <TopBar
-        workflowId={workflowId}
-        title="Workflow execution"
-        subtitle={`Execution ID: ${workflowExecutionId}`}
-        hideActionButtons
-      /> */}
       <WorkflowExecutionSidebar workflowExecutionData={workflowExecutionData} />
       <div className="size-full">
         {workflowExecutionStatus.isLoading && (
@@ -131,9 +124,9 @@ export default function ExecutionDetails({ workflowId, initialData }: Props) {
         {!taskQuery.isLoading && taskData && (
           <div className="container flex flex-col gap-4">
             <PageHeader
-              title="Task Details"
-              subtitle="Details for the executed task"
-              containerClassName="mb-6"
+              title={taskData.name}
+              subtitle="Task details"
+              containerClassName="mb-6 "
             />
             <div className="flex flex-wrap items-center gap-2">
               <TaskBadge

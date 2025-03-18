@@ -18,7 +18,10 @@ export default function Editor({ workflow }: Props) {
         subtitle={workflow.name!}
       /> */}
       <ReactFlowProvider>
-        <WorkflowEditorSidebar workflowId={workflow.workflowId!} />
+        <WorkflowEditorSidebar
+          workflowId={workflow.workflowId!}
+          workflowName={workflow.name!}
+        />
         <Flow workflow={workflow} />
       </ReactFlowProvider>
     </div>

@@ -19,9 +19,7 @@ export default function WorkflowExecutionSidebar({
   return (
     <div className="bg-sidebar fixed top-12 left-0 flex h-full max-h-[calc(100vh-48px)] w-[300px] max-w-[300px] min-w-[300px] flex-col border-r md:w-[368px] md:max-w-[368px] md:min-w-[368px] md:pl-12">
       <Workflow
-        status={workflowExecutionData?.status}
-        startedAt={workflowExecutionData?.startedAt}
-        completedAt={workflowExecutionData?.completedAt}
+        workflowExecutionData={workflowExecutionData}
         creditsConsumed={creditsConsumed}
       />
       <Separator />

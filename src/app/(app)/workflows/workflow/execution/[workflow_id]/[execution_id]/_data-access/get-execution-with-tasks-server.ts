@@ -30,7 +30,7 @@ export default async function getWorkflowExecutionWithTasksServer(
 
     const { data, error } = await supabase
       .from("workflowExecutions")
-      .select("*, tasks(*)")
+      .select("*, tasks(*), workflows(name)")
       .eq("userId", user.id)
       .eq("workflowExecutionId", workflowExecutionId)
       .order("phase", { ascending: true, referencedTable: "tasks" })
