@@ -40,7 +40,7 @@ export default function WorkflowActionsMenu({
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <Link href={`/workflows/workflow/executions/${workflowId}`}>
+          <Link href={`/workflows/workflow/${workflowId}/executions`}>
             <DropdownMenuItem>
               <HistoryIcon />
               Executions

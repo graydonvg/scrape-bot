@@ -21,7 +21,7 @@ export default function ViewAllExecutionsButton({
       >
         <Link
           aria-disabled={disabled}
-          href={`/workflows/workflow/executions/${workflowId}`}
+          href={`/workflows/workflow/${workflowId}/executions`}
         >
           <HistoryIcon className="stroke-muted-foreground" />
           View All Executions

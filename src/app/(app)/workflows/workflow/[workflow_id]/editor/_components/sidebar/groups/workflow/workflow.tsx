@@ -4,8 +4,8 @@ import {
   SidebarMenu,
 } from "@/components/ui/sidebar";
 import { CalendarIcon, CircleDashedIcon, CoinsIcon } from "lucide-react";
-import WorkflowExecutionDetail from "../../../../../_components/workflow-execution-detail";
-import ViewAllExecutionsButton from "../../../../../_components/sidebar/view-all-executions-button";
+import WorkflowExecutionDetail from "../../../../../../_components/workflow-execution-detail";
+import ViewAllExecutionsButton from "../../../../../../_components/sidebar/view-all-executions-button";
 import WorkflowGroupLabel from "./workflow-group-label";
 import getWorkflow from "../../../../_data-access/get-workflow";
 import { executionStatusColors } from "@/app/(app)/workflows/workflow/common";

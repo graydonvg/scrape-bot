@@ -15,7 +15,6 @@ export default function AppHeader() {
   const pathname = usePathname();
   const isExecutionPath = pathname.includes("/execution/");
   const isExecutionsPath = pathname.includes("/executions");
-  const isEditorPath = pathname.includes("/editor");
   const workflowId = getWorkflowId();
 
   return (
@@ -27,16 +26,11 @@ export default function AppHeader() {
             <Separator orientation="vertical" className="mr-2 h-full" />
           </div>
         )}
-        {/* <p className="text-lg font-semibold">
-          {isEditorPath && "Workflow Editor"}
-          {isExecutionPath && "Workflow Execution"}
-          {isExecutionsPath && "Workflow Executions"}
-        </p> */}
         <BreadcrumbHeader />
       </div>
       <div className="ml-auto flex items-center gap-4">
         {(isExecutionPath || isExecutionsPath) && (
-          <Link href={`/workflows/workflow/editor/${workflowId}`}>
+          <Link href={`/workflows/workflow/${workflowId}/editor`}>
             <Button size="sm">
               <PencilIcon />
               Edit Workflow
@@ -51,10 +45,8 @@ export default function AppHeader() {
   function getWorkflowId() {
     let workflowId = "";
 
-    if (isExecutionsPath) workflowId = pathname.split("executions/")[1];
-    if (isExecutionPath)
-      workflowId = pathname.split("execution/")[1].split("/")[0];
-    if (isEditorPath) workflowId = pathname.split("editor/")[1];
+    if (isExecutionsPath || isExecutionPath)
+      workflowId = pathname.split("/")[3];
 
     return workflowId;
   }

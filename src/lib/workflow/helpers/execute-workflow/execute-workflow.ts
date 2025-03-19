@@ -106,7 +106,7 @@ export default async function executeWorkflow(
 
     await cleanupPhaseContext(phaseContext, log);
 
-    revalidatePath("/workflows/workflow/execution");
+    revalidatePath(`/workflows/workflow/${workflowId}/execution`);
   } catch (error) {
     // TODO: Handle error
     log.error(LOGGER_ERROR_MESSAGES.Unexpected, { error });

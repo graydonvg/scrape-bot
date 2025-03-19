@@ -90,7 +90,7 @@ export default function ExecutionsTableBody({ workflowId, queryData }: Props) {
     setSelectedTaskId(taskId);
 
     router.push(
-      `/workflows/workflow/execution/${workflowId}/${workflowExecutionId}`,
+      `/workflows/workflow/${workflowId}/execution/${workflowExecutionId}`,
     );
   }
 }

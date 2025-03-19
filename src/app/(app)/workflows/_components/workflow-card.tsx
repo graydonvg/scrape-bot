@@ -34,7 +34,7 @@ export default function WorkflowCard({ workflow }: Props) {
           <div className="flex items-center gap-2">
             <h3 className="text-muted-foreground text-xl font-bold">
               <Link
-                href={`/workflows/workflow/editor/${workflow.workflowId}`}
+                href={`/workflows/workflow/${workflow.workflowId}/editor`}
                 className="ring-offset-card hover:underline"
               >
                 {workflow.name}
@@ -54,7 +54,7 @@ export default function WorkflowCard({ workflow }: Props) {
             size="sm"
             className="ring-offset-card"
           >
-            <Link href={`/workflows/workflow/editor/${workflow.workflowId}`}>
+            <Link href={`/workflows/workflow/${workflow.workflowId}/editor`}>
               <PencilIcon />
               Edit
             </Link>

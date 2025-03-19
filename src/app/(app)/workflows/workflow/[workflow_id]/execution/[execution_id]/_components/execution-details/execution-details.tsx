@@ -10,14 +10,14 @@ import { WorkflowNode } from "@/lib/types/workflow";
 import { TaskParamType } from "@/lib/types/task";
 import TaskLogs from "./task-logs";
 import TaskBadge from "./task-badge";
-import getWorkflowExecutionWithTasksClient from "@/app/(app)/workflows/workflow/execution/[workflow_id]/[execution_id]/_data-access/get-execution-with-tasks-client";
-import getTaskDetails from "@/app/(app)/workflows/workflow/execution/[workflow_id]/[execution_id]/_data-access/get-task-details";
 import TaskParameterCard from "./task-parameter-card/task-parameter-card";
 import TaskDetailsSkeleton from "./task-details-skeleton";
 import ExecutionStatusMessage from "./execution-status-message";
 import WorkflowExecutionSidebar from "../sidebar/workflow-execution-sidebar";
 import PageHeader from "@/components/page-header";
 import { notFound } from "next/navigation";
+import getWorkflowExecutionWithTasksClient from "../../_data-access/get-execution-with-tasks-client";
+import getTaskDetails from "../../_data-access/get-task-details";
 
 type Props = {
   initialData: Awaited<ReturnType<typeof getWorkflowExecutionWithTasksClient>>;
