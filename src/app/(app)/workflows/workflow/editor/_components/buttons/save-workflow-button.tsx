@@ -5,8 +5,6 @@ import saveWorkflowAction from "../../_actions/save-workflow-action";
 import { toast } from "sonner";
 import { USER_ERROR_MESSAGES } from "@/lib/constants";
 import ButtonWithSpinner from "@/components/button-with-spinner";
-import { useSidebar } from "@/components/ui/sidebar";
-import TooltipWrapper from "@/components/tooltip-wrapper";
 import { Dispatch, SetStateAction } from "react";
 
 type Props = {
@@ -21,7 +19,6 @@ export default function SaveWorkflowButton({
   setIsLoading,
 }: Props) {
   const toastId = "save-workflow";
-  const { isMobile, state } = useSidebar();
   const { toObject } = useReactFlow();
   const { execute, isPending } = useAction(saveWorkflowAction, {
     onExecute: () => {
@@ -43,21 +40,16 @@ export default function SaveWorkflowButton({
   });
 
   return (
-    <TooltipWrapper
-      hidden={state !== "collapsed" || isMobile}
-      tooltipContent="Save workflow"
+    <ButtonWithSpinner
+      loading={isPending}
+      disabled={isLoading}
+      className="bg-success text-success-foreground hover:bg-success/90 flex-1"
+      startIcon={<SaveIcon />}
+      onClick={() =>
+        execute({ workflowId, definition: JSON.stringify(toObject()) })
+      }
     >
-      <ButtonWithSpinner
-        loading={isPending}
-        disabled={isLoading}
-        className="bg-success text-success-foreground hover:bg-success/90 flex-1"
-        startIcon={<SaveIcon />}
-        onClick={() =>
-          execute({ workflowId, definition: JSON.stringify(toObject()) })
-        }
-      >
-        Save
-      </ButtonWithSpinner>
-    </TooltipWrapper>
+      Save
+    </ButtonWithSpinner>
   );
 }

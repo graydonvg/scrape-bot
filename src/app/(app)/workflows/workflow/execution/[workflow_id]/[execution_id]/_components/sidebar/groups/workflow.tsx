@@ -14,20 +14,16 @@ import {
   PlayIcon,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import { datesToDurationString } from "@/lib/utils";
-import { WorkflowExecutionStatusDb } from "@/lib/types/execution";
+import {
+  datesToDurationString,
+  getFormattedWorkflowExecutionStatus,
+  stringToDate,
+} from "@/lib/utils";
 import AnimatedCounter from "@/components/animated-counter";
 import WorkflowExecutionDetail from "@/app/(app)/workflows/workflow/_components/workflow-execution-detail";
 import getWorkflowExecutionWithTasksClient from "../../../_data-access/get-execution-with-tasks-client";
 import ViewAllExecutionsButton from "@/app/(app)/workflows/workflow/_components/sidebar/view-all-executions-button";
-
-const statusColors: Record<WorkflowExecutionStatusDb, string> = {
-  PENDING: "text-muted-foreground",
-  EXECUTING: "text-violet-500",
-  COMPLETED: "text-success dark:text-green-500",
-  FAILED: "text-destructive",
-  PARTIALLY_FAILED: "text-warning",
-};
+import { executionStatusColors } from "@/app/(app)/workflows/workflow/common";
 
 type Props = {
   workflowExecutionData: Awaited<
@@ -40,14 +36,9 @@ export default function Workflow({
   workflowExecutionData,
   creditsConsumed,
 }: Props) {
-  const startedAtDate = workflowExecutionData?.startedAt
-    ? new Date(workflowExecutionData?.startedAt)
-    : null;
-  const completedAtDate = workflowExecutionData?.completedAt
-    ? new Date(workflowExecutionData?.completedAt)
-    : null;
+  const startedAtDate = stringToDate(workflowExecutionData?.startedAt);
+  const completedAtDate = stringToDate(workflowExecutionData?.completedAt);
   const duration = datesToDurationString(startedAtDate, completedAtDate);
-  const formattedStatus = workflowExecutionData?.status?.split("_").join(" ");
 
   return (
     <SidebarGroup className="py-4">
@@ -64,8 +55,14 @@ export default function Workflow({
             label="Status"
             value={
               workflowExecutionData?.status ? (
-                <span className={statusColors[workflowExecutionData?.status]}>
-                  {formattedStatus}
+                <span
+                  className={
+                    executionStatusColors[workflowExecutionData.status]
+                  }
+                >
+                  {getFormattedWorkflowExecutionStatus(
+                    workflowExecutionData.status,
+                  )}
                 </span>
               ) : (
                 "-"

@@ -2,26 +2,18 @@
 
 import { ReactFlowProvider } from "@xyflow/react";
 import Flow from "./flow";
-import { WorkflowDb } from "@/lib/types/workflow";
 import WorkflowEditorSidebar from "./sidebar/workflow-editor-sidebar";
+import getWorkflow from "../_data-access/get-workflow";
 
 type Props = {
-  workflow: Partial<WorkflowDb>;
+  workflow: Awaited<ReturnType<typeof getWorkflow>>;
 };
 
 export default function Editor({ workflow }: Props) {
   return (
     <div className="bg-sidebar fixed inset-0 top-12 flex">
-      {/* <TopBar
-        workflowId={workflow.workflowId!}
-        title="Workflow editor"
-        subtitle={workflow.name!}
-      /> */}
       <ReactFlowProvider>
-        <WorkflowEditorSidebar
-          workflowId={workflow.workflowId!}
-          workflowName={workflow.name!}
-        />
+        <WorkflowEditorSidebar workflow={workflow} />
         <Flow workflow={workflow} />
       </ReactFlowProvider>
     </div>

@@ -1,7 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { ArrowLeftIcon } from "lucide-react";
 import { Metadata } from "next";
-import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Not Found",
@@ -9,7 +6,7 @@ export const metadata: Metadata = {
 
 export default function NotFoundPage() {
   return (
-    <div className="fixed inset-0 flex grow flex-col p-6 md:p-10">
+    <div className="flex grow flex-col p-6 md:p-10">
       <div className="flex-center flex-1 flex-col text-center">
         <h1 className="text-primary mb-4 text-6xl font-bold">404</h1>
         <h2 className="mb-4 text-2xl font-semibold capitalize">
@@ -19,12 +16,6 @@ export default function NotFoundPage() {
           Don&apos;t worry, even the best data sometimes gets lost in the
           internet.
         </p>
-        <Link href="/">
-          <Button className="capitalize">
-            <ArrowLeftIcon size={4} />
-            Home
-          </Button>
-        </Link>
       </div>
     </div>
   );

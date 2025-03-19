@@ -9,6 +9,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export function stringToDate(dateString?: string | null) {
+  return dateString ? new Date(dateString) : null;
+}
+
 export function datesToDurationString(start?: Date | null, end?: Date | null) {
   if (!start || !end) return null;
 
@@ -38,6 +42,10 @@ export function calculateTotalCreditsRequired(
     .reduce((sum, credits) => sum + credits, 0);
 
   return totalCreditsRequired;
+}
+
+export function getFormattedWorkflowExecutionStatus(status: string) {
+  return status.split("_").join(" ");
 }
 
 // export async function wait(ms: number) {

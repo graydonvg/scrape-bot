@@ -4,13 +4,15 @@ import Link from "next/link";
 import { CoinsIcon, Loader2Icon } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import getUserAvailableCredits from "@/data-access/get-user-available-credits";
-import AnimatedCounter from "./animated-counter";
+import AnimatedCounter from "../../../../components/animated-counter";
 import useWorkflowsStore from "@/lib/store/workflows-store";
-import { Button } from "./ui/button";
-import TooltipWrapper from "./tooltip-wrapper";
+import { Button } from "../../../../components/ui/button";
+import TooltipWrapper from "../../../../components/tooltip-wrapper";
+import { cn } from "@/lib/utils";
 
 export default function AvailableCredits() {
-  const { workflowExecutionStatus } = useWorkflowsStore();
+  const { workflowExecutionStatus, editorWorkflowCreditCost } =
+    useWorkflowsStore();
   const query = useQuery({
     queryKey: ["available-credits"],
     queryFn: () => getUserAvailableCredits(),
@@ -33,7 +35,12 @@ export default function AvailableCredits() {
             <Loader2Icon size={20} className="animate-spin" />
           )}
           {!query.isLoading && query.data && (
-            <span className="font-semibold">
+            <span
+              className={cn("text-foreground font-semibold", {
+                "text-destructive":
+                  query.data.credits < editorWorkflowCreditCost,
+              })}
+            >
               <AnimatedCounter value={query.data.credits} />
             </span>
           )}

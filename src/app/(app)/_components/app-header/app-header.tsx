@@ -1,13 +1,12 @@
 "use client";
 
-import AvailableCredits from "@/components/available-credits";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { PencilIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import AvailableCredits from "./available-credits";
 
 export default function AppHeader() {
   const isMobile = useIsMobile();

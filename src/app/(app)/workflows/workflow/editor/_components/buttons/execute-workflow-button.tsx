@@ -6,8 +6,6 @@ import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";
 import { USER_ERROR_MESSAGES } from "@/lib/constants";
 import executeWorkflowAction from "../../_actions/execute-workflow-action";
-import { useSidebar } from "@/components/ui/sidebar";
-import TooltipWrapper from "@/components/tooltip-wrapper";
 import useUserStore from "@/lib/store/user-store";
 import { calculateTotalCreditsRequired } from "@/lib/utils";
 import { Dispatch, SetStateAction } from "react";
@@ -25,7 +23,6 @@ export default function ExecuteWorkflowButton({
   setIsLoading,
 }: Props) {
   const toastId = "execute-workflow";
-  const { isMobile, state } = useSidebar();
   const { userCreditBalance } = useUserStore();
   const generateExecutionPlan = useWorkflowExecutionPlan();
   const { setSelectedTaskId } = useWorkflowsStore();
@@ -51,31 +48,26 @@ export default function ExecuteWorkflowButton({
   });
 
   return (
-    <TooltipWrapper
-      hidden={state !== "collapsed" || isMobile}
-      tooltipContent="Execute workflow"
+    <ButtonWithSpinner
+      loading={isPending}
+      disabled={isLoading}
+      className="flex-1"
+      startIcon={<PlayIcon />}
+      onClick={() => {
+        const executionPlan = generateExecutionPlan();
+
+        if (executionPlan) {
+          const totalCreditsRequired =
+            calculateTotalCreditsRequired(executionPlan);
+
+          if (userCreditBalance < totalCreditsRequired)
+            return toast.error(USER_ERROR_MESSAGES.InsufficientCredits);
+
+          execute({ workflowId, definition: JSON.stringify(toObject()) });
+        }
+      }}
     >
-      <ButtonWithSpinner
-        loading={isPending}
-        disabled={isLoading}
-        className="flex-1"
-        startIcon={<PlayIcon />}
-        onClick={() => {
-          const executionPlan = generateExecutionPlan();
-
-          if (executionPlan) {
-            const totalCreditsRequired =
-              calculateTotalCreditsRequired(executionPlan);
-
-            if (userCreditBalance < totalCreditsRequired)
-              return toast.error(USER_ERROR_MESSAGES.InsufficientCredits);
-
-            execute({ workflowId, definition: JSON.stringify(toObject()) });
-          }
-        }}
-      >
-        Execute
-      </ButtonWithSpinner>
-    </TooltipWrapper>
+      Execute
+    </ButtonWithSpinner>
   );
 }

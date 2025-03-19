@@ -3,7 +3,9 @@
 import TooltipWrapper from "@/components/tooltip-wrapper";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import useWorkflowsStore from "@/lib/store/workflows-store";
 import { TaskType } from "@/lib/types/task";
+import { WorkflowNode } from "@/lib/types/workflow";
 import createWorkflowNode from "@/lib/workflow/helpers/create-workflow-node";
 import { taskRegistry } from "@/lib/workflow/tasks/task-registry";
 import { useReactFlow } from "@xyflow/react";
@@ -22,6 +24,7 @@ type Props = {
 export default function NodeHeader({ nodeId, taskType }: Props) {
   const task = taskRegistry[taskType];
   const { deleteElements, getNode, addNodes, updateNode } = useReactFlow();
+  const { updateEditorWorkflowCreditCost } = useWorkflowsStore();
 
   function createNodeCopy() {
     const currentNode = getNode(nodeId);
@@ -39,12 +42,28 @@ export default function NodeHeader({ nodeId, taskType }: Props) {
 
     const newNode = createWorkflowNode(taskType, { x: newNodeX, y: newNodeY });
 
+    const creditCost = taskRegistry[newNode.data.type].credits;
+
+    updateEditorWorkflowCreditCost(creditCost);
+
     newNode.selected = true;
 
     addNodes(newNode);
 
     updateNode(nodeId, {
       selected: false,
+    });
+  }
+
+  function deleteNode() {
+    const nodeToDelete = getNode(nodeId) as WorkflowNode;
+
+    const creditCost = taskRegistry[nodeToDelete.data.type].credits;
+
+    updateEditorWorkflowCreditCost(-creditCost);
+
+    deleteElements({
+      nodes: [{ id: nodeId }],
     });
   }
 
@@ -66,15 +85,7 @@ export default function NodeHeader({ nodeId, taskType }: Props) {
           {!task.isEntryPoint && (
             <>
               <TooltipWrapper tooltipContent="Delete node">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() =>
-                    deleteElements({
-                      nodes: [{ id: nodeId }],
-                    })
-                  }
-                >
+                <Button variant="ghost" size="icon" onClick={deleteNode}>
                   <Trash2Icon />
                 </Button>
               </TooltipWrapper>

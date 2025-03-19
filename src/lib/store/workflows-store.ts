@@ -17,6 +17,9 @@ type WorkflowsState = {
   ) => void;
   selectedTaskId: string | null;
   setSelectedTaskId: (selectedTaskId: string | null) => void;
+  editorWorkflowCreditCost: number;
+  setEditorWorkflowCreditCost: (credits: number) => void;
+  updateEditorWorkflowCreditCost: (credits: number) => void;
 };
 
 const useWorkflowsStore = create<WorkflowsState>()(
@@ -33,6 +36,15 @@ const useWorkflowsStore = create<WorkflowsState>()(
         set({ workflowExecutionStatus }),
       selectedTaskId: null,
       setSelectedTaskId: (selectedTaskId) => set({ selectedTaskId }),
+      editorWorkflowCreditCost: 0,
+      setEditorWorkflowCreditCost: (credits) =>
+        set({
+          editorWorkflowCreditCost: credits,
+        }),
+      updateEditorWorkflowCreditCost: (credits) =>
+        set((state) => ({
+          editorWorkflowCreditCost: state.editorWorkflowCreditCost + credits,
+        })),
     }),
     {
       name: "workflows-storage", // Storage key

@@ -31,25 +31,32 @@ import DeleteableEdge from "./edges/deleteable-edge";
 import createWorkflowNode from "@/lib/workflow/helpers/create-workflow-node";
 import { taskRegistry } from "@/lib/workflow/tasks/task-registry";
 import { TaskType } from "@/lib/types/task";
-import { WorkflowDb, WorkflowNode } from "@/lib/types/workflow";
+import { WorkflowNode } from "@/lib/types/workflow";
+import getWorkflow from "../_data-access/get-workflow";
+import useWorkflowsStore from "@/lib/store/workflows-store";
 
 const fitViewOptions = {
   padding: 1,
 };
 
 type Props = {
-  workflow: Partial<WorkflowDb>;
+  workflow: Awaited<ReturnType<typeof getWorkflow>>;
 };
 
 export default function Flow({ workflow }: Props) {
   const log = useLogger();
   const { theme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
+  const { setEditorWorkflowCreditCost, updateEditorWorkflowCreditCost } =
+    useWorkflowsStore();
   const nodeTypes = useMemo(() => ({ node: Node }), []);
   const edgeTypes = useMemo(() => ({ default: DeleteableEdge }), []);
   const { setViewport, screenToFlowPosition, updateNodeData } = useReactFlow();
   const [nodes, setNodes, onNodesChange] = useNodesState<WorkflowNode>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
+  // lastInvalidConnection is used to track the last connection error
+  // to prevent displaying more than one toast at a time while
+  // the edge is being dragged over that handle.
   const lastInvalidConnection = useRef<string | null>(null);
 
   useEffect(() => {
@@ -59,12 +66,21 @@ export default function Flow({ workflow }: Props) {
 
   useEffect(() => {
     try {
-      const workflowDefinition = JSON.parse(workflow.definition as string);
+      const workflowDefinition = JSON.parse(workflow!.definition as string);
 
       if (!workflowDefinition) throw new Error("Workflow definition missing");
 
-      setNodes(workflowDefinition.nodes || []);
+      const nodes = workflowDefinition.nodes as WorkflowNode[];
+
+      setNodes(nodes || []);
       setEdges(workflowDefinition.edges || []);
+
+      const workflowCreditCost = nodes.reduce(
+        (acc, node) => acc + taskRegistry[node.data.type].credits,
+        0,
+      );
+
+      setEditorWorkflowCreditCost(workflowCreditCost);
 
       if (!workflowDefinition.viewport) return;
       const { x = 0, y = 0, zoom = 1 } = workflowDefinition.viewport;
@@ -80,7 +96,14 @@ export default function Flow({ workflow }: Props) {
     } finally {
       log.flush();
     }
-  }, [workflow.definition, setEdges, setNodes, setViewport, log]);
+  }, [
+    workflow,
+    setEdges,
+    setNodes,
+    setViewport,
+    log,
+    setEditorWorkflowCreditCost,
+  ]);
 
   const handleDragOver = useCallback((e: DragEvent) => {
     e.preventDefault();
@@ -98,9 +121,13 @@ export default function Flow({ workflow }: Props) {
 
       const newNode = createWorkflowNode(taskType as TaskType, poisiton);
 
+      const nodeCreditCost = taskRegistry[newNode.data.type].credits;
+
+      updateEditorWorkflowCreditCost(nodeCreditCost);
+
       setNodes((prev) => prev.concat(newNode));
     },
-    [setNodes, screenToFlowPosition],
+    [setNodes, screenToFlowPosition, updateEditorWorkflowCreditCost],
   );
 
   const handleOnConnect = useCallback(
