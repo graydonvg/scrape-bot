@@ -143,6 +143,7 @@ const executeWorkflowAction = actionClient
         }
 
         executeWorkflow(supabase, user.id, workflowId, workflowExecutionId); // runs in the background
+
         redirect(
           `/workflows/workflow/${workflowId}/execution/${workflowExecutionId}`,
         );

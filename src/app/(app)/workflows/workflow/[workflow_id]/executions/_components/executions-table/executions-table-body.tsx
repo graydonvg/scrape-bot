@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import ExecutionStatusIndicator from "./execution-status-indicator";
 import { CoinsIcon } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import { useRouter } from "next/navigation";
+import { useRouter } from "nextjs-toploader/app";
 import getAllWorkflowExecutionsClient from "../../_data-access/get-all-workflow-executions-client";
 import useWorkflowsStore from "@/lib/store/workflows-store";
 

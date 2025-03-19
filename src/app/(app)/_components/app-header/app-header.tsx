@@ -7,8 +7,8 @@ import { PencilIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import AvailableCredits from "./available-credits";
-import { Separator } from "@/components/ui/separator";
-import BreadcrumbHeader from "@/components/breadcrumb-header";
+// import { Separator } from "@/components/ui/separator";
+// import BreadcrumbHeader from "@/components/breadcrumb-header";
 
 export default function AppHeader() {
   const isMobile = useIsMobile();
@@ -23,10 +23,10 @@ export default function AppHeader() {
         {isMobile && (
           <div className="flex h-full items-center gap-2">
             <SidebarTrigger />
-            <Separator orientation="vertical" className="mr-2 h-full" />
+            {/* <Separator orientation="vertical" className="mr-2 h-full" /> */}
           </div>
         )}
-        <BreadcrumbHeader />
+        {/* <BreadcrumbHeader /> */}
       </div>
       <div className="ml-auto flex items-center gap-4">
         {(isExecutionPath || isExecutionsPath) && (
