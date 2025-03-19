@@ -1,12 +1,12 @@
 import { create } from "zustand";
 
 type UserStore = {
-  userCreditBalance: number;
+  userCreditBalance: number | null;
   setUserCreditBalance: (creditBalance: number) => void;
 };
 
 const useUserStore = create<UserStore>()((set) => ({
-  userCreditBalance: 0,
+  userCreditBalance: null,
   setUserCreditBalance: (userCreditBalance) => set({ userCreditBalance }),
 }));
 

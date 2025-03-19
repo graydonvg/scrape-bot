@@ -34,27 +34,8 @@ export default function WorkflowGroupLabel({
     },
   });
 
-  function handleRenameWorkflow() {
-    setRenameWorkflow(false);
-
-    const trimmedNewName = newName.trim();
-
-    if (trimmedNewName === workflowName) {
-      setNewName(workflowName);
-      return;
-    }
-
-    if (trimmedNewName.length === 0) {
-      setNewName(workflowName);
-      return;
-    }
-
-    setNewName(trimmedNewName);
-    execute({ workflowId, workflowName: trimmedNewName });
-  }
-
   return (
-    <SidebarGroupLabel className="mb-2 rounded-none border-b px-0">
+    <SidebarGroupLabel className="mb-2 rounded-none px-0">
       {!renameWorkflow ? (
         <Button
           onClick={() => setRenameWorkflow(true)}
@@ -88,4 +69,23 @@ export default function WorkflowGroupLabel({
       )}
     </SidebarGroupLabel>
   );
+
+  function handleRenameWorkflow() {
+    setRenameWorkflow(false);
+
+    const trimmedNewName = newName.trim();
+
+    if (trimmedNewName === workflowName) {
+      setNewName(workflowName);
+      return;
+    }
+
+    if (trimmedNewName.length === 0) {
+      setNewName(workflowName);
+      return;
+    }
+
+    setNewName(trimmedNewName);
+    execute({ workflowId, workflowName: trimmedNewName });
+  }
 }

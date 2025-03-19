@@ -42,7 +42,7 @@ export default function Workflow({
 
   return (
     <SidebarGroup className="py-4">
-      <SidebarGroupLabel className="mb-2 flex items-center gap-2 border-b">
+      <SidebarGroupLabel className="mb-2 flex items-center gap-2">
         <NetworkIcon className="stroke-muted-foreground/80 -rotate-90" />
         <span className="text-foreground truncate text-base">
           {workflowExecutionData?.workflows?.name}

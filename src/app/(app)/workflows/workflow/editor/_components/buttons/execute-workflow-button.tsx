@@ -60,7 +60,7 @@ export default function ExecuteWorkflowButton({
           const totalCreditsRequired =
             calculateTotalCreditsRequired(executionPlan);
 
-          if (userCreditBalance < totalCreditsRequired)
+          if (userCreditBalance && userCreditBalance < totalCreditsRequired)
             return toast.error(USER_ERROR_MESSAGES.InsufficientCredits);
 
           execute({ workflowId, definition: JSON.stringify(toObject()) });

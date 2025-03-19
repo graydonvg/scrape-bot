@@ -73,6 +73,7 @@ export default function Workflow({ workflow }: Props) {
               <span
                 className={cn("text-foreground", {
                   "text-destructive":
+                    userCreditBalance !== null &&
                     userCreditBalance < editorWorkflowCreditCost,
                 })}
               >
