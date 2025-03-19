@@ -12,10 +12,8 @@ type Props = {
 export default function AuthLayout({ children }: Props) {
   return (
     <main className="divide-border grid min-h-svh divide-x lg:grid-cols-2">
-      <section className="flex flex-col gap-4 p-6 md:p-10">
-        <div className="flex justify-center gap-2 lg:justify-start">
-          <Logo />
-        </div>
+      <section className="flex flex-col gap-4 p-6">
+        <Logo />
         <div className="flex-center flex-1">
           <div className="w-full max-w-xs">
             {/* Suspense boundary is required because the signin pages includes useSearchParams()  */}
@@ -49,7 +47,7 @@ export default function AuthLayout({ children }: Props) {
             </h1>
             <Separator />
             <p className="text-center text-lg text-pretty text-white/70">
-              Visually create and manage web scrapers
+              Visually build and manage web scrapers
               <br />
               without writing any code.
             </p>

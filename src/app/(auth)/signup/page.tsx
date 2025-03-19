@@ -19,7 +19,6 @@ import { USER_ERROR_MESSAGES } from "@/lib/constants";
 import signUpAction from "./_actions/sign-up-action";
 import { useEffect } from "react";
 import CustomFormLabel from "@/components/custom-form-label";
-import { Separator } from "@/components/ui/separator";
 import ButtonWithSpinner from "@/components/button-with-spinner";
 
 const initialValues = {
@@ -104,7 +103,7 @@ export default function SignUpPage() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(execute)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(execute)} className="space-y-8">
         <div className="flex flex-col items-center gap-2 text-center">
           <h1 className="text-2xl font-bold">
             New to ScrapeBot? <span className="font-light">Sign up</span>
@@ -113,8 +112,7 @@ export default function SignUpPage() {
             Enter your email address and password to create a new account
           </p>
         </div>
-        <div className="space-y-6">
-          <Separator />
+        <div className="space-y-4">
           <div className="grid grid-cols-2 gap-6 lg:grid-cols-2">
             <FormField
               control={form.control}
@@ -193,7 +191,7 @@ export default function SignUpPage() {
           <ButtonWithSpinner
             type="submit"
             loading={isPending}
-            className="w-full capitalize"
+            className="mt-2 w-full capitalize"
           >
             {!isPending ? "Sign up" : "Signing up..."}
           </ButtonWithSpinner>

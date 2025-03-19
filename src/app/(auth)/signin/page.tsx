@@ -22,7 +22,6 @@ import signInWithPasswordAction from "./_actions/sign-in-with-password-action";
 import signInWithGoogleAction from "./_actions/sign-in-with-google-action";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import { Separator } from "@/components/ui/separator";
 import ButtonWithSpinner from "@/components/button-with-spinner";
 
 export default function SignInPage() {
@@ -89,15 +88,14 @@ export default function SignInPage() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(execute)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(execute)} className="space-y-8">
         <div className="space-y-2 text-center">
           <h1 className="text-2xl font-bold">Sign in to your account</h1>
           <p className="text-muted-foreground text-sm text-pretty">
             Enter your email address and password to sign in to your account
           </p>
         </div>
-        <div className="space-y-6">
-          <Separator />
+        <div className="space-y-4">
           <FormField
             control={form.control}
             name="email"
@@ -131,7 +129,7 @@ export default function SignInPage() {
           <ButtonWithSpinner
             type="submit"
             loading={isPending}
-            className="w-full capitalize"
+            className="mt-2 w-full capitalize"
           >
             {!isPending ? "Sign in" : "Signing in..."}
           </ButtonWithSpinner>

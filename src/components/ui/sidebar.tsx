@@ -186,14 +186,15 @@ function Sidebar({
   } = useSidebar();
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isMouseOverSidebar, setIsMouseOverSidebar] = React.useState(false);
-  const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+  const deferClosingTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
   const observersRef = React.useRef<MutationObserver[]>([]);
   const collapsibleSidebarRef = React.useRef<HTMLDivElement | null>(null);
 
   // Open the sidebar on mouse enter if sidebarOpensOnHover=true
   const handleMouseEnter = React.useCallback(() => {
     if (sidebarOpensOnHover) {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      if (deferClosingTimeoutRef.current)
+        clearTimeout(deferClosingTimeoutRef.current);
       setIsMouseOverSidebar(true);
       setSidebarOpen(true);
     }
@@ -204,13 +205,17 @@ function Sidebar({
     if (sidebarOpensOnHover && !isMenuOpen) {
       if (isMouseOverSidebar) setIsMouseOverSidebar(false);
 
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      if (deferClosingTimeoutRef.current)
+        clearTimeout(deferClosingTimeoutRef.current);
       // The setTimeout defers the sidebar closing until the next event loop tick.
       // This delay allows any pending DOM updates (like the dropdown menu's close transition)
       // to fully register and complete. Without deferring the state change, the sidebar's CSS
       // collapse transition would be interrupted, resulting in an immediate, jarring close.
 
-      timeoutRef.current = setTimeout(() => setSidebarOpen(false), 0);
+      deferClosingTimeoutRef.current = setTimeout(
+        () => setSidebarOpen(false),
+        0,
+      );
     }
   }, [isMenuOpen, setSidebarOpen, sidebarOpensOnHover, isMouseOverSidebar]);
 
@@ -289,7 +294,8 @@ function Sidebar({
 
     // Cleanup
     return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      if (deferClosingTimeoutRef.current)
+        clearTimeout(deferClosingTimeoutRef.current);
     };
   }, [
     sidebarOpensOnHover,

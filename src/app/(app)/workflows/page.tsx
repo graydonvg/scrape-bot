@@ -18,9 +18,9 @@ export default function WorkflowsPage() {
       </PageHeader>
 
       <div className="relative size-full">
-        <ScrollArea className="h-[calc(100vh-222.3px)] transition-[height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-[calc(100vh-206.3px)]">
+        <ScrollArea className="h-[calc(100vh-222.3px)] rounded-xl border transition-[height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-[calc(100vh-206.3px)]">
           <Suspense fallback={<WorkflowsSkeleton />}>
-            <div className="pb-2">
+            <div className="p-4">
               <Workflows />
             </div>
           </Suspense>

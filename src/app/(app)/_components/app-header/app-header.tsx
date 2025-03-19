@@ -7,6 +7,8 @@ import { PencilIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import AvailableCredits from "./available-credits";
+import { Separator } from "@/components/ui/separator";
+import BreadcrumbHeader from "@/components/breadcrumb-header";
 
 export default function AppHeader() {
   const isMobile = useIsMobile();
@@ -18,7 +20,20 @@ export default function AppHeader() {
 
   return (
     <header className="bg-sidebar z-50 flex h-12 shrink-0 items-center justify-between gap-4 px-4 py-2">
-      {isMobile && <SidebarTrigger />}
+      <div className="flex h-full items-center gap-2">
+        {isMobile && (
+          <div className="flex h-full items-center gap-2">
+            <SidebarTrigger />
+            <Separator orientation="vertical" className="mr-2 h-full" />
+          </div>
+        )}
+        {/* <p className="text-lg font-semibold">
+          {isEditorPath && "Workflow Editor"}
+          {isExecutionPath && "Workflow Execution"}
+          {isExecutionsPath && "Workflow Executions"}
+        </p> */}
+        <BreadcrumbHeader />
+      </div>
       <div className="ml-auto flex items-center gap-4">
         {(isExecutionPath || isExecutionsPath) && (
           <Link href={`/workflows/workflow/editor/${workflowId}`}>
