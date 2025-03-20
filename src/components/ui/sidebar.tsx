@@ -31,7 +31,7 @@ const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 const SIDEBAR_WIDTH = "16rem";
 const MOBILE_SIDEBAR_WIDTH = "16rem";
 const SIDEBAR_WIDTH_ICON = "3rem";
-const SIDEBAR_OPENS_ON_HOVER_PATHS = ["/editor", "/execution/"];
+const SIDEBAR_EXPANDS_ON_HOVER_PATHS = ["/editor", "/execution/"];
 
 type SidebarContext = {
   state: "expanded" | "collapsed";
@@ -41,7 +41,7 @@ type SidebarContext = {
   setOpenMobile: (open: boolean) => void;
   isMobile: boolean;
   toggleSidebar: () => void;
-  sidebarOpensOnHover: boolean;
+  sidebarExpandsOnHover: boolean;
 };
 
 const SidebarContext = React.createContext<SidebarContext | null>(null);
@@ -78,7 +78,7 @@ const SidebarProvider = React.forwardRef<
     const isMobile = useIsMobile();
     const [openMobile, setOpenMobile] = React.useState(false);
     const pathname = usePathname();
-    const sidebarOpensOnHover = SIDEBAR_OPENS_ON_HOVER_PATHS.some((path) =>
+    const sidebarExpandsOnHover = SIDEBAR_EXPANDS_ON_HOVER_PATHS.some((path) =>
       pathname.includes(path),
     );
 
@@ -122,7 +122,7 @@ const SidebarProvider = React.forwardRef<
         openMobile,
         setOpenMobile,
         toggleSidebar,
-        sidebarOpensOnHover,
+        sidebarExpandsOnHover,
       }),
       [
         state,
@@ -132,7 +132,7 @@ const SidebarProvider = React.forwardRef<
         openMobile,
         setOpenMobile,
         toggleSidebar,
-        sidebarOpensOnHover,
+        sidebarExpandsOnHover,
       ],
     );
 
@@ -182,7 +182,7 @@ function Sidebar({
     openMobile,
     setOpenMobile,
     setOpen: setSidebarOpen,
-    sidebarOpensOnHover,
+    sidebarExpandsOnHover,
   } = useSidebar();
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isMouseOverSidebar, setIsMouseOverSidebar] = React.useState(false);
@@ -190,19 +190,19 @@ function Sidebar({
   const observersRef = React.useRef<MutationObserver[]>([]);
   const collapsibleSidebarRef = React.useRef<HTMLDivElement | null>(null);
 
-  // Open the sidebar on mouse enter if sidebarOpensOnHover=true
+  // Open the sidebar on mouse enter if sidebarExpandsOnHover=true
   const handleMouseEnter = React.useCallback(() => {
-    if (sidebarOpensOnHover) {
+    if (sidebarExpandsOnHover) {
       if (deferClosingTimeoutRef.current)
         clearTimeout(deferClosingTimeoutRef.current);
       setIsMouseOverSidebar(true);
       setSidebarOpen(true);
     }
-  }, [setSidebarOpen, sidebarOpensOnHover]);
+  }, [setSidebarOpen, sidebarExpandsOnHover]);
 
-  // Close the sidebar on mouse leave if sidebarOpensOnHover=true
+  // Close the sidebar on mouse leave if sidebarExpandsOnHover=true
   const handleMouseLeave = React.useCallback(() => {
-    if (sidebarOpensOnHover && !isMenuOpen) {
+    if (sidebarExpandsOnHover && !isMenuOpen) {
       if (isMouseOverSidebar) setIsMouseOverSidebar(false);
 
       if (deferClosingTimeoutRef.current)
@@ -217,12 +217,12 @@ function Sidebar({
         0,
       );
     }
-  }, [isMenuOpen, setSidebarOpen, sidebarOpensOnHover, isMouseOverSidebar]);
+  }, [isMenuOpen, setSidebarOpen, sidebarExpandsOnHover, isMouseOverSidebar]);
 
   // Observe changes to data-state attribute of dropdown menu triggers, if any, to prevent
   // the sidebar from closing while the menu is open.
   React.useEffect(() => {
-    if (!collapsibleSidebarRef.current || !sidebarOpensOnHover) return;
+    if (!collapsibleSidebarRef.current || !sidebarExpandsOnHover) return;
     if (observersRef.current.length > 0) {
       // Cleanup existing observers when the sidebar state changes
       observersRef.current.forEach((observer) => observer.disconnect());
@@ -272,22 +272,22 @@ function Sidebar({
       observersRef.current.forEach((observer) => observer.disconnect());
       observersRef.current = [];
     };
-  }, [state, setIsMouseOverSidebar, sidebarOpensOnHover]);
+  }, [state, setIsMouseOverSidebar, sidebarExpandsOnHover]);
 
   // Automatically handle the open/close state of the sidebar depending on the path.
-  // See SIDEBAR_OPENS_ON_HOVER_PATHS above.
+  // See SIDEBAR_EXPANDS_ON_HOVER_PATHS above.
   React.useEffect(() => {
     if (isMenuOpen) return;
 
-    // Close the sidebar when navigating to a page included in SIDEBAR_OPENS_ON_HOVER_PATHS.
+    // Close the sidebar when navigating to a page included in SIDEBAR_EXPANDS_ON_HOVER_PATHS.
     // This also ensures that the sidebar returns to it's closed state after a
     // dropdown menu is closed.
-    if (sidebarOpensOnHover && !isMouseOverSidebar) {
+    if (sidebarExpandsOnHover && !isMouseOverSidebar) {
       handleMouseLeave();
     }
 
-    // Open the sidebar when navigating to a page NOT included in SIDEBAR_OPENS_ON_HOVER_PATHS.
-    if (!sidebarOpensOnHover) {
+    // Open the sidebar when navigating to a page NOT included in SIDEBAR_EXPANDS_ON_HOVER_PATHS.
+    if (!sidebarExpandsOnHover) {
       setIsMouseOverSidebar(false);
       setSidebarOpen(true);
     }
@@ -298,7 +298,7 @@ function Sidebar({
         clearTimeout(deferClosingTimeoutRef.current);
     };
   }, [
-    sidebarOpensOnHover,
+    sidebarExpandsOnHover,
     isMouseOverSidebar,
     isMenuOpen,
     setIsMouseOverSidebar,

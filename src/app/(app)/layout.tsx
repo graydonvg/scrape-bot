@@ -19,7 +19,7 @@ export default async function AppLayout({ children }: Props) {
       <SidebarInset>
         <AppHeader />
         <Separator orientation="horizontal" className="z-50" />
-        <div className="container flex grow flex-col">{children}</div>
+        <div className="container flex flex-1 flex-col">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );

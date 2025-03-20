@@ -34,6 +34,9 @@ export default function WorkflowCard({ workflow }: Props) {
           <div className="flex items-center gap-2">
             <h3 className="text-muted-foreground text-xl font-bold">
               <Link
+                // Scroll false to prevent "skipping auto-scroll" warning because of
+                // loading skeleton position set to fixed.
+                scroll={false}
                 href={`/workflows/workflow/${workflow.workflowId}/editor`}
                 className="ring-offset-card hover:underline"
               >
@@ -54,7 +57,12 @@ export default function WorkflowCard({ workflow }: Props) {
             size="sm"
             className="ring-offset-card"
           >
-            <Link href={`/workflows/workflow/${workflow.workflowId}/editor`}>
+            <Link
+              // Scroll false to prevent "skipping auto-scroll" warning because of
+              // loading skeleton position set to fixed.
+              scroll={false}
+              href={`/workflows/workflow/${workflow.workflowId}/editor`}
+            >
               <PencilIcon />
               Edit
             </Link>

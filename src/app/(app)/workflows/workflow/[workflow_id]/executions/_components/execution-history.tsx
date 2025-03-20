@@ -13,7 +13,7 @@ export default function ExecutionHistory({ workflowId, initialData }: Props) {
     <div className="flex h-full flex-col">
       <PageHeader
         title={
-          initialData?.workflowExecutions[0].workflows?.workflowName ||
+          initialData?.workflowExecutions[0].workflowName ||
           "Workflow Executions"
         }
         subtitle="A list of all this workflow's executions"

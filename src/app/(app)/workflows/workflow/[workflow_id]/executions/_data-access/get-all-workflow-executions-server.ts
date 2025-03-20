@@ -34,7 +34,7 @@ export default async function getAllWorkflowExecutionsServer(
       error,
     } = await supabase
       .from("workflowExecutions")
-      .select("*, tasks(taskId), workflows(workflowName:name)", {
+      .select("*, tasks(taskId), ...workflows!inner(workflowName:name)", {
         count: "exact",
       })
       .eq("userId", user.id)
