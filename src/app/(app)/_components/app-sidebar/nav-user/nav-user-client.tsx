@@ -31,6 +31,7 @@ import useUserStore from "@/lib/store/user-store";
 import { useEffect } from "react";
 import { UserDb } from "@/lib/types/user";
 import { ThemeMenuItems } from "./theme-menu-items";
+import { cn } from "@/lib/utils";
 
 type Props = {
   user: UserDb;
@@ -39,7 +40,7 @@ type Props = {
 export function NavUserClient({ user }: Props) {
   const log = useLogger();
   const router = useRouter();
-  const { isMobile } = useSidebar();
+  const { state } = useSidebar();
   const supabase = createSupabaseBrowserClient();
   const { setUserCreditBalance } = useUserStore();
   const userFullName = getUserFullName();
@@ -53,13 +54,13 @@ export function NavUserClient({ user }: Props) {
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <DropdownMenu>
+        <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <Avatar className="h-8 w-8 rounded-md">
+              <Avatar className="size-8 rounded-md">
                 {user.avatarUrl ? (
                   <AvatarImage
                     src={user.avatarUrl}
@@ -79,14 +80,19 @@ export function NavUserClient({ user }: Props) {
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-            side={isMobile ? "bottom" : "right"}
+            className={cn(
+              "w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg",
+              {
+                "ml-2": state === "collapsed",
+              },
+            )}
+            side="bottom"
             align="end"
             sideOffset={4}
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-md">
+                <Avatar className="size-8 rounded-md">
                   {user.avatarUrl ? (
                     <AvatarImage
                       src={user.avatarUrl}

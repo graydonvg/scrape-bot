@@ -17,7 +17,7 @@ export function NavMain() {
   const pathname = usePathname();
   const paths = pathname === "/" ? ["/"] : pathname.split("/");
   const routes = siteConfig.navMain;
-  const activeRoute = getActiveRoute();
+  const activeRoute = getActiveRoute(routes, paths);
 
   return (
     <SidebarGroup>
@@ -46,13 +46,13 @@ export function NavMain() {
       </SidebarGroupContent>
     </SidebarGroup>
   );
+}
 
-  function getActiveRoute() {
-    return routes.find((route) => {
-      const splitRouteHref = route.href.split("/")[1];
-      const routeHref = splitRouteHref === "" ? "/" : splitRouteHref;
+function getActiveRoute(routes: { href: string }[], paths: string[]) {
+  return routes.find((route) => {
+    const splitRouteHref = route.href.split("/")[1];
+    const routeHref = splitRouteHref === "" ? "/" : splitRouteHref;
 
-      return paths.includes(routeHref);
-    });
-  }
+    return paths.includes(routeHref);
+  });
 }

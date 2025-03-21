@@ -2,20 +2,21 @@
 
 import { useTheme } from "next-themes";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import { CircleIcon, LaptopMinimalIcon, MoonIcon, SunIcon } from "lucide-react";
+import { LaptopMinimalIcon, MoonIcon, SunIcon } from "lucide-react";
+import SelectedMenuItemIndicator from "../selected-menu-item-indicator";
 
 const modes = [
   {
     name: "light",
-    icon: SunIcon,
+    icon: <SunIcon />,
   },
   {
     name: "dark",
-    icon: MoonIcon,
+    icon: <MoonIcon />,
   },
   {
     name: "system",
-    icon: LaptopMinimalIcon,
+    icon: <LaptopMinimalIcon />,
   },
 ];
 
@@ -30,11 +31,9 @@ export function ThemeMenuItems() {
           onClick={() => setTheme(mode.name)}
           className="capitalize"
         >
-          <mode.icon />
+          {mode.icon}
           {mode.name}
-          {mode.name === theme && (
-            <CircleIcon className="fill-popover-foreground stroke-popover-foreground ml-auto size-2" />
-          )}
+          {mode.name === theme && <SelectedMenuItemIndicator />}
         </DropdownMenuItem>
       ))}
     </>

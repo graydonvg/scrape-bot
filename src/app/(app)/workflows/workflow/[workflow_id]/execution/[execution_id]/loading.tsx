@@ -5,8 +5,8 @@ import { ListOrderedIcon, Loader2Icon } from "lucide-react";
 
 export default function Loading() {
   return (
-    <div className="fixed inset-0 top-12 flex flex-1">
-      <div className="bg-sidebar flex h-full w-[300px] max-w-[300px] min-w-[300px] flex-col border-r md:ml-12 md:w-[320px] md:max-w-[320px] md:min-w-[320px]">
+    <div className="flex flex-1">
+      <div className="bg-sidebar flex h-full w-[320px] max-w-[320px] min-w-[320px] flex-col border-r">
         <div className="flex h-[304px] flex-col space-y-2 p-4">
           {Array.from({ length: 7 }).map((_, i) => (
             <Skeleton key={i} className="bg-accent h-full w-full" />

@@ -105,7 +105,7 @@ export default function ExecutionDetails({ initialData }: Props) {
   if (!workflowExecutionData) notFound();
 
   return (
-    <div className="fixed inset-0 top-12 left-[300px] flex grow md:left-[368px]">
+    <div className="flex flex-1">
       <WorkflowExecutionSidebar workflowExecutionData={workflowExecutionData} />
       <div className="size-full">
         {workflowExecutionStatus.isLoading && (

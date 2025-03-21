@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { ThemeProvider } from "./theme-provider";
 import ReactQueryProvider from "./react-query-provider";
 import NextTopLoader from "nextjs-toploader";
+import { Toaster } from "sonner";
 
 type Props = {
   children: ReactNode;
@@ -18,6 +19,7 @@ export default async function Providers({ children }: Props) {
       >
         <NextTopLoader color="#3b82f6" showSpinner={false} height={2} />
         {children}
+        <Toaster richColors />
       </ThemeProvider>
     </ReactQueryProvider>
   );

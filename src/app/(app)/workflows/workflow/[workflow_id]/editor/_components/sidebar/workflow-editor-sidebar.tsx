@@ -10,7 +10,7 @@ type Props = {
 
 export default function WorkflowEditorSidebar({ workflow }: Props) {
   return (
-    <div className="bg-sidebar flex h-full w-[300px] max-w-[300px] min-w-[300px] flex-col border-r md:ml-12 md:w-[320px] md:max-w-[320px] md:min-w-[320px]">
+    <div className="bg-sidebar flex h-full w-[320px] max-w-[320px] min-w-[320px] flex-col border-r">
       <Workflow workflow={workflow} />
       <Separator />
       <TaskMenu />

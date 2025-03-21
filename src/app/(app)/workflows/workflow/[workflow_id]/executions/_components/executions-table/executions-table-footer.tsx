@@ -48,7 +48,7 @@ export default function ExecutionsTableFooter({
   const rangeEndIndicator = rangeEnd < totalRows ? rangeEnd : totalRows;
 
   return (
-    <div className="dark:bg-sidebar bg-muted flex items-center justify-between gap-6 overflow-x-auto p-2">
+    <div className="dark:bg-sidebar bg-muted flex w-full items-center justify-between gap-6 overflow-x-auto border-t p-2">
       <div className="flex shrink-0 items-center gap-2">
         <span>Rows per page:</span>
         <Select

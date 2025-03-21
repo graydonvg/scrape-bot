@@ -11,7 +11,7 @@ type Props = {
 
 export default function Editor({ workflow }: Props) {
   return (
-    <div className="bg-sidebar fixed inset-0 top-12 flex">
+    <div className="bg-sidebar flex flex-1">
       <ReactFlowProvider>
         <WorkflowEditorSidebar workflow={workflow} />
         <Flow workflow={workflow} />
