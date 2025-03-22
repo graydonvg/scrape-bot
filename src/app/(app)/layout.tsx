@@ -26,7 +26,7 @@ export default async function AppLayout({ children }: Props) {
       defaultBehaviour={defaultSidebarBehaviour}
     >
       <AppSidebar />
-      <SidebarInset>
+      <SidebarInset className="max-h-screen overflow-hidden">
         <AppHeader />
         <Separator orientation="horizontal" className="z-50" />
         <AppContainer>{children}</AppContainer>

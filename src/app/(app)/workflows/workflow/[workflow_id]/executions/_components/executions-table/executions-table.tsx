@@ -43,10 +43,9 @@ export default function ExecutionsTable({ workflowId, initialData }: Props) {
   return (
     <>
       {/* The outer <div>  applies the border radius and hides any overflow, ensuring that the scrollbar doesn't protrude beyond the rounded corners. */}
-      <div className="overflow-hidden rounded-xl border">
-        {/* <div className="max-w-[calc(100vw-(--spacing(16)))] overflow-hidden rounded-xl border md:max-w-[calc(100vw-255.2px-(--spacing(16)))]"> */}
+      <div className="relative flex w-full flex-1 flex-col overflow-hidden rounded-xl border">
         {/* The inner <div>  manages the scrolling functionality. */}
-        <div className="h-[calc(100vh-260px)] overflow-auto">
+        <div className="w-full flex-1 overflow-auto">
           <Table>
             <TableHeader className="dark:bg-sidebar bg-muted sticky top-0 z-10">
               <TableRow>

@@ -17,8 +17,8 @@ export default function WorkflowsPage() {
         <CreateWorkflowDialog />
       </PageHeader>
 
-      <div className="relative size-full">
-        <ScrollArea className="h-[calc(100vh-205px)] rounded-xl border">
+      <div className="relative flex size-full">
+        <ScrollArea className="flex-1 rounded-xl border">
           <Suspense fallback={<WorkflowsSkeleton />}>
             <div className="p-4">
               <Workflows />

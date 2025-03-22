@@ -31,7 +31,7 @@ export default function TaskLogs({ logs }: Props) {
       </CardHeader>
       <CardContent className="px-4 py-2">
         <div className="overflow-x-auto">
-          <Table className="min-w-full">
+          <Table>
             <TableHeader className="text-muted-foreground">
               <TableRow>
                 <TableHead>Time</TableHead>
