@@ -150,7 +150,7 @@ const SidebarProvider = React.forwardRef<
 
     return (
       <SidebarContext.Provider value={contextValue}>
-        <TooltipProvider delayDuration={0}>
+        <TooltipProvider>
           <div
             data-slot="sidebar-wrapper"
             style={
@@ -188,102 +188,7 @@ function Sidebar({
   variant?: "sidebar" | "floating" | "inset";
   collapsible?: "offcanvas" | "icon" | "none";
 }) {
-  const {
-    isMobile,
-    state,
-    open,
-    openMobile,
-    setOpenMobile,
-    setOpen: setSidebarOpen,
-    sidebarBehaviour,
-  } = useSidebar();
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const observersRef = React.useRef<MutationObserver[]>([]);
-  const collapsibleSidebarRef = React.useRef<HTMLDivElement | null>(null);
-  const isExpandable = sidebarBehaviour === "expandable";
-
-  // Listen for a click when sidebar open, remove when closed.
-  // If click NOT on sidebar bounding box, close.
-
-  React.useEffect(() => {
-    if (!isExpandable || !collapsibleSidebarRef.current || isMobile) return;
-
-    const controller = new AbortController();
-
-    collapsibleSidebarRef.current?.addEventListener(
-      "mouseenter",
-      () => {
-        console.log("enter");
-        setSidebarOpen(true);
-      },
-      { signal: controller.signal },
-    );
-
-    collapsibleSidebarRef.current?.addEventListener(
-      "mouseleave",
-      () => {
-        if (isMenuOpen) return;
-
-        console.log("leave");
-        setSidebarOpen(false);
-      },
-      { signal: controller.signal },
-    );
-
-    return () => controller.abort();
-  }, [setSidebarOpen, open, isExpandable, isMenuOpen, isMobile]);
-
-  // Observe changes to data-state attribute of dropdown menu triggers, if any, to prevent
-  // the sidebar from closing while the menu is open.
-  React.useEffect(() => {
-    if (!collapsibleSidebarRef.current || isMobile) return;
-
-    if (observersRef.current.length > 0) {
-      // Cleanup existing observers when the sidebar state changes
-      observersRef.current.forEach((observer) => observer.disconnect());
-      observersRef.current = [];
-    }
-
-    // Get all dropdown menu triggers in the sidebar
-    const dropdownMenuTriggers = collapsibleSidebarRef.current.querySelectorAll(
-      '[data-slot="dropdown-menu-trigger"]',
-    );
-
-    // When a dropdown menu opens, the onMouseLeave event is triggered.
-    // Check if any dropdown menus are open to prevent closing the sidebar.
-    function handleMutation(mutationsList: MutationRecord[]) {
-      mutationsList.forEach((mutation) => {
-        if (
-          mutation.target instanceof HTMLElement &&
-          mutation.attributeName === "data-state"
-        ) {
-          const isOpen = mutation.target.dataset.state === "open";
-
-          setIsMenuOpen(isOpen);
-        }
-      });
-    }
-
-    // Observe changes in the dropwdown menu trigger data-state attribute
-    dropdownMenuTriggers.forEach((trigger) => {
-      if (trigger instanceof HTMLElement) {
-        const observer = new MutationObserver(handleMutation);
-
-        observer.observe(trigger, {
-          attributes: true,
-          attributeFilter: ["data-state"],
-        });
-
-        observersRef.current.push(observer);
-      }
-    });
-
-    // Cleanup
-    return () => {
-      observersRef.current.forEach((observer) => observer.disconnect());
-      observersRef.current = [];
-    };
-  }, [open, isExpandable, setSidebarOpen, isMobile]);
+  const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
 
   if (collapsible === "none") {
     return (
@@ -327,7 +232,6 @@ function Sidebar({
 
   return (
     <div
-      ref={collapsibleSidebarRef}
       className="group peer text-sidebar-foreground hidden md:block"
       data-state={state}
       data-collapsible={state === "collapsed" ? collapsible : ""}

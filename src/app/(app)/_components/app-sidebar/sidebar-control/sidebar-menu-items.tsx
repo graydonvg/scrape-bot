@@ -4,13 +4,11 @@ import {
   PanelRightOpenIcon,
   SquareMousePointerIcon,
 } from "lucide-react";
-import { useSidebar } from "@/components/ui/sidebar";
 import SelectedMenuItemIndicator from "../selected-menu-item-indicator";
+import { useSidebar } from "@/components/ui/sidebar";
 
 export function SidebarMenuItems() {
-  const { setOpen, sidebarBehaviour, setSidebarBehaviour, state } =
-    useSidebar();
-  const isExpandable = sidebarBehaviour === "expandable";
+  const { sidebarBehaviour, setSidebarBehaviour } = useSidebar();
   const menuItems = getMenuItems();
 
   return (
@@ -31,19 +29,17 @@ export function SidebarMenuItems() {
         label: "Expanded",
         icon: <PanelRightCloseIcon />,
         action: () => {
-          setOpen(true);
           setSidebarBehaviour("open");
         },
-        isSelected: state === "expanded" && !isExpandable,
+        isSelected: sidebarBehaviour === "open",
       },
       {
         label: "Collapsed",
         icon: <PanelRightOpenIcon />,
         action: () => {
-          setOpen(false);
           setSidebarBehaviour("closed");
         },
-        isSelected: state === "collapsed" && !isExpandable,
+        isSelected: sidebarBehaviour === "closed",
       },
       {
         label: "Expand on hover",
@@ -51,7 +47,7 @@ export function SidebarMenuItems() {
         action: () => {
           setSidebarBehaviour("expandable");
         },
-        isSelected: isExpandable,
+        isSelected: sidebarBehaviour === "expandable",
       },
     ];
   }
