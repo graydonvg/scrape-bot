@@ -28,8 +28,8 @@ import { useLogger } from "next-axiom";
 import useUserStore from "@/lib/store/user-store";
 import { useEffect } from "react";
 import { UserDb } from "@/lib/types/user";
-import { ThemeMenuItems } from "./theme-menu-items";
 import UserMenuLabel from "./user-menu-label";
+import { ThemeMenu } from "./theme-menu";
 
 type Props = {
   user: UserDb;
@@ -67,10 +67,10 @@ export function NavUserClient({ user }: Props) {
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="ml-2 min-w-[calc(16rem-(--spacing(4)))]"
-            side="top"
             align="end"
+            side="top"
             sideOffset={4}
+            className="ml-2 min-w-[calc(16rem-(--spacing(4)))]"
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
@@ -98,12 +98,7 @@ export function NavUserClient({ user }: Props) {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuLabel className="font-normal">
-                Theme
-              </DropdownMenuLabel>
-              <ThemeMenuItems />
-            </DropdownMenuGroup>
+            <ThemeMenu />
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleSignOut}>
               <LogOutIcon />

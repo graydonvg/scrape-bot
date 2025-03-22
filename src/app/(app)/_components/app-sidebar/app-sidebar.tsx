@@ -11,8 +11,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import NavUserServer from "@/app/(app)/_components/app-sidebar/nav-user/nav-user-server";
 import { Separator } from "@/components/ui/separator";
 import SidebarLogo from "./sidebar-logo";
-import SidebarControl from "./sidebar-control/sidebar-control";
 import Sidebar from "./sidebar";
+import SidebarControl from "./sidebar-control";
 
 export default function AppSidebar({
   ...props
