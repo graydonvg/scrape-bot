@@ -21,8 +21,8 @@ export default function PageHeader({
         containerClassName,
       )}
     >
-      <div className="mr-6 flex shrink-0 flex-col">
-        <h1 className="text-3xl font-bold">{title}</h1>
+      <div className="mr-6 flex flex-col">
+        <h1 className="flex-wrap text-3xl font-bold">{title}</h1>
         <p className="text-muted-foreground">{subtitle}</p>
       </div>
       {children}

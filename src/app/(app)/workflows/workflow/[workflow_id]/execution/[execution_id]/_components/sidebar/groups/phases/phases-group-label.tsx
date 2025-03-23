@@ -1,5 +1,5 @@
 import { SidebarGroupLabel } from "@/components/ui/sidebar";
-import { CopyMinusIcon, CopyPlusIcon, ListOrdered } from "lucide-react";
+import { CopyMinusIcon, CopyPlusIcon, ListOrderedIcon } from "lucide-react";
 import TooltipWrapper from "@/components/tooltip-wrapper";
 import { Button } from "@/components/ui/button";
 
@@ -15,7 +15,7 @@ export default function PhasesGroupLabel({
   return (
     <SidebarGroupLabel className="text-muted-foreground text-base">
       <div className="flex items-center gap-2">
-        <ListOrdered size={20} className="stroke-muted-foreground/80" />
+        <ListOrderedIcon size={20} className="stroke-muted-foreground/80" />
         <span className="font-semibold">Phases</span>
       </div>
       <div className="ml-auto flex items-center opacity-0 transition-opacity duration-200 ease-linear group-hover/phases:opacity-100">

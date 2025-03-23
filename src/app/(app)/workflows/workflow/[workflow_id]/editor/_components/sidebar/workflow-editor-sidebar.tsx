@@ -1,4 +1,3 @@
-import { Separator } from "@/components/ui/separator";
 import ActionButtons from "./groups/action-buttons";
 import TaskMenu from "./groups/tasks/task-menu";
 import Workflow from "./groups/workflow/workflow";
@@ -10,11 +9,9 @@ type Props = {
 
 export default function WorkflowEditorSidebar({ workflow }: Props) {
   return (
-    <div className="bg-sidebar flex h-full w-[320px] max-w-[320px] min-w-[320px] flex-col border-r">
+    <div className="bg-sidebar flex h-full w-[320px] max-w-[320px] min-w-[320px] flex-col divide-y border-r">
       <Workflow workflow={workflow} />
-      <Separator />
       <TaskMenu />
-      <Separator />
       <ActionButtons workflowId={workflow!.workflowId} />
     </div>
   );

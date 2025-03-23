@@ -18,7 +18,7 @@ export default function AppHeader() {
   const workflowId = getWorkflowId();
 
   return (
-    <header className="bg-sidebar z-50 flex h-12 shrink-0 items-center justify-between gap-4 px-4 py-2">
+    <header className="bg-sidebar z-50 flex h-12 shrink-0 items-center justify-between gap-4 border-b px-4 py-2">
       <div className="flex h-full items-center gap-2">
         {isMobile && (
           <div className="flex h-full items-center gap-2">

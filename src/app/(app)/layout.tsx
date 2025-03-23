@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import { Separator } from "@/components/ui/separator";
 import {
   SidebarBehaviour,
   SidebarInset,
@@ -28,7 +27,6 @@ export default async function AppLayout({ children }: Props) {
       <AppSidebar />
       <SidebarInset className="max-h-screen overflow-hidden">
         <AppHeader />
-        <Separator orientation="horizontal" className="z-50" />
         <AppContainer>{children}</AppContainer>
       </SidebarInset>
     </SidebarProvider>

@@ -1,6 +1,5 @@
 import Phases from "./groups/phases/phases";
 import { calculateTotalCreditsConsumed } from "@/lib/workflow/helpers/calculate-credit-consumption";
-import { Separator } from "@/components/ui/separator";
 import Workflow from "./groups/workflow";
 import getWorkflowExecutionWithTasksClient from "../../_data-access/get-execution-with-tasks-client";
 
@@ -17,12 +16,14 @@ export default function WorkflowExecutionSidebar({
   const creditsConsumed = calculateTotalCreditsConsumed(tasks || []);
 
   return (
-    <div className="bg-sidebar flex h-full w-[320px] max-w-[320px] min-w-[320px] flex-col border-r">
+    <div
+      id="execution-details-sidebar"
+      className="bg-sidebar flex h-full w-[320px] max-w-[320px] min-w-[320px] flex-col divide-y border-r"
+    >
       <Workflow
         workflowExecutionData={workflowExecutionData}
         creditsConsumed={creditsConsumed}
       />
-      <Separator />
       <Phases tasks={tasks} />
     </div>
   );

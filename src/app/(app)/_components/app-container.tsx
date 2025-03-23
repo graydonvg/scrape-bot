@@ -20,7 +20,7 @@ export default function AppContainer({ children }: Props) {
   return (
     <div
       className={cn(
-        "flex max-h-[calc(100vh-(--spacing(12))-1px)] flex-1 flex-col",
+        "flex max-h-[calc(100vh-(--spacing(12)))] flex-1 flex-col",
         {
           "fixed inset-0 top-px max-h-screen pt-12 pl-0 md:pl-12":
             isSidebarExpandable,

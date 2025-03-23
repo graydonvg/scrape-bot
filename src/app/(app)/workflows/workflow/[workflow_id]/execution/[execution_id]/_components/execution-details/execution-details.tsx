@@ -26,6 +26,8 @@ type Props = {
 export default function ExecutionDetails({ initialData }: Props) {
   const { selectedTaskId, setSelectedTaskId, setWorkflowExecutionStatus } =
     useWorkflowsStore();
+  const [executionDetailsSidebarWidth, setExecutionDetailsSidebarWidth] =
+    useState(0);
   const [workflowDidExecute, setWorkflowDidExecute] = useState(false);
   const workflowExecutionId = initialData!.workflowExecutionId;
 
@@ -102,12 +104,28 @@ export default function ExecutionDetails({ initialData }: Props) {
     setSelectedTaskId,
   ]);
 
+  useEffect(() => {
+    const executionDetailsSidebar = document.getElementById(
+      "execution-details-sidebar",
+    );
+    const executionDetailsSidebarWidth =
+      executionDetailsSidebar?.getBoundingClientRect().width;
+
+    if (executionDetailsSidebarWidth)
+      setExecutionDetailsSidebarWidth(executionDetailsSidebarWidth);
+  }, []);
+
   if (!workflowExecutionData) notFound();
 
   return (
     <div className="flex flex-1">
       <WorkflowExecutionSidebar workflowExecutionData={workflowExecutionData} />
-      <div className="size-full">
+      <div
+        className="size-full"
+        style={{
+          maxWidth: `calc(100% - ${executionDetailsSidebarWidth}px)`,
+        }}
+      >
         {workflowExecutionStatus.isLoading && (
           <ExecutionStatusMessage
             title="Execution in progress"
