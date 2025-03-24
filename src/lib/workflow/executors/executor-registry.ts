@@ -1,6 +1,6 @@
 import "server-only";
 
-import launchBrowserExecutor from "./launch-broswer";
+import goToWebsiteExecutor from "./go-to-website";
 import getPageHtmlExecutor from "./get-page-html";
 import extractTextFromElementExecutor from "./extract-text-from-element.ts";
 import { Logger } from "next-axiom";
@@ -21,7 +21,7 @@ type ExecutorRegistry = {
 };
 
 export const executorRegistry: ExecutorRegistry = {
-  LAUNCH_BROWSER: launchBrowserExecutor,
+  GO_TO_WEBSITE: goToWebsiteExecutor,
   GET_PAGE_HTML: getPageHtmlExecutor,
   EXTRACT_TEXT_FROM_ELEMENT: extractTextFromElementExecutor,
 };

@@ -1,9 +1,9 @@
 import { Task, TaskParamName, TaskParamType, TaskType } from "@/lib/types/task";
 import { GlobeIcon, LucideProps } from "lucide-react";
 
-export const launchBrowserTask = {
-  type: TaskType.LaunchBrowser,
-  label: "Launch browser",
+export const goToWebsiteTask = {
+  type: TaskType.GoToWebiste,
+  label: "Go to website",
   credits: 5,
   icon: (props: LucideProps) => (
     <GlobeIcon className="stroke-pink-400" {...props} />

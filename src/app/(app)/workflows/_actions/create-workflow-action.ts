@@ -47,7 +47,7 @@ const createWorkflowAction = actionClient
           edges: [],
         };
 
-        initialWorkflow.nodes.push(createWorkflowNode(TaskType.LaunchBrowser));
+        initialWorkflow.nodes.push(createWorkflowNode(TaskType.GoToWebiste));
 
         const { data, error } = await supabase
           .from("workflows")

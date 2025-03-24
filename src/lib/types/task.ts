@@ -18,7 +18,7 @@ export enum TaskParamName {
 }
 
 export enum TaskType {
-  LaunchBrowser = "LAUNCH_BROWSER",
+  GoToWebiste = "GO_TO_WEBSITE",
   GetPageHtml = "GET_PAGE_HTML",
   ExtractTextFromElement = "EXTRACT_TEXT_FROM_ELEMENT",
 }

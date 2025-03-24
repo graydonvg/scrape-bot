@@ -1,7 +1,7 @@
 import "server-only";
 
 import puppeteer from "puppeteer";
-import { launchBrowserTask } from "../tasks/entry-point";
+import { goToWebsiteTask } from "../tasks/entry-point";
 import { LOGGER_ERROR_MESSAGES, USER_ERROR_MESSAGES } from "@/lib/constants";
 import { Logger } from "next-axiom";
 import {
@@ -10,12 +10,12 @@ import {
 } from "@/lib/types/execution";
 import { TaskParamName } from "@/lib/types/task";
 
-export default async function launchBrowserExecutor(
+export default async function goToWebsiteExecutor(
   taskId: string,
-  executionContext: ExecutionContext<typeof launchBrowserTask>,
+  executionContext: ExecutionContext<typeof goToWebsiteTask>,
   log: Logger,
 ): Promise<ExecutorFunctionReturn> {
-  log.with({ executor: "launchBrowserExecutor" });
+  log.with({ executor: "goToWebsiteExecutor" });
 
   try {
     const websiteUrl = executionContext.getInput(TaskParamName.WebsiteUrl);

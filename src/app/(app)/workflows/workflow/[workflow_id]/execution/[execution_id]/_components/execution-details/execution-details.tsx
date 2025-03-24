@@ -52,7 +52,7 @@ export default function ExecutionDetails({ initialData }: Props) {
     checkParamIncludesBrowserInstance("inputs");
   const outputIncludesBrowserInstance =
     checkParamIncludesBrowserInstance("outputs");
-  const launchBrowserTaskStatus = getLaunchBrowserTaskStatus();
+  const goToWebsiteTaskStatus = getGoToWebsiteTaskStatus();
 
   useEffect(() => {
     if (workflowExecutionData)
@@ -188,9 +188,9 @@ export default function ExecutionDetails({ initialData }: Props) {
               paramsJson={taskData.inputs}
               includesBrowserInstance={
                 inputIncludesBrowserInstance &&
-                // If the launchBrowserTask was successful,
+                // If the goToWebsiteTask was successful,
                 // the browser instance will be an input
-                launchBrowserTaskStatus !== "FAILED"
+                goToWebsiteTaskStatus !== "FAILED"
               }
             />
             <TaskParameterCard
@@ -200,9 +200,9 @@ export default function ExecutionDetails({ initialData }: Props) {
               paramsJson={taskData.outputs}
               includesBrowserInstance={
                 outputIncludesBrowserInstance &&
-                // If the launchBrowserTask was successful,
+                // If the goToWebsiteTask was successful,
                 // the browser instance will be a output
-                launchBrowserTaskStatus !== "FAILED"
+                goToWebsiteTaskStatus !== "FAILED"
               }
             />
             <TaskLogs logs={taskData.taskLogs} />
@@ -212,13 +212,13 @@ export default function ExecutionDetails({ initialData }: Props) {
     </div>
   );
 
-  function getLaunchBrowserTaskStatus() {
-    const launchBrowserTask = workflowExecutionData?.tasks.find((task) => {
+  function getGoToWebsiteTaskStatus() {
+    const goToWebsiteTask = workflowExecutionData?.tasks.find((task) => {
       const node = JSON.parse(task.node as string) as WorkflowNode;
       return task.name === taskRegistry[node.data.type].label;
     });
 
-    return launchBrowserTask?.status;
+    return goToWebsiteTask?.status;
   }
 
   function checkParamIncludesBrowserInstance(param: "inputs" | "outputs") {
