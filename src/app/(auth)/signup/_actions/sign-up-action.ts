@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { actionClient } from "@/lib/safe-action";
 import { signUpSchema, SignUpSchemaType } from "@/lib/schemas/auth";
 import { Logger } from "next-axiom";
-import { LOGGER_ERROR_MESSAGES, USER_ERROR_MESSAGES } from "@/lib/constants";
+import { loggerErrorMessages, userErrorMessages } from "@/lib/constants";
 import { ActionReturn } from "@/lib/types/action";
 
 const signUpAction = actionClient
@@ -72,14 +72,14 @@ const signUpAction = actionClient
 
           return {
             success: false,
-            message: USER_ERROR_MESSAGES.Unexpected,
+            message: userErrorMessages.Unexpected,
           };
         }
       } catch (error) {
-        log.error(LOGGER_ERROR_MESSAGES.Unexpected, { error });
+        log.error(loggerErrorMessages.Unexpected, { error });
         return {
           success: false,
-          message: USER_ERROR_MESSAGES.Unexpected,
+          message: userErrorMessages.Unexpected,
         };
       }
 

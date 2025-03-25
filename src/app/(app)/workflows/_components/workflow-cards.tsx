@@ -9,7 +9,7 @@ type Props = {
   workflows: WorkflowDb[];
 };
 
-export default function WorklfowCards({ workflows }: Props) {
+export default function WorkflowCards({ workflows }: Props) {
   const { setExistingWorkflowNames } = useWorkflowsStore();
 
   useEffect(() => {

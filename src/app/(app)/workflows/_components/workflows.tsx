@@ -1,7 +1,7 @@
 import CreateWorkflowDialog from "./create-workflow-dialog";
 import CustomAlert from "@/components/custom-alert";
 import getWorkflows from "../_data-access/get-workkflows";
-import WorklfowCards from "./worklfow-cards";
+import WorkflowCards from "./workflow-cards";
 import NoResultsFound from "@/components/no-results-found";
 
 export default async function Workflows() {
@@ -29,5 +29,5 @@ export default async function Workflows() {
     );
   }
 
-  return <WorklfowCards workflows={workflows} />;
+  return <WorkflowCards workflows={workflows} />;
 }

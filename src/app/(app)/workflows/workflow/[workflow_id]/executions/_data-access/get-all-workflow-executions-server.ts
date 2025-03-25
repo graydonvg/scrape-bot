@@ -1,6 +1,6 @@
 import "server-only";
 
-import { LOGGER_ERROR_MESSAGES } from "@/lib/constants";
+import { loggerErrorMessages } from "@/lib/constants";
 import createSupabaseServerClient from "@/lib/supabase/supabase-server";
 import { Logger } from "next-axiom";
 import { redirect } from "next/navigation";
@@ -22,7 +22,7 @@ export default async function getAllWorkflowExecutionsServer(
     } = await supabase.auth.getUser();
 
     if (!user) {
-      log.warn(LOGGER_ERROR_MESSAGES.Unauthorized);
+      log.warn(loggerErrorMessages.Unauthorized);
       return redirect("/signin");
     }
 
@@ -45,7 +45,7 @@ export default async function getAllWorkflowExecutionsServer(
       .range(0, 4);
 
     if (error) {
-      log.error(LOGGER_ERROR_MESSAGES.Select, {
+      log.error(loggerErrorMessages.Select, {
         error,
       });
       return null;
@@ -57,7 +57,7 @@ export default async function getAllWorkflowExecutionsServer(
     // Throw the “error” to trigger the redirection
     if (isRedirectError(error)) throw error;
 
-    log.error(LOGGER_ERROR_MESSAGES.Unexpected, { error });
+    log.error(loggerErrorMessages.Unexpected, { error });
     return null;
   }
 }

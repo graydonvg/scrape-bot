@@ -1,32 +1,23 @@
-import ButtonWithSpinner from "@/components/button-with-spinner";
-import useWorkflowExecutionPlan from "@/hooks/use-workflow-execution-plan";
-import { useReactFlow } from "@xyflow/react";
 import { PlayIcon } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
+import executeWorkflowAction from "../workflow/[workflow_id]/editor/_actions/execute-workflow-action";
+import { ActionReturn } from "@/lib/types/action";
 import { toast } from "sonner";
 import { userErrorMessages } from "@/lib/constants";
-import executeWorkflowAction from "../../_actions/execute-workflow-action";
-import useUserStore from "@/lib/store/user-store";
-import { calculateTotalCreditCost } from "@/lib/utils";
-import { Dispatch, SetStateAction } from "react";
 import useWorkflowsStore from "@/lib/store/workflows-store";
-import { ActionReturn } from "@/lib/types/action";
+import { Dispatch, SetStateAction } from "react";
+import ButtonWithSpinner from "@/components/button-with-spinner";
 
 type Props = {
   workflowId: string;
-  isLoading: boolean;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
 };
 
 export default function ExecuteWorkflowButton({
   workflowId,
-  isLoading,
   setIsLoading,
 }: Props) {
-  const { userCreditBalance } = useUserStore();
-  const generateExecutionPlan = useWorkflowExecutionPlan();
   const { setSelectedTaskId } = useWorkflowsStore();
-  const { toObject } = useReactFlow();
   const { execute, isPending } = useAction(executeWorkflowAction, {
     onExecute: () => handleExecute(),
     onSuccess: ({ data }) => handleSuccess(data),
@@ -35,11 +26,12 @@ export default function ExecuteWorkflowButton({
 
   return (
     <ButtonWithSpinner
+      variant="outline"
+      size="sm"
       loading={isPending}
-      disabled={isLoading}
-      className="flex-1"
+      className="ring-offset-card flex-1"
       startIcon={<PlayIcon />}
-      onClick={handleClick}
+      onClick={() => execute({ workflowId })}
     >
       Execute
     </ButtonWithSpinner>
@@ -63,18 +55,5 @@ export default function ExecuteWorkflowButton({
   function handleError() {
     setIsLoading(false);
     toast.error(userErrorMessages.Unexpected, { id: workflowId });
-  }
-
-  function handleClick() {
-    const executionPlan = generateExecutionPlan();
-
-    if (executionPlan) {
-      const totalCreditsRequired = calculateTotalCreditCost(executionPlan);
-
-      if (userCreditBalance && userCreditBalance < totalCreditsRequired)
-        return toast.error(userErrorMessages.InsufficientCredits);
-
-      execute({ workflowId, definition: JSON.stringify(toObject()) });
-    }
   }
 }

@@ -1,10 +1,10 @@
-export const USER_ERROR_MESSAGES = {
+export const userErrorMessages = {
   Unexpected: "An unexpected error occurred. Please try again later.",
   GenericFormValidation: "Please fix the errors in the form",
   InsufficientCredits: "Insufficient credits",
 } as const;
 
-export const LOGGER_ERROR_MESSAGES = {
+export const loggerErrorMessages = {
   Unauthorized: "Unauthorized",
   Unexpected: "Unexpected error",
   Insert: "Database insert error",

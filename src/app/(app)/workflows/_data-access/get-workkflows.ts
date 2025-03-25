@@ -1,6 +1,6 @@
 import "server-only";
 
-import { LOGGER_ERROR_MESSAGES } from "@/lib/constants";
+import { loggerErrorMessages } from "@/lib/constants";
 import createSupabaseServerClient from "@/lib/supabase/supabase-server";
 import { Logger } from "next-axiom";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
@@ -17,7 +17,7 @@ export default async function getWorkflows() {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      log.warn(LOGGER_ERROR_MESSAGES.Unauthorized);
+      log.warn(loggerErrorMessages.Unauthorized);
       return redirect("/signin");
     }
 
@@ -28,7 +28,7 @@ export default async function getWorkflows() {
       .order("createdAt", { ascending: true });
 
     if (error) {
-      log.error(LOGGER_ERROR_MESSAGES.Select, {
+      log.error(loggerErrorMessages.Select, {
         error,
       });
       return null;
@@ -40,7 +40,7 @@ export default async function getWorkflows() {
     // Throw the “error” to trigger the redirection
     if (isRedirectError(error)) throw error;
 
-    log.error(LOGGER_ERROR_MESSAGES.Unexpected, { error });
+    log.error(loggerErrorMessages.Unexpected, { error });
     return null;
   }
 }

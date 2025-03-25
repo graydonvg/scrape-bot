@@ -3,27 +3,28 @@
 import createSupabaseServerClient from "@/lib/supabase/supabase-server";
 import { actionClient } from "@/lib/safe-action";
 import {
-  saveWorkflowSchema,
-  SaveWorkflowSchemaType,
+  unpublishWorkflowSchema,
+  UnpublishWorkflowSchemaType,
 } from "@/lib/schemas/workflows";
-import { revalidatePath } from "next/cache";
-import { isRedirectError } from "next/dist/client/components/redirect-error";
-import { ActionReturn } from "@/lib/types/action";
 import { Logger } from "next-axiom";
 import { loggerErrorMessages, userErrorMessages } from "@/lib/constants";
+import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { redirect } from "next/navigation";
+import { ActionReturn } from "@/lib/types/action";
+import { revalidatePath } from "next/cache";
+import { taskRegistry } from "@/lib/workflow/tasks/task-registry";
 
-const saveWorkflowAction = actionClient
-  .metadata({ actionName: "saveWorkflowAction" })
-  .schema(saveWorkflowSchema)
+const unpublishWorkflowAction = actionClient
+  .metadata({ actionName: "unpublishWorkflowAction" })
+  .schema(unpublishWorkflowSchema)
   .action(
     async ({
       parsedInput: formData,
     }: {
-      parsedInput: SaveWorkflowSchemaType;
+      parsedInput: UnpublishWorkflowSchemaType;
     }): Promise<ActionReturn> => {
       let log = new Logger();
-      log = log.with({ context: "saveWorkflowAction" });
+      log = log.with({ context: "unpublishWorkflowAction" });
 
       try {
         const supabase = await createSupabaseServerClient();
@@ -33,19 +34,25 @@ const saveWorkflowAction = actionClient
 
         if (!user) {
           log.warn(loggerErrorMessages.Unauthorized, { formData });
-          redirect("signin");
+          redirect("/signin");
         }
 
         log = log.with({ userId: user.id });
 
+        const workflowId = formData.workflowId;
+
         const { error } = await supabase
           .from("workflows")
           .update({
-            definition: formData.definition,
+            status: "DRAFT",
+            executionPlan: null,
+            // GO_TO_WEBSITE is the entry point and will always be present
+            // The default credit cost will always be at least the cost of the entry point
+            creditCost: taskRegistry.GO_TO_WEBSITE.credits,
           })
           .eq("userId", user.id)
           .eq("workflowId", formData.workflowId)
-          .eq("status", "DRAFT");
+          .eq("status", "PUBLISHED");
 
         if (error) {
           log.error(loggerErrorMessages.Update, {
@@ -58,10 +65,10 @@ const saveWorkflowAction = actionClient
           };
         }
 
-        revalidatePath("/workflows");
+        revalidatePath(`/workflows/workflow/${workflowId}/editor`);
         return {
           success: true,
-          message: "Workflow saved",
+          message: "Workflow unpublished",
         };
       } catch (error) {
         // When you call the redirect() function (from next/navigation), it throws a special error (with the code NEXT_REDIRECT) to immediately halt further processing and trigger the redirection. This “error” is meant to be caught internally by Next.js, not by the try/catch blocks.
@@ -77,4 +84,4 @@ const saveWorkflowAction = actionClient
     },
   );
 
-export default saveWorkflowAction;
+export default unpublishWorkflowAction;

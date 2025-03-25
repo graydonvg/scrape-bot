@@ -10,7 +10,7 @@ import { revalidatePath } from "next/cache";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { ActionReturn } from "@/lib/types/action";
 import { Logger } from "next-axiom";
-import { LOGGER_ERROR_MESSAGES, USER_ERROR_MESSAGES } from "@/lib/constants";
+import { loggerErrorMessages, userErrorMessages } from "@/lib/constants";
 import { redirect } from "next/navigation";
 
 const renameWorkflowAction = actionClient
@@ -32,7 +32,7 @@ const renameWorkflowAction = actionClient
         } = await supabase.auth.getUser();
 
         if (!user) {
-          log.warn(LOGGER_ERROR_MESSAGES.Unauthorized, { formData });
+          log.warn(loggerErrorMessages.Unauthorized, { formData });
           redirect("signin");
         }
 
@@ -48,13 +48,13 @@ const renameWorkflowAction = actionClient
           .eq("workflowId", formData.workflowId);
 
         if (error) {
-          log.error(LOGGER_ERROR_MESSAGES.Update, {
+          log.error(loggerErrorMessages.Update, {
             error,
             formData,
           });
           return {
             success: false,
-            message: USER_ERROR_MESSAGES.Unexpected,
+            message: userErrorMessages.Unexpected,
           };
         }
 
@@ -68,10 +68,10 @@ const renameWorkflowAction = actionClient
         // Throw the “error” to trigger the redirection
         if (isRedirectError(error)) throw error;
 
-        log.error(LOGGER_ERROR_MESSAGES.Unexpected, { error });
+        log.error(loggerErrorMessages.Unexpected, { error });
         return {
           success: false,
-          message: USER_ERROR_MESSAGES.Unexpected,
+          message: userErrorMessages.Unexpected,
         };
       }
     },

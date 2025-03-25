@@ -28,9 +28,24 @@ export const saveWorkflowSchema = z.object({
 
 export type SaveWorkflowSchemaType = z.infer<typeof saveWorkflowSchema>;
 
-export const executeWorkflowSchema = z.object({
+export const publishWorkflowSchema = z.object({
   workflowId: z.string().uuid(),
   definition: z.string(),
+});
+
+export type PublishWorkflowSchemaType = z.infer<typeof publishWorkflowSchema>;
+
+export const unpublishWorkflowSchema = z.object({
+  workflowId: z.string().uuid(),
+});
+
+export type UnpublishWorkflowSchemaType = z.infer<
+  typeof unpublishWorkflowSchema
+>;
+
+export const executeWorkflowSchema = z.object({
+  workflowId: z.string().uuid(),
+  definition: z.string().optional(),
 });
 
 export type ExecuteWorkflowSchemaType = z.infer<typeof executeWorkflowSchema>;

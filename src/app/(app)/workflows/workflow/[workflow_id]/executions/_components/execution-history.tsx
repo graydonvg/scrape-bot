@@ -21,7 +21,7 @@ export default function ExecutionHistory({ workflowId, initialData }: Props) {
 
       {initialData?.workflowExecutions.length === 0 ? (
         <NoResultsFound
-          title="This worklfow has not been executed yet"
+          title="This workflow has not been executed yet"
           description="Return to the editor to trigger an execution"
         />
       ) : (

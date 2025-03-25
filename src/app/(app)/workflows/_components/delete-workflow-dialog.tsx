@@ -16,7 +16,7 @@ import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { USER_ERROR_MESSAGES } from "@/lib/constants";
+import { userErrorMessages } from "@/lib/constants";
 import CustomAlert from "@/components/custom-alert";
 import { Trash2Icon } from "lucide-react";
 import useWorkflowsStore from "@/lib/store/workflows-store";
@@ -35,20 +35,19 @@ export default function DeleteWorkflowDialog({
   workflowName,
   workflowId,
 }: Props) {
-  const toastId = `workflow-${workflowId}`;
   const { existingWorkflowNames, setExistingWorkflowNames } =
     useWorkflowsStore();
   const [confirmText, setConfirmText] = useState("");
   const { execute, isPending } = useAction(deleteWorkflowAction, {
     onExecute: () => {
-      toast.loading("Deleting workflow...", { id: toastId });
+      toast.loading("Deleting workflow...", { id: workflowId });
     },
     onSuccess: ({ data }) => {
       handleSuccess(data);
     },
     onError: () => {
       setConfirmText("");
-      toast.error(USER_ERROR_MESSAGES.Unexpected, { id: toastId });
+      toast.error(userErrorMessages.Unexpected, { id: workflowId });
     },
   });
 
@@ -116,7 +115,7 @@ export default function DeleteWorkflowDialog({
     setConfirmText("");
 
     if (data && !data.success) {
-      return toast.error(data.message, { id: toastId });
+      return toast.error(data.message, { id: workflowId });
     }
 
     setOpen(false);
@@ -125,6 +124,6 @@ export default function DeleteWorkflowDialog({
         (existingWorkflowName) => existingWorkflowName !== workflowName,
       ),
     ]);
-    toast.success("Workflow deleted", { id: toastId });
+    toast.success("Workflow deleted", { id: workflowId });
   }
 }

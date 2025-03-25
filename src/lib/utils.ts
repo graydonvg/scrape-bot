@@ -30,10 +30,10 @@ export function datesToDurationString(start?: Date | null, end?: Date | null) {
   return `${duration.minutes || 0}m ${duration.seconds || 0}s`;
 }
 
-export function calculateTotalCreditsRequired(
+export function calculateTotalCreditCost(
   executionPlan: WorkflowExecutionPlan[],
 ) {
-  const totalCreditsRequired = executionPlan
+  const totalCreditCost = executionPlan
     .flatMap((plan) =>
       plan.nodes.flatMap(
         (node: WorkflowNode) => taskRegistry[node.data.type].credits,
@@ -41,7 +41,7 @@ export function calculateTotalCreditsRequired(
     )
     .reduce((sum, credits) => sum + credits, 0);
 
-  return totalCreditsRequired;
+  return totalCreditCost;
 }
 
 export function getFormattedWorkflowExecutionStatus(status: string) {

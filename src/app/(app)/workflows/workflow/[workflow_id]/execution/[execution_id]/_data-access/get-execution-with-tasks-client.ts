@@ -1,4 +1,4 @@
-import { LOGGER_ERROR_MESSAGES } from "@/lib/constants";
+import { loggerErrorMessages } from "@/lib/constants";
 import { createSupabaseBrowserClient } from "@/lib/supabase/supabase-browser";
 import { Logger } from "next-axiom";
 
@@ -18,7 +18,7 @@ export default async function getWorkflowExecutionWithTasksClient(
     } = await supabase.auth.getUser();
 
     if (!user) {
-      log.warn(LOGGER_ERROR_MESSAGES.Unauthorized);
+      log.warn(loggerErrorMessages.Unauthorized);
       return null;
     }
 
@@ -33,7 +33,7 @@ export default async function getWorkflowExecutionWithTasksClient(
       .order("completedAt", { referencedTable: "tasks", ascending: true });
 
     if (error) {
-      log.error(LOGGER_ERROR_MESSAGES.Select, {
+      log.error(loggerErrorMessages.Select, {
         error,
       });
       return null;
@@ -41,7 +41,7 @@ export default async function getWorkflowExecutionWithTasksClient(
 
     return data[0];
   } catch (error) {
-    log.error(LOGGER_ERROR_MESSAGES.Unexpected, { error });
+    log.error(loggerErrorMessages.Unexpected, { error });
     return null;
   } finally {
     log.flush();

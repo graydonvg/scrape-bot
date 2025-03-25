@@ -7,7 +7,7 @@ import {
   ExecuteWorkflowSchemaType,
 } from "@/lib/schemas/workflows";
 import { Logger } from "next-axiom";
-import { LOGGER_ERROR_MESSAGES, USER_ERROR_MESSAGES } from "@/lib/constants";
+import { loggerErrorMessages, userErrorMessages } from "@/lib/constants";
 import buildWorkflowExecutionPlan from "@/lib/workflow/helpers/build-workflow-execution-plan";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { redirect } from "next/navigation";
@@ -16,7 +16,8 @@ import { taskRegistry } from "@/lib/workflow/tasks/task-registry";
 import { ActionReturn } from "@/lib/types/action";
 import { TaskDb } from "@/lib/types/task";
 import { WorkflowNode } from "@/lib/types/workflow";
-import { calculateTotalCreditsRequired } from "@/lib/utils";
+import { calculateTotalCreditCost } from "@/lib/utils";
+import { WorkflowExecutionPlan } from "@/lib/types/execution";
 
 const executeWorkflowAction = actionClient
   .metadata({ actionName: "executeWorkflowAction" })
@@ -37,55 +38,107 @@ const executeWorkflowAction = actionClient
         } = await supabase.auth.getUser();
 
         if (!user) {
-          log.warn(LOGGER_ERROR_MESSAGES.Unauthorized, { formData });
+          log.warn(loggerErrorMessages.Unauthorized, { formData });
           redirect("/signin");
         }
 
         log = log.with({ userId: user.id });
 
         const workflowId = formData.workflowId;
-        const workflowDefinition = JSON.parse(formData.definition);
-        const { nodes, edges } = workflowDefinition;
-        const result = buildWorkflowExecutionPlan(nodes, edges);
 
-        if (result.error) {
-          log.error("Workflow definition is invalid", { error: result.error });
+        const {
+          data: selectPublishedWorkflowData,
+          error: selectPublishedWorkflowError,
+        } = await supabase
+          .from("workflows")
+          .select("executionPlan, definition")
+          .eq("userId", user.id)
+          .eq("workflowId", workflowId)
+          .eq("status", "PUBLISHED");
+
+        if (selectPublishedWorkflowError) {
+          log.error(loggerErrorMessages.Select, {
+            error: selectPublishedWorkflowError,
+          });
           return {
             success: false,
-            message: "Workflow definition is invalid",
+            message: userErrorMessages.Unexpected,
           };
         }
 
-        if (!result.executionPlan) {
-          log.error("No execution plan generated");
-          return {
-            success: false,
-            message: "No execution plan generated",
-          };
+        let executionPlan: WorkflowExecutionPlan[];
+        let workflowDefinition: string;
+
+        if (
+          selectPublishedWorkflowData &&
+          selectPublishedWorkflowData[0].definition &&
+          selectPublishedWorkflowData[0].executionPlan
+        ) {
+          // If the workflow is published, use the data from the database
+          const { executionPlan: workflowExecutionPlan, definition } =
+            selectPublishedWorkflowData[0];
+
+          const publishedWorkflowExecutionPlan = JSON.parse(
+            workflowExecutionPlan as string,
+          ) as WorkflowExecutionPlan[];
+
+          executionPlan = publishedWorkflowExecutionPlan;
+          workflowDefinition = definition as string;
+        } else {
+          // If the workflow is unpublished, use the submitted form data
+          if (!formData.definition) {
+            log.error("Workflow definition is missing");
+            return {
+              success: false,
+              message: "Workflow definition is missing",
+            };
+          }
+
+          workflowDefinition = formData.definition;
+          const parsedDefinition = JSON.parse(formData.definition);
+          const { nodes, edges } = parsedDefinition;
+          const result = buildWorkflowExecutionPlan(nodes, edges);
+
+          if (result.error) {
+            log.error("Workflow definition is invalid", {
+              error: result.error,
+            });
+            return {
+              success: false,
+              message: "Workflow definition is invalid",
+            };
+          }
+
+          if (!result.executionPlan) {
+            log.error("No execution plan generated");
+            return {
+              success: false,
+              message: "No execution plan generated",
+            };
+          }
+
+          executionPlan = result.executionPlan;
         }
 
-        const executionPlan = result.executionPlan;
-
-        const { data: selectCreditsData, error: selectCreditsError } =
+        const { data: selectUserCreditsData, error: selectCreditsError } =
           await supabase.from("users").select("credits").eq("userId", user.id);
 
         if (selectCreditsError) {
-          log.error(LOGGER_ERROR_MESSAGES.Select, {
+          log.error(loggerErrorMessages.Select, {
             error: selectCreditsError,
           });
           return {
             success: false,
-            message: USER_ERROR_MESSAGES.Unexpected,
+            message: userErrorMessages.Unexpected,
           };
         }
 
-        const totalCreditsRequired =
-          calculateTotalCreditsRequired(executionPlan);
+        const totalCreditsRequired = calculateTotalCreditCost(executionPlan);
 
-        if (selectCreditsData[0].credits < totalCreditsRequired) {
+        if (selectUserCreditsData[0].credits < totalCreditsRequired) {
           return {
             success: false,
-            message: USER_ERROR_MESSAGES.InsufficientCredits,
+            message: userErrorMessages.InsufficientCredits,
           };
         }
 
@@ -99,17 +152,17 @@ const executeWorkflowAction = actionClient
             status: "PENDING",
             trigger: "MANUAL",
             startedAt: new Date().toISOString(),
-            definition: JSON.stringify(workflowDefinition),
+            definition: workflowDefinition,
           })
           .select("workflowExecutionId");
 
         if (insertWorkflowExecutionError) {
-          log.error(LOGGER_ERROR_MESSAGES.Insert, {
+          log.error(loggerErrorMessages.Insert, {
             error: insertWorkflowExecutionError,
           });
           return {
             success: false,
-            message: USER_ERROR_MESSAGES.Unexpected,
+            message: userErrorMessages.Unexpected,
           };
         }
 
@@ -133,12 +186,12 @@ const executeWorkflowAction = actionClient
           .insert(tasksToInsert);
 
         if (insertTaskError) {
-          log.error(LOGGER_ERROR_MESSAGES.Insert, {
+          log.error(loggerErrorMessages.Insert, {
             error: insertTaskError,
           });
           return {
             success: false,
-            message: USER_ERROR_MESSAGES.Unexpected,
+            message: userErrorMessages.Unexpected,
           };
         }
 
@@ -152,10 +205,10 @@ const executeWorkflowAction = actionClient
         // Throw the “error” to trigger the redirection
         if (isRedirectError(error)) throw error;
 
-        log.error(LOGGER_ERROR_MESSAGES.Unexpected, { error });
+        log.error(loggerErrorMessages.Unexpected, { error });
         return {
           success: false,
-          message: USER_ERROR_MESSAGES.Unexpected,
+          message: userErrorMessages.Unexpected,
         };
       }
     },

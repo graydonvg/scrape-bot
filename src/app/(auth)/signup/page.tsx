@@ -15,11 +15,14 @@ import {
 } from "@/components/ui/form";
 import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";
-import { USER_ERROR_MESSAGES } from "@/lib/constants";
+import { userErrorMessages } from "@/lib/constants";
 import signUpAction from "./_actions/sign-up-action";
 import { useEffect } from "react";
 import CustomFormLabel from "@/components/custom-form-label";
 import ButtonWithSpinner from "@/components/button-with-spinner";
+import { ActionReturn } from "@/lib/types/action";
+
+const TOAST_ID = "sign-up";
 
 const initialValues = {
   firstName: "",
@@ -30,66 +33,14 @@ const initialValues = {
 };
 
 export default function SignUpPage() {
-  const toastId = "sign-up";
   const form = useForm<SignUpSchemaType>({
     resolver: zodResolver(signUpSchema),
     defaultValues: initialValues,
   });
   const { execute, isPending } = useAction(signUpAction, {
-    onExecute: () => {
-      toast.loading("Signing up...", { id: toastId });
-    },
-    onSuccess: ({ data }) => {
-      if (data && !data.success) {
-        if (data.field) {
-          data.field.forEach((field) =>
-            form.setError(
-              field,
-              {
-                type: data.type,
-                message: data.message,
-              },
-              {
-                shouldFocus: field === "password" ? true : false,
-              },
-            ),
-          );
-
-          return toast.error(USER_ERROR_MESSAGES.GenericFormValidation, {
-            id: toastId,
-          });
-        }
-
-        return toast.error(data.message, { id: toastId });
-      }
-
-      toast.dismiss(toastId);
-    },
-    onError: ({ error: { validationErrors } }) => {
-      if (validationErrors) {
-        const keys = Object.keys(validationErrors.fieldErrors) as Array<
-          keyof typeof validationErrors.fieldErrors
-        >;
-
-        keys.forEach((key) => {
-          form.setError(
-            key,
-            {
-              message:
-                validationErrors.fieldErrors[key]?.[0] ||
-                USER_ERROR_MESSAGES.GenericFormValidation,
-            },
-            { shouldFocus: true },
-          );
-        });
-
-        return toast.error(USER_ERROR_MESSAGES.GenericFormValidation, {
-          id: toastId,
-        });
-      }
-
-      toast.error(USER_ERROR_MESSAGES.Unexpected, { id: toastId });
-    },
+    onExecute: () => toast.loading("Signing up...", { id: TOAST_ID }),
+    onSuccess: ({ data }) => handleSuccess(data),
+    onError: ({ error: { validationErrors } }) => handleError(validationErrors),
   });
 
   const password = form.watch("password");
@@ -205,4 +156,66 @@ export default function SignUpPage() {
       </form>
     </Form>
   );
+
+  function handleSuccess(data?: ActionReturn<Array<keyof SignUpSchemaType>>) {
+    if (data && !data.success) {
+      if (data.field) {
+        data.field.forEach((field) =>
+          form.setError(
+            field,
+            {
+              type: data.type,
+              message: data.message,
+            },
+            {
+              shouldFocus: field === "password" ? true : false,
+            },
+          ),
+        );
+
+        return toast.error(userErrorMessages.GenericFormValidation, {
+          id: TOAST_ID,
+        });
+      }
+
+      return toast.error(data.message, { id: TOAST_ID });
+    }
+
+    toast.dismiss(TOAST_ID);
+  }
+
+  function handleError(validationErrors?: {
+    formErrors: string[];
+    fieldErrors: {
+      firstName?: string[] | undefined;
+      lastName?: string[] | undefined;
+      email?: string[] | undefined;
+      password?: string[] | undefined;
+      confirmPassword?: string[] | undefined;
+    };
+  }) {
+    if (validationErrors) {
+      const keys = Object.keys(validationErrors.fieldErrors) as Array<
+        keyof typeof validationErrors.fieldErrors
+      >;
+
+      keys.forEach((key) => {
+        form.setError(
+          key,
+          {
+            message:
+              validationErrors.fieldErrors[key]?.[0] ||
+              userErrorMessages.GenericFormValidation,
+          },
+          { shouldFocus: true },
+        );
+      });
+
+      return toast.error(userErrorMessages.GenericFormValidation, {
+        id: TOAST_ID,
+      });
+    }
+
+    toast.error(userErrorMessages.Unexpected, { id: TOAST_ID });
+  }
 }

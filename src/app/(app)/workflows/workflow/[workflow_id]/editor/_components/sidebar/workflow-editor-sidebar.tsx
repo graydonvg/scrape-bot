@@ -12,7 +12,10 @@ export default function WorkflowEditorSidebar({ workflow }: Props) {
     <div className="bg-sidebar flex h-full w-[320px] max-w-[320px] min-w-[320px] flex-col divide-y border-r">
       <Workflow workflow={workflow} />
       <TaskMenu />
-      <ActionButtons workflowId={workflow!.workflowId} />
+      <ActionButtons
+        workflowId={workflow!.workflowId}
+        isPublished={workflow?.status === "PUBLISHED"}
+      />
     </div>
   );
 }

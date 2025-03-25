@@ -3,7 +3,7 @@
 import createSupabaseServerClient from "@/lib/supabase/supabase-server";
 import { redirect } from "next/navigation";
 import { Logger } from "next-axiom";
-import { LOGGER_ERROR_MESSAGES, USER_ERROR_MESSAGES } from "@/lib/constants";
+import { loggerErrorMessages, userErrorMessages } from "@/lib/constants";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 
 export default async function signInWithGoogleAction() {
@@ -42,7 +42,7 @@ export default async function signInWithGoogleAction() {
 
       return {
         success: false,
-        message: USER_ERROR_MESSAGES.Unexpected,
+        message: userErrorMessages.Unexpected,
       };
     }
 
@@ -52,10 +52,10 @@ export default async function signInWithGoogleAction() {
     // Throw the “error” to trigger the redirection
     if (isRedirectError(error)) throw error;
 
-    log.error(LOGGER_ERROR_MESSAGES.Unexpected, { error });
+    log.error(loggerErrorMessages.Unexpected, { error });
     return {
       success: false,
-      message: USER_ERROR_MESSAGES.Unexpected,
+      message: userErrorMessages.Unexpected,
     };
   }
 }

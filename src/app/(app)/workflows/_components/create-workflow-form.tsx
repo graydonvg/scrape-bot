@@ -19,27 +19,28 @@ import { Textarea } from "@/components/ui/textarea";
 import createWorkflowAction from "../_actions/create-workflow-action";
 import { toast } from "sonner";
 import { useAction } from "next-safe-action/hooks";
-import { USER_ERROR_MESSAGES } from "@/lib/constants";
+import { userErrorMessages } from "@/lib/constants";
 import useWorkflowsStore from "@/lib/store/workflows-store";
 import CustomFormLabel from "@/components/custom-form-label";
 import ButtonWithSpinner from "@/components/button-with-spinner";
 import { ActionReturn } from "@/lib/types/action";
 
-const initialState = {
+const TOAST_ID = "create-workflow";
+
+const defaultValues = {
   name: "",
   description: "",
 };
 
 export default function CreateWorkflowForm() {
   const { existingWorkflowNames } = useWorkflowsStore();
-  const toastId = "create-workflow";
   const form = useForm<CreateWorkflowSchemaType>({
     resolver: zodResolver(createWorkflowSchema),
-    defaultValues: initialState,
+    defaultValues,
   });
   const { execute, isPending } = useAction(createWorkflowAction, {
     onExecute: () => {
-      toast.loading("Creating workflow...", { id: toastId });
+      toast.loading("Creating workflow...", { id: TOAST_ID });
     },
     onSuccess: ({ data }) => {
       handleSuccess(data);
@@ -136,15 +137,15 @@ export default function CreateWorkflowForm() {
             shouldFocus: true,
           },
         );
-        return toast.error(USER_ERROR_MESSAGES.GenericFormValidation, {
-          id: toastId,
+        return toast.error(userErrorMessages.GenericFormValidation, {
+          id: TOAST_ID,
         });
       }
 
-      return toast.error(data.message, { id: toastId });
+      return toast.error(data.message, { id: TOAST_ID });
     }
 
-    toast.success("Workflow created", { id: toastId });
+    toast.success("Workflow created", { id: TOAST_ID });
   }
 
   function handleError(validationErrors?: {
@@ -165,17 +166,17 @@ export default function CreateWorkflowForm() {
           {
             message:
               validationErrors.fieldErrors[key]?.[0] ||
-              USER_ERROR_MESSAGES.GenericFormValidation,
+              userErrorMessages.GenericFormValidation,
           },
           { shouldFocus: true },
         );
       });
 
-      return toast.error(USER_ERROR_MESSAGES.GenericFormValidation, {
-        id: toastId,
+      return toast.error(userErrorMessages.GenericFormValidation, {
+        id: TOAST_ID,
       });
     }
 
-    toast.error(USER_ERROR_MESSAGES.Unexpected, { id: toastId });
+    toast.error(userErrorMessages.Unexpected, { id: TOAST_ID });
   }
 }

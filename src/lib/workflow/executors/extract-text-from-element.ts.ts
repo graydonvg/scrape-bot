@@ -1,6 +1,6 @@
 import "server-only";
 
-import { LOGGER_ERROR_MESSAGES, USER_ERROR_MESSAGES } from "@/lib/constants";
+import { loggerErrorMessages, userErrorMessages } from "@/lib/constants";
 import { extractTextFromElementTask } from "../tasks/data-extraction";
 import * as cheerio from "cheerio";
 import { Logger } from "next-axiom";
@@ -61,8 +61,8 @@ export default async function extractTextFromElementExecutor(
 
     return { success: true };
   } catch (error) {
-    executionContext.logDb.ERROR(taskId, USER_ERROR_MESSAGES.Unexpected);
-    log.error(LOGGER_ERROR_MESSAGES.Unexpected, { error });
+    executionContext.logDb.ERROR(taskId, userErrorMessages.Unexpected);
+    log.error(loggerErrorMessages.Unexpected, { error });
     return { success: false, errorType: "server" };
   }
 }

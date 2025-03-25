@@ -8,7 +8,7 @@ import {
 } from "@/lib/schemas/workflows";
 import { ActionReturn } from "@/lib/types/action";
 import { Logger } from "next-axiom";
-import { LOGGER_ERROR_MESSAGES, USER_ERROR_MESSAGES } from "@/lib/constants";
+import { loggerErrorMessages, userErrorMessages } from "@/lib/constants";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
@@ -32,7 +32,7 @@ const deleteWorkflowAction = actionClient
         } = await supabase.auth.getUser();
 
         if (!user) {
-          log.warn(LOGGER_ERROR_MESSAGES.Unauthorized, { formData });
+          log.warn(loggerErrorMessages.Unauthorized, { formData });
           redirect("signin");
         }
 
@@ -45,13 +45,13 @@ const deleteWorkflowAction = actionClient
           .eq("userId", user.id);
 
         if (error) {
-          log.error(LOGGER_ERROR_MESSAGES.Delete, {
+          log.error(loggerErrorMessages.Delete, {
             error,
             formData,
           });
           return {
             success: false,
-            message: USER_ERROR_MESSAGES.Unexpected,
+            message: userErrorMessages.Unexpected,
           };
         }
 
@@ -65,10 +65,10 @@ const deleteWorkflowAction = actionClient
         // Throw the “error” to trigger the redirection
         if (isRedirectError(error)) throw error;
 
-        log.error(LOGGER_ERROR_MESSAGES.Unexpected, { error });
+        log.error(loggerErrorMessages.Unexpected, { error });
         return {
           success: false,
-          message: USER_ERROR_MESSAGES.Unexpected,
+          message: userErrorMessages.Unexpected,
         };
       }
     },

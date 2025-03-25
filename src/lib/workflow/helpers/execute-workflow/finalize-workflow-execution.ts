@@ -1,6 +1,6 @@
 import "server-only";
 
-import { LOGGER_ERROR_MESSAGES } from "@/lib/constants";
+import { loggerErrorMessages } from "@/lib/constants";
 import { Database } from "@/lib/supabase/database.types";
 import { WorkflowExecutionStatusDb } from "@/lib/types/execution";
 import { SupabaseClient } from "@supabase/supabase-js";
@@ -57,6 +57,6 @@ export default async function finalizeWorkflowExecution(
 
   if (errors.length > 0) {
     // TODO: Handle errors
-    log.error(LOGGER_ERROR_MESSAGES.Update, { errors });
+    log.error(loggerErrorMessages.Update, { errors });
   }
 }

@@ -25,7 +25,7 @@ import {
   useState,
 } from "react";
 import { toast } from "sonner";
-import { USER_ERROR_MESSAGES } from "@/lib/constants";
+import { userErrorMessages } from "@/lib/constants";
 import { useLogger } from "next-axiom";
 import DeleteableEdge from "./edges/deleteable-edge";
 import createWorkflowNode from "@/lib/workflow/helpers/create-workflow-node";
@@ -92,7 +92,7 @@ export default function Flow({ workflow }: Props) {
 
       log.error("Error parsing workflow definition", { error });
 
-      toast.error(USER_ERROR_MESSAGES.Unexpected);
+      toast.error(userErrorMessages.Unexpected);
     } finally {
       log.flush();
     }

@@ -1,16 +1,15 @@
 import ButtonWithSpinner from "@/components/button-with-spinner";
 import useWorkflowExecutionPlan from "@/hooks/use-workflow-execution-plan";
 import { useReactFlow } from "@xyflow/react";
-import { PlayIcon } from "lucide-react";
+import { UploadIcon } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";
 import { userErrorMessages } from "@/lib/constants";
-import executeWorkflowAction from "../../_actions/execute-workflow-action";
 import useUserStore from "@/lib/store/user-store";
 import { calculateTotalCreditCost } from "@/lib/utils";
 import { Dispatch, SetStateAction } from "react";
-import useWorkflowsStore from "@/lib/store/workflows-store";
 import { ActionReturn } from "@/lib/types/action";
+import publishWorkflowAction from "../../_actions/publish-workflow-action";
 
 type Props = {
   workflowId: string;
@@ -18,16 +17,15 @@ type Props = {
   setIsLoading: Dispatch<SetStateAction<boolean>>;
 };
 
-export default function ExecuteWorkflowButton({
+export default function PublishWorkflowButton({
   workflowId,
   isLoading,
   setIsLoading,
 }: Props) {
   const { userCreditBalance } = useUserStore();
   const generateExecutionPlan = useWorkflowExecutionPlan();
-  const { setSelectedTaskId } = useWorkflowsStore();
   const { toObject } = useReactFlow();
-  const { execute, isPending } = useAction(executeWorkflowAction, {
+  const { execute, isPending } = useAction(publishWorkflowAction, {
     onExecute: () => handleExecute(),
     onSuccess: ({ data }) => handleSuccess(data),
     onError: () => handleError(),
@@ -35,20 +33,20 @@ export default function ExecuteWorkflowButton({
 
   return (
     <ButtonWithSpinner
+      variant="outline"
       loading={isPending}
       disabled={isLoading}
       className="flex-1"
-      startIcon={<PlayIcon />}
+      startIcon={<UploadIcon />}
       onClick={handleClick}
     >
-      Execute
+      Publish
     </ButtonWithSpinner>
   );
 
   function handleExecute() {
-    setSelectedTaskId(null);
     setIsLoading(true);
-    toast.loading("Processing workflow...", { id: workflowId });
+    toast.loading("Publishing workflow...", { id: workflowId });
   }
 
   function handleSuccess(data?: ActionReturn) {
@@ -57,7 +55,7 @@ export default function ExecuteWorkflowButton({
     }
 
     setIsLoading(false);
-    toast.success("Execution started", { id: workflowId });
+    toast.success("Workflow published", { id: workflowId });
   }
 
   function handleError() {

@@ -1,6 +1,6 @@
 import "server-only";
 
-import { LOGGER_ERROR_MESSAGES } from "@/lib/constants";
+import { loggerErrorMessages } from "@/lib/constants";
 import { Logger } from "next-axiom";
 import { revalidatePath } from "next/cache";
 import getUniquePhaseNumbers from "../get-unique-phase-numbers";
@@ -41,11 +41,11 @@ export default async function executeWorkflow(
         .eq("workflowExecutionId", executionId);
 
     if (selectExecutionDataError || workflowExecutionData.length === 0) {
-      log.error(LOGGER_ERROR_MESSAGES.Select, {
+      log.error(loggerErrorMessages.Select, {
         error: selectExecutionDataError,
       });
       // TODO: Handle error
-      throw new Error("Worklfow execution not found");
+      throw new Error("Workflow execution not found");
     }
 
     await initializeWorkflowExecution(
@@ -109,7 +109,7 @@ export default async function executeWorkflow(
     revalidatePath(`/workflows/workflow/${workflowId}/execution`);
   } catch (error) {
     // TODO: Handle error
-    log.error(LOGGER_ERROR_MESSAGES.Unexpected, { error });
+    log.error(loggerErrorMessages.Unexpected, { error });
     throw error;
   }
 }

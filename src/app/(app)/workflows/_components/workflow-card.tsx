@@ -6,6 +6,8 @@ import WorkflowActionsMenu from "./workflow-actions-menu";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { WorkflowDb, WorkflowStatusDb } from "@/lib/types/workflow";
+import ExecuteWorkflowButton from "./execute-workflow-button";
+import { useState } from "react";
 
 type Props = {
   workflow: WorkflowDb;
@@ -17,6 +19,7 @@ const statusColors: Record<WorkflowStatusDb, string> = {
 };
 
 export default function WorkflowCard({ workflow }: Props) {
+  const [isLoading, setIsLoading] = useState(false);
   const isDraft = workflow.status === "DRAFT";
 
   return (
@@ -34,9 +37,6 @@ export default function WorkflowCard({ workflow }: Props) {
           <div className="flex items-center gap-2">
             <h3 className="text-muted-foreground text-xl font-bold">
               <Link
-                // Scroll false to prevent "skipping auto-scroll" warning because of
-                // loading skeleton position set to fixed.
-                scroll={false}
                 href={`/workflows/workflow/${workflow.workflowId}/editor`}
                 className="ring-offset-card hover:underline"
               >
@@ -51,16 +51,24 @@ export default function WorkflowCard({ workflow }: Props) {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          {workflow.status === "PUBLISHED" && (
+            <ExecuteWorkflowButton
+              workflowId={workflow.workflowId}
+              setIsLoading={setIsLoading}
+            />
+          )}
+
           <Button
             asChild
             variant="outline"
             size="sm"
-            className="ring-offset-card"
+            disabled={isLoading}
+            className={cn("ring-offset-card", {
+              "pointer-events-none opacity-50": isLoading,
+            })}
           >
             <Link
-              // Scroll false to prevent "skipping auto-scroll" warning because of
-              // loading skeleton position set to fixed.
-              scroll={false}
+              aria-disabled={isLoading}
               href={`/workflows/workflow/${workflow.workflowId}/editor`}
             >
               <PencilIcon />
@@ -68,6 +76,7 @@ export default function WorkflowCard({ workflow }: Props) {
             </Link>
           </Button>
           <WorkflowActionsMenu
+            isLoading={isLoading}
             workflowName={workflow.name}
             workflowId={workflow.workflowId}
           />

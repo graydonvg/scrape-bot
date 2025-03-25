@@ -17,11 +17,13 @@ import { useState } from "react";
 import Link from "next/link";
 
 type Props = {
+  isLoading: boolean;
   workflowName: string;
   workflowId: string;
 };
 
 export default function WorkflowActionsMenu({
+  isLoading,
   workflowName,
   workflowId,
 }: Props) {
@@ -31,7 +33,7 @@ export default function WorkflowActionsMenu({
     <>
       <DropdownMenu>
         <TooltipWrapper tooltipContent="More actions">
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger asChild disabled={isLoading}>
             <Button variant="outline" size="sm" className="ring-offset-card">
               <MoreVerticalIcon size={18} />
             </Button>

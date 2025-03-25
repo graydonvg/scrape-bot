@@ -4,7 +4,7 @@ import { LogCollector } from "@/lib/types/log";
 import { executorRegistry } from "../../executors/executor-registry";
 import { createExecutionContext } from "./context";
 import { Logger } from "next-axiom";
-import { USER_ERROR_MESSAGES } from "@/lib/constants";
+import { userErrorMessages } from "@/lib/constants";
 import {
   ExecutionPhaseContext,
   PhaseResult,
@@ -12,7 +12,7 @@ import {
 } from "@/lib/types/execution";
 import { WorkflowNode } from "@/lib/types/workflow";
 import { taskRegistry } from "../../tasks/task-registry";
-import deductCredits from "./decrement-credits";
+import deductCredits from "./deduct-credits";
 import { Database } from "@/lib/supabase/database.types";
 import { SupabaseClient } from "@supabase/supabase-js";
 
@@ -149,7 +149,7 @@ export default async function executePhase(
         creditsConsumed: 0,
       });
     } else {
-      logCollector.ERROR(result.reason.taskId, USER_ERROR_MESSAGES.Unexpected);
+      logCollector.ERROR(result.reason.taskId, userErrorMessages.Unexpected);
       log.error("Executor promise rejected", { error: result.reason });
 
       phaseResults.push({

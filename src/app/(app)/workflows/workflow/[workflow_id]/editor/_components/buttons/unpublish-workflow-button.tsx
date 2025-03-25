@@ -1,12 +1,11 @@
-import { useReactFlow } from "@xyflow/react";
-import { SaveIcon } from "lucide-react";
+import ButtonWithSpinner from "@/components/button-with-spinner";
+import { DownloadIcon } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
-import saveWorkflowAction from "../../_actions/save-workflow-action";
 import { toast } from "sonner";
 import { userErrorMessages } from "@/lib/constants";
-import ButtonWithSpinner from "@/components/button-with-spinner";
 import { Dispatch, SetStateAction } from "react";
 import { ActionReturn } from "@/lib/types/action";
+import unpublishWorkflowAction from "../../_actions/unpublish-workflow-action";
 
 type Props = {
   workflowId: string;
@@ -14,13 +13,12 @@ type Props = {
   setIsLoading: Dispatch<SetStateAction<boolean>>;
 };
 
-export default function SaveWorkflowButton({
+export default function UnpublishWorkflowButton({
   workflowId,
   isLoading,
   setIsLoading,
 }: Props) {
-  const { toObject } = useReactFlow();
-  const { execute, isPending } = useAction(saveWorkflowAction, {
+  const { execute, isPending } = useAction(unpublishWorkflowAction, {
     onExecute: () => handleExecute(),
     onSuccess: ({ data }) => handleSuccess(data),
     onError: () => handleError(),
@@ -28,21 +26,20 @@ export default function SaveWorkflowButton({
 
   return (
     <ButtonWithSpinner
+      variant="outline"
       loading={isPending}
       disabled={isLoading}
-      className="bg-success text-success-foreground hover:bg-success/90 flex-1"
-      startIcon={<SaveIcon />}
-      onClick={() =>
-        execute({ workflowId, definition: JSON.stringify(toObject()) })
-      }
+      className="flex-1"
+      startIcon={<DownloadIcon />}
+      onClick={() => execute({ workflowId })}
     >
-      Save
+      Unpublish
     </ButtonWithSpinner>
   );
 
   function handleExecute() {
     setIsLoading(true);
-    toast.loading("Saving workflow...", { id: workflowId });
+    toast.loading("Unpublishing workflow...", { id: workflowId });
   }
 
   function handleSuccess(data?: ActionReturn) {
@@ -51,7 +48,7 @@ export default function SaveWorkflowButton({
     }
 
     setIsLoading(false);
-    toast.success("Workflow saved", { id: workflowId });
+    toast.success("Workflow unpublished", { id: workflowId });
   }
 
   function handleError() {

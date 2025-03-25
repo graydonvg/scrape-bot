@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SidebarGroupLabel } from "@/components/ui/sidebar";
-import { USER_ERROR_MESSAGES } from "@/lib/constants";
+import { userErrorMessages } from "@/lib/constants";
 import { Loader2Icon, NetworkIcon, PencilIcon } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { useState } from "react";
@@ -30,7 +30,7 @@ export default function WorkflowGroupLabel({
     onError: () => {
       setNewName(workflowName);
 
-      toast.error(USER_ERROR_MESSAGES.Unexpected);
+      toast.error(userErrorMessages.Unexpected);
     },
   });
 

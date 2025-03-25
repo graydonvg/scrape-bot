@@ -8,10 +8,7 @@ import Providers from "@/components/providers/providers";
 import { ReactNode } from "react";
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "white" },
-    { media: "(prefers-color-scheme: dark)", color: "black" },
-  ],
+  themeColor: siteConfig.themeColor,
 };
 
 export const metadata: Metadata = {

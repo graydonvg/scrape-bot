@@ -1,6 +1,6 @@
 import "server-only";
 
-import { LOGGER_ERROR_MESSAGES } from "@/lib/constants";
+import { loggerErrorMessages } from "@/lib/constants";
 import { Database } from "@/lib/supabase/database.types";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Logger } from "next-axiom";
@@ -60,6 +60,6 @@ export default async function initializeWorkflowExecution(
 
   if (errors.length > 0) {
     // TODO: Handle errors
-    log.error(LOGGER_ERROR_MESSAGES.Update, { errors });
+    log.error(loggerErrorMessages.Update, { errors });
   }
 }

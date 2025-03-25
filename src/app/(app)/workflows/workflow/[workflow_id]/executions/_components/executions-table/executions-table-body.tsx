@@ -91,11 +91,6 @@ export default function ExecutionsTableBody({ workflowId, queryData }: Props) {
 
     router.push(
       `/workflows/workflow/${workflowId}/execution/${workflowExecutionId}`,
-      {
-        // Scroll false to prevent "skipping auto-scroll" warning because of
-        // loading skeleton position set to fixed.
-        scroll: false,
-      },
     );
   }
 }

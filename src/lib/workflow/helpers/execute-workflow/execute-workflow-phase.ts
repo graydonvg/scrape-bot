@@ -8,7 +8,7 @@ import { Logger } from "next-axiom";
 import { populatePhaseContext } from "./context";
 import executePhase from "./execute-phase";
 import finalizePhase from "./finalize-phase";
-import { LOGGER_ERROR_MESSAGES } from "@/lib/constants";
+import { loggerErrorMessages } from "@/lib/constants";
 import {
   ExecutionPhaseContext,
   WorkflowExecutionPhase,
@@ -87,7 +87,7 @@ export default async function executeWorkflowPhase(
 
   if (errors.length > 0) {
     // TODO: Handle errors
-    log.error(LOGGER_ERROR_MESSAGES.Update, { errors });
+    log.error(loggerErrorMessages.Update, { errors });
   }
 
   const phaseResults = await executePhase(

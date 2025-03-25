@@ -177,8 +177,10 @@ export type Database = {
       workflows: {
         Row: {
           createdAt: string;
+          creditCost: number;
           definition: Json;
           description: string | null;
+          executionPlan: Json | null;
           lastExecutedAt: string | null;
           lastExecutionId: string | null;
           lastExecutionStatus:
@@ -192,8 +194,10 @@ export type Database = {
         };
         Insert: {
           createdAt?: string;
+          creditCost?: number;
           definition: Json;
           description?: string | null;
+          executionPlan?: Json | null;
           lastExecutedAt?: string | null;
           lastExecutionId?: string | null;
           lastExecutionStatus?:
@@ -207,8 +211,10 @@ export type Database = {
         };
         Update: {
           createdAt?: string;
+          creditCost?: number;
           definition?: Json;
           description?: string | null;
+          executionPlan?: Json | null;
           lastExecutedAt?: string | null;
           lastExecutionId?: string | null;
           lastExecutionStatus?:
@@ -227,13 +233,21 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      update_user_credits: {
-        Args: {
-          p_user_id: string;
-          p_amount: number;
-        };
-        Returns: boolean;
-      };
+      update_user_credits:
+        | {
+            Args: {
+              p_user_id: string;
+              p_amount: number;
+            };
+            Returns: boolean;
+          }
+        | {
+            Args: {
+              user_id: number;
+              credits: number;
+            };
+            Returns: undefined;
+          };
     };
     Enums: {
       LogLevel: "INFO" | "ERROR";

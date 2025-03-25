@@ -1,4 +1,4 @@
-import { USER_ERROR_MESSAGES } from "@/lib/constants";
+import { userErrorMessages } from "@/lib/constants";
 import { Database } from "@/lib/supabase/database.types";
 import { LogCollector } from "@/lib/types/log";
 import { SupabaseClient } from "@supabase/supabase-js";
@@ -21,7 +21,7 @@ export default async function deductCredits(
     });
 
     if (error) {
-      logCollector.ERROR(taskId, USER_ERROR_MESSAGES.Unexpected);
+      logCollector.ERROR(taskId, userErrorMessages.Unexpected);
       log.error("Failed to update user credit balance. Database error.", {
         error,
       });
@@ -31,13 +31,13 @@ export default async function deductCredits(
     if (!success) {
       // Credit balance gets checked client and server side before executing,
       // so this should not happen.
-      logCollector.ERROR(taskId, USER_ERROR_MESSAGES.InsufficientCredits);
+      logCollector.ERROR(taskId, userErrorMessages.InsufficientCredits);
       return false;
     }
 
     return true;
   } catch (error) {
-    logCollector.ERROR(taskId, USER_ERROR_MESSAGES.Unexpected);
+    logCollector.ERROR(taskId, userErrorMessages.Unexpected);
     log.error("Failed to update user credit balance. Unexpected error.", {
       error,
     });

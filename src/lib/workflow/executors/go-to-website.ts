@@ -2,7 +2,7 @@ import "server-only";
 
 import puppeteer from "puppeteer";
 import { goToWebsiteTask } from "../tasks/entry-point";
-import { LOGGER_ERROR_MESSAGES, USER_ERROR_MESSAGES } from "@/lib/constants";
+import { loggerErrorMessages, userErrorMessages } from "@/lib/constants";
 import { Logger } from "next-axiom";
 import {
   ExecutionContext,
@@ -37,8 +37,8 @@ export default async function goToWebsiteExecutor(
 
     return { success: true };
   } catch (error) {
-    executionContext.logDb.ERROR(taskId, USER_ERROR_MESSAGES.Unexpected);
-    log.error(LOGGER_ERROR_MESSAGES.Unexpected, { error });
+    executionContext.logDb.ERROR(taskId, userErrorMessages.Unexpected);
+    log.error(loggerErrorMessages.Unexpected, { error });
     return { success: false, errorType: "server" };
   }
 }

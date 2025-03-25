@@ -17,66 +17,33 @@ import { useAction } from "next-safe-action/hooks";
 import { signInSchema, SignInSchemaType } from "@/lib/schemas/auth";
 import { toast } from "sonner";
 import GoogleIcon from "@/components/icons/google-icon";
-import { USER_ERROR_MESSAGES } from "@/lib/constants";
+import { userErrorMessages } from "@/lib/constants";
 import signInWithPasswordAction from "./_actions/sign-in-with-password-action";
 import signInWithGoogleAction from "./_actions/sign-in-with-google-action";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import ButtonWithSpinner from "@/components/button-with-spinner";
+import { ActionReturn } from "@/lib/types/action";
+
+const TOAST_ID = "sign-in";
+
+const defaultValues = {
+  email: "",
+  password: "",
+};
 
 export default function SignInPage() {
-  const toastId = "sign-in";
   const searchParams = useSearchParams();
   const oAuthSuccess = searchParams.get("success");
   const form = useForm<SignInSchemaType>({
     resolver: zodResolver(signInSchema),
-    defaultValues: { email: "", password: "" },
+    defaultValues,
   });
   const { execute, isPending } = useAction(signInWithPasswordAction, {
-    onExecute: () => {
-      toast.loading("Signing in...", { id: toastId });
-    },
-    onSuccess: ({ data }) => {
-      if (data && !data.success) {
-        return toast.error(data.message, { id: toastId });
-      }
-
-      toast.dismiss(toastId);
-    },
-    onError: ({ error: { validationErrors } }) => {
-      if (validationErrors) {
-        const keys = Object.keys(validationErrors.fieldErrors) as Array<
-          keyof typeof validationErrors.fieldErrors
-        >;
-
-        keys.forEach((key) => {
-          form.setError(
-            key,
-            {
-              message:
-                validationErrors.fieldErrors[key]?.[0] ||
-                USER_ERROR_MESSAGES.GenericFormValidation,
-            },
-            { shouldFocus: true },
-          );
-        });
-
-        return toast.error(USER_ERROR_MESSAGES.GenericFormValidation, {
-          id: toastId,
-        });
-      }
-
-      toast.error(USER_ERROR_MESSAGES.Unexpected, { id: toastId });
-    },
+    onExecute: () => toast.loading("Signing in...", { id: TOAST_ID }),
+    onSuccess: ({ data }) => handleSuccess(data),
+    onError: ({ error: { validationErrors } }) => handleError(validationErrors),
   });
-
-  async function signInWithGoogle() {
-    const res = await signInWithGoogleAction();
-
-    if (res && !res.success) {
-      toast.error(res.message);
-    }
-  }
 
   useEffect(() => {
     if (oAuthSuccess === "false") {
@@ -157,4 +124,52 @@ export default function SignInPage() {
       </form>
     </Form>
   );
+
+  async function signInWithGoogle() {
+    const res = await signInWithGoogleAction();
+
+    if (res && !res.success) {
+      toast.error(res.message);
+    }
+  }
+
+  function handleSuccess(data?: ActionReturn) {
+    if (data && !data.success) {
+      return toast.error(data.message, { id: TOAST_ID });
+    }
+
+    toast.dismiss(TOAST_ID);
+  }
+
+  function handleError(validationErrors?: {
+    formErrors: string[];
+    fieldErrors: {
+      email?: string[] | undefined;
+      password?: string[] | undefined;
+    };
+  }) {
+    if (validationErrors) {
+      const keys = Object.keys(validationErrors.fieldErrors) as Array<
+        keyof typeof validationErrors.fieldErrors
+      >;
+
+      keys.forEach((key) => {
+        form.setError(
+          key,
+          {
+            message:
+              validationErrors.fieldErrors[key]?.[0] ||
+              userErrorMessages.GenericFormValidation,
+          },
+          { shouldFocus: true },
+        );
+      });
+
+      return toast.error(userErrorMessages.GenericFormValidation, {
+        id: TOAST_ID,
+      });
+    }
+
+    toast.error(userErrorMessages.Unexpected, { id: TOAST_ID });
+  }
 }
