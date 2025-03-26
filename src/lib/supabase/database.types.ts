@@ -178,6 +178,7 @@ export type Database = {
         Row: {
           createdAt: string;
           creditCost: number;
+          cron: string | null;
           definition: Json;
           description: string | null;
           executionPlan: Json | null;
@@ -187,6 +188,7 @@ export type Database = {
             | Database["public"]["Enums"]["WorkflowExecutionStatus"]
             | null;
           name: string;
+          nextExecutionAt: string | null;
           status: Database["public"]["Enums"]["WorkflowStatus"];
           updatedAt: string;
           userId: string;
@@ -195,6 +197,7 @@ export type Database = {
         Insert: {
           createdAt?: string;
           creditCost?: number;
+          cron?: string | null;
           definition: Json;
           description?: string | null;
           executionPlan?: Json | null;
@@ -204,6 +207,7 @@ export type Database = {
             | Database["public"]["Enums"]["WorkflowExecutionStatus"]
             | null;
           name: string;
+          nextExecutionAt?: string | null;
           status?: Database["public"]["Enums"]["WorkflowStatus"];
           updatedAt?: string;
           userId?: string;
@@ -212,6 +216,7 @@ export type Database = {
         Update: {
           createdAt?: string;
           creditCost?: number;
+          cron?: string | null;
           definition?: Json;
           description?: string | null;
           executionPlan?: Json | null;
@@ -221,6 +226,7 @@ export type Database = {
             | Database["public"]["Enums"]["WorkflowExecutionStatus"]
             | null;
           name?: string;
+          nextExecutionAt?: string | null;
           status?: Database["public"]["Enums"]["WorkflowStatus"];
           updatedAt?: string;
           userId?: string;

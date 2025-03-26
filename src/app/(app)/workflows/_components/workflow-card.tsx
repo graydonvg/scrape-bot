@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { WorkflowDb, WorkflowStatusDb } from "@/lib/types/workflow";
 import ExecuteWorkflowButton from "./execute-workflow-button";
 import { useState } from "react";
+import ScheduleSection from "./schedule-section";
 
 type Props = {
   workflow: WorkflowDb;
@@ -34,20 +35,28 @@ export default function WorkflowCard({ workflow }: Props) {
           >
             {isDraft ? <FileTextIcon /> : <PlayIcon />}
           </Badge>
-          <div className="flex items-center gap-2">
-            <h3 className="text-muted-foreground text-xl font-bold">
-              <Link
-                href={`/workflows/workflow/${workflow.workflowId}/editor`}
-                className="ring-offset-card hover:underline"
-              >
-                {workflow.name}
-              </Link>
-            </h3>
-            {isDraft && (
-              <Badge className="rounded-full bg-yellow-100 text-yellow-800">
-                Draft
-              </Badge>
-            )}
+          <div className="flex flex-col justify-center">
+            <div className="flex items-center gap-2">
+              <h3 className="text-muted-foreground text-xl font-bold">
+                <Link
+                  href={`/workflows/workflow/${workflow.workflowId}/editor`}
+                  className="ring-offset-card hover:underline"
+                >
+                  {workflow.name}
+                </Link>
+              </h3>
+              {isDraft && (
+                <Badge className="rounded-full bg-yellow-100 text-yellow-800">
+                  Draft
+                </Badge>
+              )}
+            </div>
+            <ScheduleSection
+              workflowId={workflow.workflowId}
+              isDraft={isDraft}
+              creditCost={workflow.creditCost}
+              cron={workflow.cron}
+            />
           </div>
         </div>
         <div className="flex items-center gap-2">

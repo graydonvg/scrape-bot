@@ -21,6 +21,24 @@ import {
   SquareMousePointerIcon,
 } from "lucide-react";
 
+const items = [
+  {
+    value: "open",
+    label: "Expanded",
+    icon: <PanelLeftOpenIcon />,
+  },
+  {
+    value: "closed",
+    label: "Collapsed",
+    icon: <PanelLeftCloseIcon />,
+  },
+  {
+    value: "expandable",
+    label: "Expand on hover",
+    icon: <SquareMousePointerIcon />,
+  },
+];
+
 export default function SidebarControl() {
   const { isMobile, sidebarBehaviour, setSidebarBehaviour } = useSidebar();
 
@@ -52,18 +70,16 @@ export default function SidebarControl() {
         >
           <DropdownMenuLabel>Sidebar control</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuRadioItem value="open">
-            <PanelLeftOpenIcon />
-            Expanded
-          </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="closed">
-            <PanelLeftCloseIcon />
-            Collapsed
-          </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="expandable">
-            <SquareMousePointerIcon />
-            Expand on hover
-          </DropdownMenuRadioItem>
+          {items.map((item) => (
+            <DropdownMenuRadioItem
+              key={item.value}
+              value={item.value}
+              className="cursor-pointer capitalize"
+            >
+              {item.icon}
+              {item.label}
+            </DropdownMenuRadioItem>
+          ))}
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>

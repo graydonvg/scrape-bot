@@ -30,16 +30,20 @@ export function datesToDurationString(start?: Date | null, end?: Date | null) {
   return `${duration.minutes || 0}m ${duration.seconds || 0}s`;
 }
 
-export function calculateTotalCreditCost(
+export function calculateTotalCreditCostFromNodes(nodes: WorkflowNode[]) {
+  const totalCreditCost = nodes.reduce(
+    (acc, node) => acc + taskRegistry[node.data.type].credits,
+    0,
+  );
+
+  return totalCreditCost;
+}
+
+export function calculateTotalCreditCostFromExecutionPlan(
   executionPlan: WorkflowExecutionPlan[],
 ) {
-  const totalCreditCost = executionPlan
-    .flatMap((plan) =>
-      plan.nodes.flatMap(
-        (node: WorkflowNode) => taskRegistry[node.data.type].credits,
-      ),
-    )
-    .reduce((sum, credits) => sum + credits, 0);
+  const nodes = executionPlan.flatMap((plan) => plan.nodes);
+  const totalCreditCost = calculateTotalCreditCostFromNodes(nodes);
 
   return totalCreditCost;
 }

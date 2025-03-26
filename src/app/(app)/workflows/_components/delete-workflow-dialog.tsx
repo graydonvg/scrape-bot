@@ -39,12 +39,8 @@ export default function DeleteWorkflowDialog({
     useWorkflowsStore();
   const [confirmText, setConfirmText] = useState("");
   const { execute, isPending } = useAction(deleteWorkflowAction, {
-    onExecute: () => {
-      toast.loading("Deleting workflow...", { id: workflowId });
-    },
-    onSuccess: ({ data }) => {
-      handleSuccess(data);
-    },
+    onExecute: () => toast.loading("Deleting workflow...", { id: workflowId }),
+    onSuccess: ({ data }) => handleSuccess(data),
     onError: () => {
       setConfirmText("");
       toast.error(userErrorMessages.Unexpected, { id: workflowId });
@@ -104,7 +100,7 @@ export default function DeleteWorkflowDialog({
               execute({ workflowId });
             }}
           >
-            {!isPending ? "Delete" : "Deleting..."}
+            Delete
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -124,6 +120,7 @@ export default function DeleteWorkflowDialog({
         (existingWorkflowName) => existingWorkflowName !== workflowName,
       ),
     ]);
+
     toast.success("Workflow deleted", { id: workflowId });
   }
 }

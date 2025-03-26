@@ -3,7 +3,6 @@
 import { DialogDescription, DialogHeader, DialogTitle } from "./ui/dialog";
 import { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Separator } from "./ui/separator";
 
 type Props = {
   title?: string;
@@ -16,7 +15,7 @@ type Props = {
 
 export default function CustomDialogHeader(props: Props) {
   return (
-    <DialogHeader>
+    <DialogHeader className="mb-4">
       <DialogTitle
         className={cn(
           "text-primary flex flex-col items-center gap-2 text-xl dark:text-blue-500",
@@ -36,7 +35,6 @@ export default function CustomDialogHeader(props: Props) {
       >
         {props.subtitle}
       </DialogDescription>
-      <Separator className="mt-2" />
     </DialogHeader>
   );
 }

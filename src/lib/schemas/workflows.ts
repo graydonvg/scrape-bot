@@ -56,3 +56,20 @@ export const renameWorkflowSchema = z.object({
 });
 
 export type RenameWorkflowSchemaType = z.infer<typeof renameWorkflowSchema>;
+
+export const updateWorkflowCronSchema = z.object({
+  workflowId: z.string().uuid(),
+  cron: z.string().trim(),
+});
+
+export type UpdateWorkflowCronSchemaType = z.infer<
+  typeof updateWorkflowCronSchema
+>;
+
+export const removeWorkflowScheduleSchema = z.object({
+  workflowId: z.string().uuid(),
+});
+
+export type RemoveWorkflowScheduleSchemaType = z.infer<
+  typeof removeWorkflowScheduleSchema
+>;

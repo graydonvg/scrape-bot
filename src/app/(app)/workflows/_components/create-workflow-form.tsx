@@ -39,15 +39,9 @@ export default function CreateWorkflowForm() {
     defaultValues,
   });
   const { execute, isPending } = useAction(createWorkflowAction, {
-    onExecute: () => {
-      toast.loading("Creating workflow...", { id: TOAST_ID });
-    },
-    onSuccess: ({ data }) => {
-      handleSuccess(data);
-    },
-    onError: ({ error: { validationErrors } }) => {
-      handleError(validationErrors);
-    },
+    onExecute: () => toast.loading("Creating workflow...", { id: TOAST_ID }),
+    onSuccess: ({ data }) => handleSuccess(data),
+    onError: ({ error: { validationErrors } }) => handleError(validationErrors),
   });
 
   return (
@@ -97,7 +91,7 @@ export default function CreateWorkflowForm() {
           loading={isPending}
           className="w-full capitalize"
         >
-          {!isPending ? "Proceed" : "Creating workflow..."}
+          Proceed
         </ButtonWithSpinner>
       </form>
     </Form>

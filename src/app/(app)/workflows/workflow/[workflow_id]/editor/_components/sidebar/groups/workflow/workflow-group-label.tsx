@@ -7,6 +7,7 @@ import { useAction } from "next-safe-action/hooks";
 import { useState } from "react";
 import { toast } from "sonner";
 import renameWorkflowAction from "../../../../_actions/rename-workflow-action";
+import { ActionReturn } from "@/lib/types/action";
 
 type Props = {
   workflowId: string;
@@ -20,18 +21,8 @@ export default function WorkflowGroupLabel({
   const [renameWorkflow, setRenameWorkflow] = useState(false);
   const [newName, setNewName] = useState(workflowName);
   const { execute, isPending } = useAction(renameWorkflowAction, {
-    onSuccess: ({ data }) => {
-      if (data && !data.success) {
-        setNewName(workflowName);
-
-        return toast.error(data.message);
-      }
-    },
-    onError: () => {
-      setNewName(workflowName);
-
-      toast.error(userErrorMessages.Unexpected);
-    },
+    onSuccess: ({ data }) => handleSuccess(data),
+    onError: () => handleError(),
   });
 
   return (
@@ -87,5 +78,18 @@ export default function WorkflowGroupLabel({
 
     setNewName(trimmedNewName);
     execute({ workflowId, workflowName: trimmedNewName });
+  }
+
+  function handleSuccess(data?: ActionReturn) {
+    if (data && !data.success) {
+      setNewName(workflowName);
+
+      return toast.error(data.message);
+    }
+  }
+
+  function handleError() {
+    setNewName(workflowName);
+    toast.error(userErrorMessages.Unexpected);
   }
 }

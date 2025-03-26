@@ -16,7 +16,7 @@ import { taskRegistry } from "@/lib/workflow/tasks/task-registry";
 import { ActionReturn } from "@/lib/types/action";
 import { TaskDb } from "@/lib/types/task";
 import { WorkflowNode } from "@/lib/types/workflow";
-import { calculateTotalCreditCost } from "@/lib/utils";
+import { calculateTotalCreditCostFromExecutionPlan } from "@/lib/utils";
 import { WorkflowExecutionPlan } from "@/lib/types/execution";
 
 const executeWorkflowAction = actionClient
@@ -133,7 +133,8 @@ const executeWorkflowAction = actionClient
           };
         }
 
-        const totalCreditsRequired = calculateTotalCreditCost(executionPlan);
+        const totalCreditsRequired =
+          calculateTotalCreditCostFromExecutionPlan(executionPlan);
 
         if (selectUserCreditsData[0].credits < totalCreditsRequired) {
           return {

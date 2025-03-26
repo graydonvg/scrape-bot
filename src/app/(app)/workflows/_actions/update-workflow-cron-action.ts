@@ -1,31 +1,30 @@
 "use server";
 
 import createSupabaseServerClient from "@/lib/supabase/supabase-server";
+import { redirect } from "next/navigation";
 import { actionClient } from "@/lib/safe-action";
 import {
-  publishWorkflowSchema,
-  PublishWorkflowSchemaType,
+  updateWorkflowCronSchema,
+  UpdateWorkflowCronSchemaType,
 } from "@/lib/schemas/workflows";
+import { revalidatePath } from "next/cache";
+import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { Logger } from "next-axiom";
 import { loggerErrorMessages, userErrorMessages } from "@/lib/constants";
-import buildWorkflowExecutionPlan from "@/lib/workflow/helpers/build-workflow-execution-plan";
-import { isRedirectError } from "next/dist/client/components/redirect-error";
-import { redirect } from "next/navigation";
 import { ActionReturn } from "@/lib/types/action";
-import { calculateTotalCreditCostFromExecutionPlan } from "@/lib/utils";
-import { revalidatePath } from "next/cache";
+import { CronExpression, CronExpressionParser } from "cron-parser";
 
-const publishWorkflowAction = actionClient
-  .metadata({ actionName: "publishWorkflowAction" })
-  .schema(publishWorkflowSchema)
+const updateWorkflowCronAction = actionClient
+  .metadata({ actionName: "updateWorkflowCronAction" })
+  .schema(updateWorkflowCronSchema)
   .action(
     async ({
       parsedInput: formData,
     }: {
-      parsedInput: PublishWorkflowSchemaType;
+      parsedInput: UpdateWorkflowCronSchemaType;
     }): Promise<ActionReturn> => {
       let log = new Logger();
-      log = log.with({ context: "publishWorkflowAction" });
+      log = log.with({ context: "updateWorkflowCronAction" });
 
       try {
         const supabase = await createSupabaseServerClient();
@@ -40,42 +39,39 @@ const publishWorkflowAction = actionClient
 
         log = log.with({ userId: user.id });
 
-        const workflowId = formData.workflowId;
-        const workflowDefinition = JSON.parse(formData.definition);
-        const { nodes, edges } = workflowDefinition;
-        const result = buildWorkflowExecutionPlan(nodes, edges);
+        let interval: CronExpression | null = null;
 
-        if (result.error) {
-          log.error("Workflow definition is invalid", { error: result.error });
-          return {
-            success: false,
-            message: "Workflow definition is invalid",
-          };
+        try {
+          interval = CronExpressionParser.parse(formData.cron, {
+            tz: "UTC",
+          });
+        } catch (error) {
+          if (error instanceof Error) {
+            return {
+              success: false,
+              message: error.message,
+            };
+          }
+
+          throw error;
         }
 
-        if (!result.executionPlan) {
-          log.error("No execution plan generated");
+        if (!interval) {
+          log.error("Interval is missing");
           return {
             success: false,
-            message: "No execution plan generated",
+            message: userErrorMessages.Unexpected,
           };
         }
-
-        const executionPlan = result.executionPlan;
-        const totalCreditCost =
-          calculateTotalCreditCostFromExecutionPlan(executionPlan);
 
         const { error } = await supabase
           .from("workflows")
           .update({
-            definition: formData.definition,
-            executionPlan: JSON.stringify(executionPlan),
-            creditCost: totalCreditCost,
-            status: "PUBLISHED",
+            cron: formData.cron,
+            nextExecutionAt: interval.next().toDate().toDateString(),
           })
           .eq("userId", user.id)
-          .eq("workflowId", formData.workflowId)
-          .eq("status", "DRAFT");
+          .eq("workflowId", formData.workflowId);
 
         if (error) {
           log.error(loggerErrorMessages.Update, {
@@ -88,10 +84,10 @@ const publishWorkflowAction = actionClient
           };
         }
 
-        revalidatePath(`/workflows/workflow/${workflowId}/editor`);
+        revalidatePath("/workflows");
         return {
           success: true,
-          message: "Workflow published",
+          message: "Cron updated",
         };
       } catch (error) {
         // When you call the redirect() function (from next/navigation), it throws a special error (with the code NEXT_REDIRECT) to immediately halt further processing and trigger the redirection. This “error” is meant to be caught internally by Next.js, not by the try/catch blocks.
@@ -107,4 +103,4 @@ const publishWorkflowAction = actionClient
     },
   );
 
-export default publishWorkflowAction;
+export default updateWorkflowCronAction;

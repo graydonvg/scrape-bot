@@ -34,6 +34,7 @@ import { TaskType } from "@/lib/types/task";
 import { WorkflowNode } from "@/lib/types/workflow";
 import getWorkflow from "../_data-access/get-workflow";
 import useWorkflowsStore from "@/lib/store/workflows-store";
+import { calculateTotalCreditCostFromNodes } from "@/lib/utils";
 
 const fitViewOptions = {
   padding: 1,
@@ -75,10 +76,7 @@ export default function Flow({ workflow }: Props) {
       setNodes(nodes || []);
       setEdges(workflowDefinition.edges || []);
 
-      const workflowCreditCost = nodes.reduce(
-        (acc, node) => acc + taskRegistry[node.data.type].credits,
-        0,
-      );
+      const workflowCreditCost = calculateTotalCreditCostFromNodes(nodes);
 
       setEditorWorkflowCreditCost(workflowCreditCost);
 

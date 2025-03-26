@@ -8,6 +8,21 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { LaptopMinimalIcon, MoonIcon, SunIcon } from "lucide-react";
 
+const items = [
+  {
+    value: "light",
+    icon: <SunIcon />,
+  },
+  {
+    value: "dark",
+    icon: <MoonIcon />,
+  },
+  {
+    value: "system",
+    icon: <LaptopMinimalIcon />,
+  },
+];
+
 export function ThemeMenu() {
   const { theme, setTheme } = useTheme();
 
@@ -17,18 +32,16 @@ export function ThemeMenu() {
       onValueChange={(value) => setTheme(value)}
     >
       <DropdownMenuLabel className="font-normal">Theme</DropdownMenuLabel>
-      <DropdownMenuRadioItem value="light">
-        <SunIcon />
-        Light
-      </DropdownMenuRadioItem>
-      <DropdownMenuRadioItem value="dark">
-        <MoonIcon />
-        Dark
-      </DropdownMenuRadioItem>
-      <DropdownMenuRadioItem value="system">
-        <LaptopMinimalIcon />
-        System
-      </DropdownMenuRadioItem>
+      {items.map((item) => (
+        <DropdownMenuRadioItem
+          key={item.value}
+          value={item.value}
+          className="cursor-pointer capitalize"
+        >
+          {item.icon}
+          {item.value}
+        </DropdownMenuRadioItem>
+      ))}
     </DropdownMenuRadioGroup>
   );
 }

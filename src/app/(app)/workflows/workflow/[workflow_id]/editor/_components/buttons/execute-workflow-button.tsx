@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { userErrorMessages } from "@/lib/constants";
 import executeWorkflowAction from "../../_actions/execute-workflow-action";
 import useUserStore from "@/lib/store/user-store";
-import { calculateTotalCreditCost } from "@/lib/utils";
+import { calculateTotalCreditCostFromExecutionPlan } from "@/lib/utils";
 import { Dispatch, SetStateAction } from "react";
 import useWorkflowsStore from "@/lib/store/workflows-store";
 import { ActionReturn } from "@/lib/types/action";
@@ -69,7 +69,8 @@ export default function ExecuteWorkflowButton({
     const executionPlan = generateExecutionPlan();
 
     if (executionPlan) {
-      const totalCreditsRequired = calculateTotalCreditCost(executionPlan);
+      const totalCreditsRequired =
+        calculateTotalCreditCostFromExecutionPlan(executionPlan);
 
       if (userCreditBalance && userCreditBalance < totalCreditsRequired)
         return toast.error(userErrorMessages.InsufficientCredits);
