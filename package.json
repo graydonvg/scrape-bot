@@ -34,6 +34,7 @@
     "cron-parser": "^5.0.6",
     "cronstrue": "^2.56.0",
     "date-fns": "^4.1.0",
+    "date-fns-tz": "^3.2.0",
     "lucide-react": "^0.483.0",
     "next": "15.2.4",
     "next-axiom": "^1.9.1",

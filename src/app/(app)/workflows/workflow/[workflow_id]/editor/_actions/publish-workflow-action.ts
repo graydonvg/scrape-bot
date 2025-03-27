@@ -12,7 +12,7 @@ import buildWorkflowExecutionPlan from "@/lib/workflow/helpers/build-workflow-ex
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { redirect } from "next/navigation";
 import { ActionReturn } from "@/lib/types/action";
-import { calculateTotalCreditCostFromExecutionPlan } from "@/lib/utils";
+import { calculateTotalCreditCostFromNodes } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 
 const publishWorkflowAction = actionClient
@@ -62,8 +62,7 @@ const publishWorkflowAction = actionClient
         }
 
         const executionPlan = result.executionPlan;
-        const totalCreditCost =
-          calculateTotalCreditCostFromExecutionPlan(executionPlan);
+        const totalCreditCost = calculateTotalCreditCostFromNodes(nodes);
 
         const { error } = await supabase
           .from("workflows")

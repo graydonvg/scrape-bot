@@ -10,12 +10,12 @@ import initializeWorkflowExecution from "./initialize-workflow-execution";
 import executeWorkflowPhase from "./execute-workflow-phase";
 import finalizeWorkflowExecution from "./finalize-workflow-execution";
 import { cleanupPhaseContext } from "./context";
-import { SupabaseClient } from "@supabase/supabase-js";
-import { Database } from "@/lib/supabase/database.types";
 import {
   ExecutionPhaseContext,
   WorkflowExecutionStatusDb,
 } from "@/lib/types/execution";
+import { SupabaseClient } from "@supabase/supabase-js";
+import { Database } from "@/lib/supabase/database.types";
 
 let log = new Logger();
 
@@ -24,6 +24,7 @@ export default async function executeWorkflow(
   userId: string,
   workflowId: string,
   executionId: string,
+  nextExecutionAt?: string,
 ) {
   log = log.with({
     context: "executeWorkflow",
@@ -54,6 +55,7 @@ export default async function executeWorkflow(
       workflowId,
       executionId,
       log,
+      nextExecutionAt,
     );
 
     let totalCreditsConsumed = 0;

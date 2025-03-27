@@ -11,6 +11,7 @@ export default async function initializeWorkflowExecution(
   workflowId: string,
   executionId: string,
   log: Logger,
+  nextExecutionAt?: string,
 ) {
   log = log.with({ function: "initializeWorkflowExecution" });
 
@@ -26,6 +27,7 @@ export default async function initializeWorkflowExecution(
       lastExecutionId: executionId,
       lastExecutedAt: new Date().toISOString(),
       lastExecutionStatus: "EXECUTING",
+      ...(nextExecutionAt && { nextExecutionAt }),
     })
     .eq("userId", userId)
     .eq("workflowId", workflowId);

@@ -17,6 +17,8 @@ export default async function getUserDataClient() {
       return null;
     }
 
+    log = log.with({ userId: user.id });
+
     const { data, error } = await supabase
       .from("users")
       .select("email, firstName, lastName, credits, avatarUrl")

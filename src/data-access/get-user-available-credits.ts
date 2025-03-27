@@ -17,6 +17,8 @@ export default async function getUserAvailableCredits() {
       return null;
     }
 
+    log = log.with({ userId: user.id });
+
     const { data, error } = await supabase
       .from("users")
       .select("credits")

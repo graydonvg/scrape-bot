@@ -68,7 +68,7 @@ const updateWorkflowCronAction = actionClient
           .from("workflows")
           .update({
             cron: formData.cron,
-            nextExecutionAt: interval.next().toDate().toDateString(),
+            nextExecutionAt: interval.next().toDate().toISOString(),
           })
           .eq("userId", user.id)
           .eq("workflowId", formData.workflowId);

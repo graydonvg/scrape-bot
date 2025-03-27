@@ -14,5 +14,9 @@ type Props = {
 };
 
 export default function ExecutionStatusIndicator({ status }: Props) {
-  return <div className={cn("size-2 rounded-full", indicatorColors[status])} />;
+  return (
+    <div
+      className={cn("size-2 shrink-0 rounded-full", indicatorColors[status])}
+    />
+  );
 }

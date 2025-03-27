@@ -22,10 +22,12 @@ const getWorkflow = cache(async (workflowId: string) => {
       return redirect("/signin");
     }
 
+    log = log.with({ userId: user.id });
+
     const { data, error } = await supabase
       .from("workflows")
       .select(
-        "workflowId, name, description, definition, status, lastExecutedAt, lastExecutionStatus",
+        "workflowId, name, description, definition, status, lastExecutedAt, lastExecutionStatus, creditCost",
       )
       .eq("userId", user.id)
       .eq("workflowId", workflowId);

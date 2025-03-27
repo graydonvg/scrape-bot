@@ -36,11 +36,12 @@ export default async function finalizePhase(
       .eq("taskId", result.taskId);
   });
 
-  const logs = logCollector.getAll();
+  const taskLogs = logCollector.getAll();
+  const logsWithUserId = taskLogs.map((taskLog) => ({ ...taskLog, userId }));
 
   const logPromises =
-    logs.length > 0
-      ? supabase.from("taskLogs").insert(logCollector.getAll())
+    taskLogs.length > 0
+      ? supabase.from("taskLogs").insert(logsWithUserId)
       : null;
 
   const promiseResults = logPromises

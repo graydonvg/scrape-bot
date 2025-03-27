@@ -1,22 +1,24 @@
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { FileTextIcon, PencilIcon, PlayIcon } from "lucide-react";
 import Link from "next/link";
 import WorkflowActionsMenu from "./workflow-actions-menu";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { WorkflowDb, WorkflowStatusDb } from "@/lib/types/workflow";
+import { WorkflowStatusDb } from "@/lib/types/workflow";
 import ExecuteWorkflowButton from "./execute-workflow-button";
 import { useState } from "react";
 import ScheduleSection from "./schedule-section";
-
-type Props = {
-  workflow: WorkflowDb;
-};
+import ExecutionDetails from "./execution-details";
+import getWorkflows from "../_data-access/get-workkflows";
 
 const statusColors: Record<WorkflowStatusDb, string> = {
   DRAFT: "bg-yellow-400 text-yellow-600",
   PUBLISHED: "bg-primary",
+};
+
+type Props = {
+  workflow: Exclude<Awaited<ReturnType<typeof getWorkflows>>, null>[number];
 };
 
 export default function WorkflowCard({ workflow }: Props) {
@@ -91,6 +93,9 @@ export default function WorkflowCard({ workflow }: Props) {
           />
         </div>
       </CardContent>
+      <CardFooter className="p-0">
+        <ExecutionDetails workflow={workflow} />
+      </CardFooter>
     </Card>
   );
 }

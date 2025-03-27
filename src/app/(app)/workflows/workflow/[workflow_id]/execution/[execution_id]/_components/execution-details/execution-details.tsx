@@ -30,7 +30,6 @@ export default function ExecutionDetails({ initialData }: Props) {
     useState(0);
   const [workflowDidExecute, setWorkflowDidExecute] = useState(false);
   const workflowExecutionId = initialData!.workflowExecutionId;
-
   const executionQuery = useQuery({
     queryKey: ["execution", workflowExecutionId],
     initialData,
@@ -53,6 +52,15 @@ export default function ExecutionDetails({ initialData }: Props) {
   const outputIncludesBrowserInstance =
     checkParamIncludesBrowserInstance("outputs");
   const goToWebsiteTaskStatus = getGoToWebsiteTaskStatus();
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    // Persisted state from zustand/persist is not immediately available on the first render.
+    // It is restored asynchronously, meaning selectedTaskId may initially be null before being populated.
+    // Ensure hydration is complete before using selectedTaskId.
+
+    setIsHydrated(useWorkflowsStore.persist.hasHydrated());
+  }, []);
 
   useEffect(() => {
     if (workflowExecutionData)
@@ -70,11 +78,24 @@ export default function ExecutionDetails({ initialData }: Props) {
   }, [workflowExecutionData]);
 
   useEffect(() => {
-    if (!workflowExecutionData || !workflowDidExecute) return;
+    // Persisted state from zustand/persist is not immediately available on the first render.
+    // It is restored asynchronously, meaning selectedTaskId may initially be null before being populated.
+    // Ensure hydration is complete before using selectedTaskId.
+    if (!workflowExecutionData || !isHydrated) return;
     // Tasks are ordered by phase and completedAt in the query.
 
+    if (!workflowDidExecute && !selectedTaskId) {
+      const taskToSelect = workflowExecutionData.tasks[0];
+
+      setSelectedTaskId(taskToSelect!.taskId);
+    }
+
     // If the entire workflow completed, select the last task that complete.
-    if (workflowExecutionStatus.isCompleted && !selectedTaskId) {
+    if (
+      workflowDidExecute &&
+      workflowExecutionStatus.isCompleted &&
+      !selectedTaskId
+    ) {
       setWorkflowDidExecute(false);
 
       const taskToSelect = workflowExecutionData.tasks.at(-1);
@@ -84,6 +105,7 @@ export default function ExecutionDetails({ initialData }: Props) {
 
     // If a task failed, select the first task that failed.
     if (
+      workflowDidExecute &&
       (workflowExecutionStatus.isFailed ||
         workflowExecutionStatus.isPartiallyFailed) &&
       !selectedTaskId
@@ -97,6 +119,7 @@ export default function ExecutionDetails({ initialData }: Props) {
       setSelectedTaskId(taskToSelect!.taskId);
     }
   }, [
+    isHydrated,
     workflowExecutionData,
     workflowExecutionStatus,
     selectedTaskId,
@@ -132,12 +155,14 @@ export default function ExecutionDetails({ initialData }: Props) {
             message="Please wait..."
           />
         )}
-        {!workflowExecutionStatus.isLoading && !selectedTaskId && (
-          <ExecutionStatusMessage
-            title="Execution completed"
-            message="Select a task to view details"
-          />
-        )}
+        {!workflowExecutionStatus.isLoading &&
+          isHydrated &&
+          !selectedTaskId && (
+            <ExecutionStatusMessage
+              title="Execution completed"
+              message="Select a task to view details"
+            />
+          )}
         {selectedTaskId && taskQuery.isLoading && <TaskDetailsSkeleton />}
         {!taskQuery.isLoading && taskData && (
           <div className="container flex flex-col gap-4">

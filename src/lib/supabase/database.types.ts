@@ -264,7 +264,7 @@ export type Database = {
         | "COMPLETED"
         | "FAILED"
         | "PARTIALLY_FAILED";
-      WorkflowExecutionTrigger: "MANUAL";
+      WorkflowExecutionTrigger: "MANUAL" | "CRON";
       WorkflowStatus: "DRAFT" | "PUBLISHED";
     };
     CompositeTypes: {

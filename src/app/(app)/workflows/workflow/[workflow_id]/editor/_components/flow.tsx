@@ -34,7 +34,6 @@ import { TaskType } from "@/lib/types/task";
 import { WorkflowNode } from "@/lib/types/workflow";
 import getWorkflow from "../_data-access/get-workflow";
 import useWorkflowsStore from "@/lib/store/workflows-store";
-import { calculateTotalCreditCostFromNodes } from "@/lib/utils";
 
 const fitViewOptions = {
   padding: 1,
@@ -76,11 +75,11 @@ export default function Flow({ workflow }: Props) {
       setNodes(nodes || []);
       setEdges(workflowDefinition.edges || []);
 
-      const workflowCreditCost = calculateTotalCreditCostFromNodes(nodes);
-
-      setEditorWorkflowCreditCost(workflowCreditCost);
+      if (workflow?.creditCost)
+        setEditorWorkflowCreditCost(workflow.creditCost);
 
       if (!workflowDefinition.viewport) return;
+
       const { x = 0, y = 0, zoom = 1 } = workflowDefinition.viewport;
 
       setViewport({ x, y, zoom });

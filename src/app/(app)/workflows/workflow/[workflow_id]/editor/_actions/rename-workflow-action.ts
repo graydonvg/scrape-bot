@@ -42,7 +42,6 @@ const renameWorkflowAction = actionClient
           .from("workflows")
           .update({
             name: formData.workflowName,
-            status: "PUBLISHED",
           })
           .eq("userId", user.id)
           .eq("workflowId", formData.workflowId);

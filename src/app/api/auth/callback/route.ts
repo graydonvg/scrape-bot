@@ -1,8 +1,8 @@
 import arcjet, { shield, detectBot, fixedWindow } from "@/lib/arcjet";
 import createSupabaseServerClient from "@/lib/supabase/supabase-server";
 import { NextResponse } from "next/server";
-import { Logger } from "next-axiom";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
+import { withAxiom, AxiomRequest } from "next-axiom";
 
 const aj = arcjet
   .withRule(
@@ -13,7 +13,7 @@ const aj = arcjet
   .withRule(
     detectBot({
       mode: "LIVE",
-      allow: ["CATEGORY:VERCEL", "CATEGORY:SEARCH_ENGINE"],
+      allow: [],
     }),
   )
   .withRule(
@@ -24,11 +24,8 @@ const aj = arcjet
     }),
   );
 
-export async function GET(request: Request) {
-  let log = new Logger();
-  log = log.with({ context: "api/auth/callback" });
-
-  console.log("called");
+export const GET = withAxiom(async (request: AxiomRequest) => {
+  const log = request.log;
 
   try {
     const { searchParams, origin } = new URL(request.url);
@@ -94,4 +91,4 @@ export async function GET(request: Request) {
     log.error("Internal Server Error", { error });
     return NextResponse.redirect(`${origin}/signin?success=false`);
   }
-}
+});

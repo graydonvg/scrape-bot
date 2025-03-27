@@ -21,6 +21,8 @@ export default async function getUserDataServer() {
       return redirect("/signin");
     }
 
+    log = log.with({ userId: user.id });
+
     const { data, error } = await supabase
       .from("users")
       .select("email, firstName, lastName, credits, avatarUrl")

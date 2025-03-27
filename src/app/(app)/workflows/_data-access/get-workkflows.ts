@@ -21,6 +21,8 @@ export default async function getWorkflows() {
       return redirect("/signin");
     }
 
+    log = log.with({ userId: user.id });
+
     const { data, error } = await supabase
       .from("workflows")
       .select("*")

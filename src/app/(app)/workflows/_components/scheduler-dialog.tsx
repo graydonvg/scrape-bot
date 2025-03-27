@@ -37,11 +37,14 @@ type Props = {
 
 export default function SchedulerDialog({ workflowId, cron }: Props) {
   const workflowHasValidCron = cron && cron.length > 0;
-  const humanReadableSavedCron =
-    workflowHasValidCron && cronstrue.toString(cron);
+  const humanReadableSavedCron = workflowHasValidCron
+    ? cronstrue.toString(cron)
+    : "";
   const [cronExpression, setCronExpression] = useState(cron ?? "");
-  const [humanReadableCron, setHumanReadableCron] = useState("");
-  const [isCronValid, setIsCronValid] = useState(false);
+  const [humanReadableCron, setHumanReadableCron] = useState(
+    humanReadableSavedCron,
+  );
+  const [isCronExpressionValid, setIsCronExpressionValid] = useState(false);
   const {
     execute: executeUpdateWorkflowCron,
     isPending: updateWorkflowCronIsPending,
@@ -73,12 +76,12 @@ export default function SchedulerDialog({ workflowId, cron }: Props) {
 
       const humanReadableCronStr = cronstrue.toString(cronExpression);
 
-      setIsCronValid(true);
+      setIsCronExpressionValid(true);
       setHumanReadableCron(humanReadableCronStr);
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      setIsCronValid(false);
+      setIsCronExpressionValid(false);
     }
   }, [cronExpression]);
 
@@ -131,11 +134,13 @@ export default function SchedulerDialog({ workflowId, cron }: Props) {
           />
           <p
             className={cn("text-sm", {
-              "text-muted-foreground": isCronValid,
-              "text-destructive": !isCronValid,
+              "text-muted-foreground": isCronExpressionValid,
+              "text-destructive": !isCronExpressionValid,
             })}
           >
-            {isCronValid ? humanReadableCron : "Not a valid cron expression"}
+            {isCronExpressionValid
+              ? humanReadableCron
+              : "Not a valid cron expression"}
           </p>
         </div>
 
@@ -163,7 +168,7 @@ export default function SchedulerDialog({ workflowId, cron }: Props) {
               updateWorkflowCronIsPending ||
               removeWorkflowScheduleIsPending ||
               cronExpression.trim() === cron ||
-              !isCronValid
+              !isCronExpressionValid
             }
             loading={updateWorkflowCronIsPending}
             startIcon={<SaveIcon className="size-4" />}
