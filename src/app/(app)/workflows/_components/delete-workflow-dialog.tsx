@@ -59,6 +59,7 @@ export default function DeleteWorkflowDialog({
             our servers.
           </AlertDialogDescription>
           <CustomAlert
+            variant="destructive"
             title="Warning!"
             description="This action is not reversible. Please be certain."
           />

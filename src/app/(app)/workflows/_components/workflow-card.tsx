@@ -66,6 +66,7 @@ export default function WorkflowCard({ workflow }: Props) {
             <ExecuteWorkflowButton
               workflowId={workflow.workflowId}
               setIsLoading={setIsLoading}
+              creditCost={workflow.creditCost}
             />
           )}
 

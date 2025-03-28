@@ -45,6 +45,23 @@ export default function ExecuteWorkflowButton({
     </ButtonWithSpinner>
   );
 
+  function handleClick() {
+    const executionPlan = generateExecutionPlan();
+
+    if (executionPlan) {
+      const totalCreditsRequired =
+        calculateTotalCreditCostFromExecutionPlan(executionPlan);
+
+      if (
+        userCreditBalance !== null &&
+        userCreditBalance < totalCreditsRequired
+      )
+        return toast.error(userErrorMessages.InsufficientCredits);
+
+      execute({ workflowId, definition: JSON.stringify(toObject()) });
+    }
+  }
+
   function handleExecute() {
     setSelectedTaskId(null);
     setIsLoading(true);
@@ -64,19 +81,5 @@ export default function ExecuteWorkflowButton({
   function handleError() {
     setIsLoading(false);
     toast.error(userErrorMessages.Unexpected, { id: workflowId });
-  }
-
-  function handleClick() {
-    const executionPlan = generateExecutionPlan();
-
-    if (executionPlan) {
-      const totalCreditsRequired =
-        calculateTotalCreditCostFromExecutionPlan(executionPlan);
-
-      if (userCreditBalance && userCreditBalance < totalCreditsRequired)
-        return toast.error(userErrorMessages.InsufficientCredits);
-
-      execute({ workflowId, definition: JSON.stringify(toObject()) });
-    }
   }
 }

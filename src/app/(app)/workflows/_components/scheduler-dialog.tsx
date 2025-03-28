@@ -26,16 +26,24 @@ import cronstrue from "cronstrue";
 import { CronExpressionParser } from "cron-parser";
 import removeWorkflowScheduleAction from "../_actions/remove-workflow-schedule-action";
 import ButtonWithSpinner from "@/components/button-with-spinner";
+import useUserStore from "@/lib/store/user-store";
+import CustomAlert from "@/components/custom-alert";
 
 const UPDATE_CRON_TOAST_ID = "update-cron";
 const REMOVE_SCHEDULE_TOAST_ID = "remove-schedule";
 
 type Props = {
   workflowId: string;
+  creditCost: number;
   cron: string | null;
 };
 
-export default function SchedulerDialog({ workflowId, cron }: Props) {
+export default function SchedulerDialog({
+  workflowId,
+  creditCost,
+  cron,
+}: Props) {
+  const { userCreditBalance } = useUserStore();
   const workflowHasValidCron = cron && cron.length > 0;
   const humanReadableSavedCron = workflowHasValidCron
     ? cronstrue.toString(cron)
@@ -95,9 +103,18 @@ export default function SchedulerDialog({ workflowId, cron }: Props) {
         <Button
           variant="link"
           size="sm"
+          disabled={
+            !workflowHasValidCron &&
+            userCreditBalance !== null &&
+            userCreditBalance < creditCost
+          }
           className={cn("h-auto p-0! text-sm", {
-            "text-warning": !workflowHasValidCron,
             "text-success dark:text-green-500": workflowHasValidCron,
+            "text-destructive dark:text-destructive":
+              workflowHasValidCron &&
+              userCreditBalance !== null &&
+              userCreditBalance < creditCost,
+            "text-warning": !workflowHasValidCron,
           })}
         >
           {workflowHasValidCron && (
@@ -121,7 +138,13 @@ export default function SchedulerDialog({ workflowId, cron }: Props) {
           subtitle="Specify a cron expression to schedule periodic workflow executions. All times are in UTC."
         />
 
-        <div className="flex flex-col gap-2">
+        <CustomAlert
+          variant="warning"
+          title="Attention"
+          description="Please make sure you have sufficient credits before scheduling workflow executions."
+        />
+
+        <div className="mt-2 flex flex-col gap-2">
           <Label htmlFor="cron-expression" className="text-sm font-medium">
             Cron Expression
           </Label>
@@ -165,6 +188,7 @@ export default function SchedulerDialog({ workflowId, cron }: Props) {
               executeUpdateWorkflowCron({ workflowId, cron: cronExpression })
             }
             disabled={
+              (userCreditBalance !== null && userCreditBalance < creditCost) ||
               updateWorkflowCronIsPending ||
               removeWorkflowScheduleIsPending ||
               cronExpression.trim() === cron ||

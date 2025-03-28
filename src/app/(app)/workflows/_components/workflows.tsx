@@ -10,6 +10,7 @@ export default async function Workflows() {
   if (!workflows) {
     return (
       <CustomAlert
+        variant="destructive"
         title="Error"
         description="Something went wrong. Please try again later."
       />

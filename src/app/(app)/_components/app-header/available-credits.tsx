@@ -9,19 +9,15 @@ import useWorkflowsStore from "@/lib/store/workflows-store";
 import { Button } from "../../../../components/ui/button";
 import TooltipWrapper from "../../../../components/tooltip-wrapper";
 import { cn } from "@/lib/utils";
-import { usePathname } from "next/navigation";
 
 export default function AvailableCredits() {
-  const { workflowExecutionStatus, editorWorkflowCreditCost } =
-    useWorkflowsStore();
+  const { workflowExecutionStatus } = useWorkflowsStore();
   const query = useQuery({
     queryKey: ["available-credits"],
     queryFn: () => getUserAvailableCredits(),
     refetchInterval: () =>
       workflowExecutionStatus === "EXECUTING" ? 1000 : false,
   });
-  const pathname = usePathname();
-  const isEditorPath = pathname.includes("/editor");
 
   return (
     <TooltipWrapper tooltipContent="Available credits">
@@ -40,9 +36,7 @@ export default function AvailableCredits() {
           {!query.isLoading && query.data && (
             <span
               className={cn("text-side font-semibold", {
-                "text-destructive":
-                  isEditorPath &&
-                  query.data.availableCredits < editorWorkflowCreditCost,
+                "text-destructive": query.data.availableCredits === 0,
               })}
             >
               <AnimatedCounter value={query.data.availableCredits} />

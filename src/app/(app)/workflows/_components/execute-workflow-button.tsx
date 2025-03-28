@@ -7,22 +7,28 @@ import { userErrorMessages } from "@/lib/constants";
 import useWorkflowsStore from "@/lib/store/workflows-store";
 import { Dispatch, SetStateAction } from "react";
 import ButtonWithSpinner from "@/components/button-with-spinner";
+import useUserStore from "@/lib/store/user-store";
 
 type Props = {
   workflowId: string;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
+  creditCost: number;
 };
 
 export default function ExecuteWorkflowButton({
   workflowId,
   setIsLoading,
+  creditCost,
 }: Props) {
+  const { userCreditBalance } = useUserStore();
   const { setSelectedTaskId } = useWorkflowsStore();
   const { execute, isPending } = useAction(executeWorkflowAction, {
     onExecute: () => handleExecute(),
     onSuccess: ({ data }) => handleSuccess(data),
     onError: () => handleError(),
   });
+
+  console.log(userCreditBalance !== null && userCreditBalance < creditCost);
 
   return (
     <ButtonWithSpinner
@@ -31,11 +37,18 @@ export default function ExecuteWorkflowButton({
       loading={isPending}
       className="ring-offset-card flex-1"
       startIcon={<PlayIcon />}
-      onClick={() => execute({ workflowId })}
+      onClick={handleClick}
     >
       Execute
     </ButtonWithSpinner>
   );
+
+  function handleClick() {
+    if (userCreditBalance !== null && userCreditBalance < creditCost)
+      return toast.error(userErrorMessages.InsufficientCredits);
+
+    execute({ workflowId });
+  }
 
   function handleExecute() {
     setSelectedTaskId(null);
