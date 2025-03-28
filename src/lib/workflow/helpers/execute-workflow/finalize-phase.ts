@@ -17,53 +17,61 @@ export default async function finalizePhase(
 ) {
   log = log.with({ function: "finalizePhase" });
 
-  const taskPromises = phaseResults.map((result) => {
-    const outputKeys = Object.keys(phaseContext.tasks[result.nodeId].outputs);
-    const outputs =
-      outputKeys.length > 0 && result.success && result.creditsConsumed > 0
-        ? JSON.stringify(phaseContext.tasks[result.nodeId].outputs)
+  try {
+    const taskPromises = phaseResults.map((result) => {
+      const outputKeys = Object.keys(phaseContext.tasks[result.nodeId].outputs);
+      const outputs =
+        outputKeys.length > 0 && result.success && result.creditsConsumed > 0
+          ? JSON.stringify(phaseContext.tasks[result.nodeId].outputs)
+          : null;
+
+      return supabase
+        .from("tasks")
+        .update({
+          status: result.success ? "COMPLETED" : "FAILED",
+          completedAt: new Date().toISOString(),
+          outputs,
+          creditsConsumed:
+            result.success || result.errorType === "user"
+              ? result.creditsConsumed
+              : 0,
+        })
+        .eq("userId", userId)
+        .eq("taskId", result.taskId);
+    });
+
+    const taskLogs = logCollector.getAll();
+    const logsWithUserId = taskLogs.map((taskLog) => ({ ...taskLog, userId }));
+
+    const logPromises =
+      taskLogs.length > 0
+        ? supabase.from("taskLogs").insert(logsWithUserId)
         : null;
 
-    return supabase
-      .from("tasks")
-      .update({
-        status: result.success ? "COMPLETED" : "FAILED",
-        completedAt: new Date().toISOString(),
-        outputs,
-        creditsConsumed: result.creditsConsumed,
-      })
-      .eq("userId", userId)
-      .eq("taskId", result.taskId);
-  });
+    const promiseResults = logPromises
+      ? await Promise.allSettled([...taskPromises, logPromises])
+      : await Promise.allSettled(taskPromises);
 
-  const taskLogs = logCollector.getAll();
-  const logsWithUserId = taskLogs.map((taskLog) => ({ ...taskLog, userId }));
+    const errors = [];
 
-  const logPromises =
-    taskLogs.length > 0
-      ? supabase.from("taskLogs").insert(logsWithUserId)
-      : null;
+    for (const result of promiseResults) {
+      if (result.status === "fulfilled") {
+        if (result.value.error) {
+          errors.push(result.value.error);
+        }
+      }
 
-  const promiseResults = logPromises
-    ? await Promise.allSettled([...taskPromises, logPromises])
-    : await Promise.allSettled(taskPromises);
-
-  const errors = [];
-
-  for (const result of promiseResults) {
-    if (result.status === "fulfilled") {
-      if (result.value.error) {
-        errors.push(result.value.error);
+      if (result.status === "rejected") {
+        errors.push(result.reason);
       }
     }
 
-    if (result.status === "rejected") {
-      errors.push(result.reason);
+    if (errors.length > 0) {
+      // TODO: Handle errors
+      log.error(loggerErrorMessages.Update, { errors });
     }
-  }
-
-  if (errors.length > 0) {
-    // TODO: Handle errors
-    log.error(loggerErrorMessages.Update, { errors });
+  } catch (error) {
+    log.error(loggerErrorMessages.Unexpected, { error });
+    throw error;
   }
 }

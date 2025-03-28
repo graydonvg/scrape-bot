@@ -25,7 +25,7 @@ export default async function getUserDataServer() {
 
     const { data, error } = await supabase
       .from("users")
-      .select("email, firstName, lastName, credits, avatarUrl")
+      .select("email, firstName, lastName, availableCredits, avatarUrl")
       .eq("userId", user.id);
 
     if (error) {

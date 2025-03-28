@@ -23,7 +23,7 @@ export default async function extractTextFromElementExecutor(
     if (!selector) {
       log.error("Selector undefined");
       executionContext.logDb.ERROR(taskId, "Selector undefined");
-      return { success: false, errorType: "server" };
+      return { success: false, errorType: "internal" };
     }
 
     const html = executionContext.getInput(TaskParamName.Html);
@@ -31,7 +31,7 @@ export default async function extractTextFromElementExecutor(
     if (!html) {
       log.error("HTML undefined");
       executionContext.logDb.ERROR(taskId, "HTML undefined");
-      return { success: false, errorType: "server" };
+      return { success: false, errorType: "internal" };
     }
 
     const $ = cheerio.load(html);
@@ -63,6 +63,6 @@ export default async function extractTextFromElementExecutor(
   } catch (error) {
     executionContext.logDb.ERROR(taskId, userErrorMessages.Unexpected);
     log.error(loggerErrorMessages.Unexpected, { error });
-    return { success: false, errorType: "server" };
+    return { success: false, errorType: "internal" };
   }
 }

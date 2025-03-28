@@ -70,7 +70,7 @@ const executeWorkflowAction = actionClient
         let workflowDefinition: string;
 
         if (
-          selectPublishedWorkflowData &&
+          selectPublishedWorkflowData.length > 0 &&
           selectPublishedWorkflowData[0].definition &&
           selectPublishedWorkflowData[0].executionPlan
         ) {
@@ -120,12 +120,26 @@ const executeWorkflowAction = actionClient
           executionPlan = result.executionPlan;
         }
 
-        const { data: selectUserCreditsData, error: selectCreditsError } =
-          await supabase.from("users").select("credits").eq("userId", user.id);
+        const totalCreditsRequired =
+          calculateTotalCreditCostFromExecutionPlan(executionPlan);
 
-        if (selectCreditsError) {
-          log.error(loggerErrorMessages.Select, {
-            error: selectCreditsError,
+        // A stored procedure that retrieves the current available credits for the user.
+        // It checks if the user has enough credits to deduct the specified amount.
+        // If not, it returns false.
+        // If the user has enough credits, it deducts the amount from availableCredits and
+        // adds it to reservedCredits.
+        // The function returns true if the operation is successful.
+        // If the entire process is successful, the user's credit balance will be finalized.
+        // If a server error occurs, the user will be refunded.
+        const { data: reserveCreditsSuccess, error: reserveCreditsError } =
+          await supabase.rpc("reserve_credits_for_workflow_execution", {
+            p_user_id: user.id,
+            p_amount: totalCreditsRequired,
+          });
+
+        if (reserveCreditsError) {
+          log.error(loggerErrorMessages.Update, {
+            error: reserveCreditsError,
           });
           return {
             success: false,
@@ -133,10 +147,7 @@ const executeWorkflowAction = actionClient
           };
         }
 
-        const totalCreditsRequired =
-          calculateTotalCreditCostFromExecutionPlan(executionPlan);
-
-        if (selectUserCreditsData[0].credits < totalCreditsRequired) {
+        if (!reserveCreditsSuccess) {
           return {
             success: false,
             message: userErrorMessages.InsufficientCredits,

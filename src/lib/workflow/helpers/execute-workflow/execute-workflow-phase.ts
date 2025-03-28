@@ -25,104 +25,119 @@ export default async function executeWorkflowPhase(
 ) {
   log = log.with({ function: "executeWorkflowPhase" });
 
-  // Create a log collector for each phase.
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  //                 ***THESE LOGS ARE AVAILABLE TO THE USER***
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  //                          ***NO SENSITIVE DETAILS***
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  const logCollector = createLogCollector();
-  const startedAt = new Date().toISOString();
-  const promises = [];
+  try {
+    // Create a log collector for each phase.
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //                 ***THESE LOGS ARE AVAILABLE TO THE USER***
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //                          ***NO SENSITIVE DETAILS***
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    const logCollector = createLogCollector();
+    const startedAt = new Date().toISOString();
+    const promises = [];
 
-  for (const task of phase.tasks) {
-    const node = JSON.parse(task.node as string) as WorkflowNode;
-    populatePhaseContext(
-      node,
-      edges,
-      phaseContext,
-      logCollector,
-      log,
-      task.taskId,
-    );
+    for (const task of phase.tasks) {
+      const node = JSON.parse(task.node as string) as WorkflowNode;
 
-    const inputKeys = Object.keys(phaseContext.tasks[node.id].inputs);
-    const inputs =
-      inputKeys.length > 0
-        ? // Using the inputs from phaseContext rather than directly from task,
-          // because the phaseContext only includes inputs provided by the user
-          // rather than inputs provided by the user AND source nodes.
-          JSON.stringify(phaseContext.tasks[node.id].inputs)
-        : // Prevent inserting empty objects into database
-          null;
+      populatePhaseContext(
+        node,
+        edges,
+        phaseContext,
+        logCollector,
+        log,
+        task.taskId,
+      );
 
-    const taskPromise = supabase
-      .from("tasks")
-      .update({
-        status: "EXECUTING",
-        startedAt,
-        inputs,
-      })
-      .eq("userId", userId)
-      .eq("taskId", task.taskId);
+      const inputKeys = Object.keys(phaseContext.tasks[node.id].inputs);
+      const inputs =
+        inputKeys.length > 0
+          ? // Using the inputs from phaseContext rather than directly from task,
+            // because the phaseContext only includes inputs provided by the user
+            // rather than inputs provided by the user AND source nodes.
+            JSON.stringify(phaseContext.tasks[node.id].inputs)
+          : // Prevent inserting empty objects into database
+            null;
 
-    promises.push(taskPromise);
-  }
+      const taskPromise = supabase
+        .from("tasks")
+        .update({
+          status: "EXECUTING",
+          startedAt,
+          inputs,
+        })
+        .eq("userId", userId)
+        .eq("taskId", task.taskId);
 
-  const results = await Promise.allSettled(promises);
+      promises.push(taskPromise);
+    }
 
-  const errors = [];
+    const results = await Promise.allSettled(promises);
 
-  for (const result of results) {
-    if (result.status === "fulfilled") {
-      if (result.value.error) {
-        errors.push(result.value.error);
+    const errors = [];
+
+    for (const result of results) {
+      if (result.status === "fulfilled") {
+        if (result.value.error) {
+          errors.push(result.value.error);
+        }
+      }
+
+      if (result.status === "rejected") {
+        errors.push(result.reason);
       }
     }
 
-    if (result.status === "rejected") {
-      errors.push(result.reason);
+    if (errors.length > 0) {
+      // TODO: Handle errors
+      log.error(loggerErrorMessages.Update, { errors });
     }
+
+    const phaseResults = await executePhase(
+      phase,
+      phaseContext,
+      logCollector,
+      log,
+    );
+
+    await finalizePhase(
+      supabase,
+      userId,
+      phaseResults,
+      phaseContext,
+      logCollector,
+      log,
+    );
+
+    let success: boolean | "partial" = true;
+
+    const hasSuccess = phaseResults.some((result) => result.success);
+    const hasFailure = phaseResults.some((result) => !result.success);
+
+    if (hasSuccess && hasFailure) {
+      success = "partial";
+    } else if (!hasSuccess) {
+      success = false;
+    }
+
+    const creditsConsumed = phaseResults.reduce(
+      (acc, result) =>
+        result.success || result.errorType === "user"
+          ? acc + result.creditsConsumed
+          : acc,
+      0,
+    );
+
+    const creditsToRefund = phaseResults.reduce(
+      (acc, result) =>
+        !result.success && result.errorType === "internal"
+          ? acc + result.creditsConsumed
+          : acc,
+      0,
+    );
+
+    return { success, creditsConsumed, creditsToRefund };
+  } catch (error) {
+    log.error(loggerErrorMessages.Unexpected, { error });
+    throw error;
   }
-
-  if (errors.length > 0) {
-    // TODO: Handle errors
-    log.error(loggerErrorMessages.Update, { errors });
-  }
-
-  const phaseResults = await executePhase(
-    supabase,
-    userId,
-    phase,
-    phaseContext,
-    logCollector,
-    log,
-  );
-
-  await finalizePhase(
-    supabase,
-    userId,
-    phaseResults,
-    phaseContext,
-    logCollector,
-    log,
-  );
-
-  let success: boolean | "partial" = true;
-
-  const hasSuccess = phaseResults.some((result) => result.success);
-  const hasFailure = phaseResults.some((result) => !result.success);
-
-  if (hasSuccess && hasFailure) {
-    success = "partial";
-  } else if (!hasSuccess) {
-    success = false;
-  }
-
-  const creditsConsumed = phaseResults.reduce(
-    (acc, result) => acc + result.creditsConsumed,
-    0,
-  );
-
-  return { success, creditsConsumed };
 }

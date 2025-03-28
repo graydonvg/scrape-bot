@@ -21,7 +21,7 @@ export default async function getUserAvailableCredits() {
 
     const { data, error } = await supabase
       .from("users")
-      .select("credits")
+      .select("availableCredits")
       .eq("userId", user.id);
 
     if (error) {

@@ -32,7 +32,7 @@ export type WorkflowExecutionPhase = {
   tasks: TaskDb[];
 };
 
-export type ExecutorFunctionErrorType = "user" | "server";
+export type ExecutorFunctionErrorType = "user" | "internal";
 
 export type ExecutorFunctionReturn =
   | { success: true }

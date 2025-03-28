@@ -99,29 +99,32 @@ export type Database = {
       };
       users: {
         Row: {
+          availableCredits: number;
           avatarUrl: string | null;
-          credits: number;
           email: string;
           firstName: string | null;
           lastName: string | null;
+          reservedCredits: number | null;
           updatedAt: string;
           userId: string;
         };
         Insert: {
+          availableCredits?: number;
           avatarUrl?: string | null;
-          credits?: number;
           email: string;
           firstName?: string | null;
           lastName?: string | null;
+          reservedCredits?: number | null;
           updatedAt?: string;
           userId: string;
         };
         Update: {
+          availableCredits?: number;
           avatarUrl?: string | null;
-          credits?: number;
           email?: string;
           firstName?: string | null;
           lastName?: string | null;
+          reservedCredits?: number | null;
           updatedAt?: string;
           userId?: string;
         };
@@ -239,21 +242,21 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      update_user_credits:
-        | {
-            Args: {
-              p_user_id: string;
-              p_amount: number;
-            };
-            Returns: boolean;
-          }
-        | {
-            Args: {
-              user_id: number;
-              credits: number;
-            };
-            Returns: undefined;
-          };
+      finalize_user_credits: {
+        Args: {
+          p_user_id: string;
+          p_credits_consumed: number;
+          p_credits_to_refund: number;
+        };
+        Returns: Json;
+      };
+      reserve_credits_for_workflow_execution: {
+        Args: {
+          p_user_id: string;
+          p_amount: number;
+        };
+        Returns: boolean;
+      };
     };
     Enums: {
       LogLevel: "INFO" | "ERROR";

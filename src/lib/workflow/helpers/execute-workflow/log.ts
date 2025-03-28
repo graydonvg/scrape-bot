@@ -1,3 +1,5 @@
+import "server-only";
+
 import { LogDb, LogCollector, LogFunction, LogLevelDb } from "@/lib/types/log";
 
 // These logs will be added to the database and ***ARE AVAILABLE TO THE USER***.

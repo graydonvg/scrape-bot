@@ -41,10 +41,11 @@ export default function AvailableCredits() {
             <span
               className={cn("text-side font-semibold", {
                 "text-destructive":
-                  isEditorPath && query.data.credits < editorWorkflowCreditCost,
+                  isEditorPath &&
+                  query.data.availableCredits < editorWorkflowCreditCost,
               })}
             >
-              <AnimatedCounter value={query.data.credits} />
+              <AnimatedCounter value={query.data.availableCredits} />
             </span>
           )}
           {!query.isLoading &&

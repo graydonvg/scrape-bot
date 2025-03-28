@@ -22,7 +22,7 @@ export default async function getPageHtmlExecutor(
     if (!html) {
       log.error("HTML undefined");
       executionContext.logDb.ERROR(taskId, "Failed to extract HTML from page");
-      return { success: false, errorType: "server" };
+      return { success: false, errorType: "internal" };
     }
 
     executionContext.logDb.INFO(taskId, "HTML extracted successfully");
@@ -33,6 +33,6 @@ export default async function getPageHtmlExecutor(
   } catch (error) {
     executionContext.logDb.ERROR(taskId, userErrorMessages.Unexpected);
     log.error(loggerErrorMessages.Unexpected, { error });
-    return { success: false, errorType: "server" };
+    return { success: false, errorType: "internal" };
   }
 }

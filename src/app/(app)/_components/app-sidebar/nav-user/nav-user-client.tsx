@@ -45,7 +45,7 @@ export function NavUserClient({ user }: Props) {
   const avatarFallbackChars = getUserAvatarFallbackChars(userFullName);
 
   useEffect(() => {
-    if (user) setUserCreditBalance(user.credits);
+    if (user) setUserCreditBalance(user.availableCredits);
   }, [user, setUserCreditBalance]);
 
   return (

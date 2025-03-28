@@ -53,6 +53,7 @@ export default function ExecuteWorkflowButton({
 
   function handleSuccess(data?: ActionReturn) {
     if (data && !data.success) {
+      setIsLoading(false);
       return toast.error(data.message, { id: workflowId });
     }
 

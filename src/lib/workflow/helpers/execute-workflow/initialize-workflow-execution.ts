@@ -15,53 +15,58 @@ export default async function initializeWorkflowExecution(
 ) {
   log = log.with({ function: "initializeWorkflowExecution" });
 
-  const workflowExecutionsPromise = supabase
-    .from("workflowExecutions")
-    .update({ startedAt: new Date().toISOString(), status: "EXECUTING" })
-    .eq("userId", userId)
-    .eq("workflowExecutionId", executionId);
+  try {
+    const workflowExecutionsPromise = supabase
+      .from("workflowExecutions")
+      .update({ startedAt: new Date().toISOString(), status: "EXECUTING" })
+      .eq("userId", userId)
+      .eq("workflowExecutionId", executionId);
 
-  const workflowsPromise = supabase
-    .from("workflows")
-    .update({
-      lastExecutionId: executionId,
-      lastExecutedAt: new Date().toISOString(),
-      lastExecutionStatus: "EXECUTING",
-      ...(nextExecutionAt && { nextExecutionAt }),
-    })
-    .eq("userId", userId)
-    .eq("workflowId", workflowId);
+    const workflowsPromise = supabase
+      .from("workflows")
+      .update({
+        lastExecutionId: executionId,
+        lastExecutedAt: new Date().toISOString(),
+        lastExecutionStatus: "EXECUTING",
+        ...(nextExecutionAt && { nextExecutionAt }),
+      })
+      .eq("userId", userId)
+      .eq("workflowId", workflowId);
 
-  const tasksPromise = supabase
-    .from("tasks")
-    .update({
-      status: "PENDING",
-    })
-    .eq("userId", userId)
-    .eq("workflowExecutionId", executionId);
+    const tasksPromise = supabase
+      .from("tasks")
+      .update({
+        status: "PENDING",
+      })
+      .eq("userId", userId)
+      .eq("workflowExecutionId", executionId);
 
-  const results = await Promise.allSettled([
-    workflowExecutionsPromise,
-    workflowsPromise,
-    tasksPromise,
-  ]);
+    const results = await Promise.allSettled([
+      workflowExecutionsPromise,
+      workflowsPromise,
+      tasksPromise,
+    ]);
 
-  const errors = [];
+    const errors = [];
 
-  for (const result of results) {
-    if (result.status === "fulfilled") {
-      if (result.value.error) {
-        errors.push(result.value.error);
+    for (const result of results) {
+      if (result.status === "fulfilled") {
+        if (result.value.error) {
+          errors.push(result.value.error);
+        }
+      }
+
+      if (result.status === "rejected") {
+        errors.push(result.reason);
       }
     }
 
-    if (result.status === "rejected") {
-      errors.push(result.reason);
+    if (errors.length > 0) {
+      // TODO: Handle errors
+      log.error(loggerErrorMessages.Update, { errors });
     }
-  }
-
-  if (errors.length > 0) {
-    // TODO: Handle errors
-    log.error(loggerErrorMessages.Update, { errors });
+  } catch (error) {
+    log.error(loggerErrorMessages.Unexpected, { error });
+    throw error;
   }
 }

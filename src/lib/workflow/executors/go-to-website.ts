@@ -39,6 +39,6 @@ export default async function goToWebsiteExecutor(
   } catch (error) {
     executionContext.logDb.ERROR(taskId, userErrorMessages.Unexpected);
     log.error(loggerErrorMessages.Unexpected, { error });
-    return { success: false, errorType: "server" };
+    return { success: false, errorType: "internal" };
   }
 }

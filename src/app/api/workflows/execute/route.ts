@@ -11,6 +11,7 @@ import executeWorkflow from "@/lib/workflow/helpers/execute-workflow/execute-wor
 import createSupabaseService from "@/lib/supabase/supabase-service";
 import { CronExpressionParser } from "cron-parser";
 import arcjet, { shield, detectBot } from "@/lib/arcjet";
+import { calculateTotalCreditCostFromExecutionPlan } from "@/lib/utils";
 
 const aj = arcjet
   .withRule(
@@ -112,6 +113,53 @@ export const GET = withAxiom(async (request: AxiomRequest) => {
     if (!executionPlan) {
       log.error("Execution plan is missing");
       return NextResponse.json(userErrorMessages.Unexpected, { status: 500 });
+    }
+
+    const totalCreditsRequired =
+      calculateTotalCreditCostFromExecutionPlan(executionPlan);
+
+    // A stored procedure that retrieves the current available credits for the user.
+    // It checks if the user has enough credits to deduct the specified amount.
+    // If not, it returns false.
+    // If the user has enough credits, it deducts the amount from availableCredits and
+    // adds it to reservedCredits.
+    // The function returns true if the operation is successful.
+    // If the entire process is successful, the user's credit balance will be finalized.
+    // If a server error occurs, the user will be refunded.
+    const { data: reserveCreditsSuccess, error: reserveCreditsError } =
+      await supabaseService.rpc("reserve_credits_for_workflow_execution", {
+        p_user_id: workflow.userId,
+        p_amount: totalCreditsRequired,
+      });
+
+    if (reserveCreditsError) {
+      log.error(loggerErrorMessages.Update, {
+        error: reserveCreditsError,
+      });
+      return NextResponse.json(userErrorMessages.Unexpected, { status: 500 });
+    }
+
+    if (!reserveCreditsSuccess) {
+      // If the user has insufficient credits, disable the workflow's schedule
+      // to prevent it from being executed in future cron jobs.
+      const { error } = await supabaseService
+        .from("workflows")
+        .update({
+          cron: null,
+          nextExecutionAt: null,
+        })
+        .eq("userId", workflow.userId)
+        .eq("workflowId", workflowId);
+
+      if (error) {
+        log.error(loggerErrorMessages.Update, {
+          error,
+        });
+      }
+
+      return NextResponse.json(userErrorMessages.InsufficientCredits, {
+        status: 400,
+      });
     }
 
     if (!workflow.cron) {

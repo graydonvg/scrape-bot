@@ -2,20 +2,14 @@ import { loggerErrorMessages, userErrorMessages } from "@/lib/constants";
 import createSupabaseService from "@/lib/supabase/supabase-service";
 import { AxiomRequest, Logger, withAxiom } from "next-axiom";
 import { NextResponse } from "next/server";
-import arcjet, { shield, detectBot } from "@/lib/arcjet";
+import arcjet, { detectBot } from "@/lib/arcjet";
 
-const aj = arcjet
-  .withRule(
-    shield({
-      mode: "LIVE",
-    }),
-  )
-  .withRule(
-    detectBot({
-      mode: "LIVE",
-      allow: [],
-    }),
-  );
+const aj = arcjet.withRule(
+  detectBot({
+    mode: "LIVE",
+    allow: [],
+  }),
+);
 // .withRule(
 //   fixedWindow({
 //     mode: "LIVE",
@@ -38,13 +32,6 @@ export const GET = withAxiom(async (request: AxiomRequest) => {
     }
 
     if (decision.isDenied()) {
-      if (decision.reason.isShield()) {
-        return NextResponse.json(
-          { error: "You are suspicious!" },
-          { status: 403 },
-        );
-      }
-
       if (decision.reason.isBot()) {
         return NextResponse.json({ error: "Forbidden!" }, { status: 403 });
       }

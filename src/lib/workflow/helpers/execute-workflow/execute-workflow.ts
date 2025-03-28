@@ -59,7 +59,7 @@ export default async function executeWorkflow(
     );
 
     let totalCreditsConsumed = 0;
-    let status: WorkflowExecutionStatusDb = "COMPLETED";
+    let totalCreditsToRefund = 0;
     const workflowDefinition = workflowExecutionData[0].definition;
     const edges = JSON.parse(workflowDefinition as string).edges as Edge[];
     const tasks = workflowExecutionData[0].tasks;
@@ -74,27 +74,34 @@ export default async function executeWorkflow(
  		 * - To call the cleanup function once execution completes.
  		 */
     const phaseContext: ExecutionPhaseContext = { tasks: {} };
+    const workflowSuccesses: (boolean | "partial")[] = [];
 
     for (const phase of phases) {
-      const { success, creditsConsumed } = await executeWorkflowPhase(
-        supabase,
-        userId,
-        phase,
-        phaseContext,
-        edges,
-        log,
-      );
+      const { success, creditsConsumed, creditsToRefund } =
+        await executeWorkflowPhase(
+          supabase,
+          userId,
+          phase,
+          phaseContext,
+          edges,
+          log,
+        );
 
+      workflowSuccesses.push(success);
       totalCreditsConsumed += creditsConsumed;
-
-      if (success === false) {
-        status = "FAILED";
-      }
-
-      if (success === "partial") {
-        status = "PARTIALLY_FAILED";
-      }
+      totalCreditsToRefund += creditsToRefund;
     }
+
+    let status: WorkflowExecutionStatusDb = "COMPLETED";
+    const workflowIsCompleted = workflowSuccesses.every(
+      (success) => success === true,
+    );
+    const workflowFailed = workflowSuccesses.every(
+      (success) => success === false,
+    );
+
+    if (!workflowIsCompleted && !workflowFailed) status = "PARTIALLY_FAILED";
+    if (workflowFailed) status = "FAILED";
 
     await finalizeWorkflowExecution(
       supabase,
@@ -103,12 +110,13 @@ export default async function executeWorkflow(
       executionId,
       status,
       totalCreditsConsumed,
+      totalCreditsToRefund,
       log,
     );
 
     await cleanupPhaseContext(phaseContext, log);
 
-    revalidatePath(`/workflows/workflow/${workflowId}/execution`);
+    revalidatePath(`/workflows`);
   } catch (error) {
     // TODO: Handle error
     log.error(loggerErrorMessages.Unexpected, { error });
