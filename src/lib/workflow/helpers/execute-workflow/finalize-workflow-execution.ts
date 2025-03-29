@@ -60,23 +60,24 @@ export default async function finalizeWorkflowExecution(
 
     for (const result of results) {
       if (result.status === "fulfilled") {
-        if (result.value.error) {
-          errors.push(result.value.error);
-        }
+        if (result.value.error) errors.push(result.value.error);
 
         if (result.value.data) {
           const finalizeUserCreditsResult = result.value.data as
             | { success: true }
             | { success: false; message: string };
 
-          if (!finalizeUserCreditsResult.success)
+          if (!finalizeUserCreditsResult.success) {
+            // This should not happen.
+            // The total cost of the worklfow is reserved before execution begin.
+            // The sum of the credits consumed and credits to refund should always
+            // equal the total cost of the worklfow.
             errors.push({ error: finalizeUserCreditsResult.message });
+          }
         }
       }
 
-      if (result.status === "rejected") {
-        errors.push(result.reason);
-      }
+      if (result.status === "rejected") errors.push(result.reason);
     }
 
     if (errors.length > 0) {

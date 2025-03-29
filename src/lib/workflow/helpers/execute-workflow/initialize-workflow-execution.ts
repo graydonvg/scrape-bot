@@ -51,14 +51,10 @@ export default async function initializeWorkflowExecution(
 
     for (const result of results) {
       if (result.status === "fulfilled") {
-        if (result.value.error) {
-          errors.push(result.value.error);
-        }
+        if (result.value.error) errors.push(result.value.error);
       }
 
-      if (result.status === "rejected") {
-        errors.push(result.reason);
-      }
+      if (result.status === "rejected") errors.push(result.reason);
     }
 
     if (errors.length > 0) {

@@ -4,10 +4,11 @@ import { SidebarGroupLabel } from "@/components/ui/sidebar";
 import { userErrorMessages } from "@/lib/constants";
 import { Loader2Icon, NetworkIcon, PencilIcon } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 import renameWorkflowAction from "../../../../_actions/rename-workflow-action";
 import { ActionReturn } from "@/lib/types/action";
+import useWorkflowsStore from "@/lib/store/workflows-store";
 
 type Props = {
   workflowId: string;
@@ -18,6 +19,8 @@ export default function WorkflowGroupLabel({
   workflowId,
   workflowName,
 }: Props) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const { existingWorkflowNames } = useWorkflowsStore();
   const [renameWorkflow, setRenameWorkflow] = useState(false);
   const [newName, setNewName] = useState(workflowName);
   const { execute, isPending } = useAction(renameWorkflowAction, {
@@ -46,6 +49,7 @@ export default function WorkflowGroupLabel({
         </Button>
       ) : (
         <Input
+          ref={inputRef}
           autoFocus
           onBlur={handleRenameWorkflow}
           onKeyDown={(e) => {
@@ -62,16 +66,19 @@ export default function WorkflowGroupLabel({
   );
 
   function handleRenameWorkflow() {
-    setRenameWorkflow(false);
-
     const trimmedNewName = newName.trim();
+    const workflowNameExists = existingWorkflowNames?.includes(trimmedNewName);
 
-    if (trimmedNewName === workflowName) {
-      setNewName(workflowName);
-      return;
+    if (workflowNameExists && !(trimmedNewName === workflowName)) {
+      inputRef.current?.focus();
+      return toast.warning(
+        `Workflow name "${trimmedNewName}" already exists. Please provide a unique name.`,
+      );
     }
 
-    if (trimmedNewName.length === 0) {
+    setRenameWorkflow(false);
+
+    if (trimmedNewName === workflowName || trimmedNewName.length === 0) {
       setNewName(workflowName);
       return;
     }
