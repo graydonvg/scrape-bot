@@ -1,13 +1,11 @@
 import { Task, TaskParamName, TaskParamType, TaskType } from "@/lib/types/task";
-import { CodeIcon, LucideProps, TextIcon } from "lucide-react";
+import { CodeIcon, TextIcon } from "lucide-react";
 
 export const getPageHtmlTask = {
   type: TaskType.GetPageHtml,
   label: "Get page HTML",
   credits: 2,
-  icon: (props: LucideProps) => (
-    <CodeIcon className="stroke-rose-400" {...props} />
-  ),
+  icon: (props) => <CodeIcon className="stroke-rose-400" {...props} />,
   isEntryPoint: false,
   inputs: [
     {
@@ -32,9 +30,7 @@ export const extractTextFromElementTask = {
   type: TaskType.ExtractTextFromElement,
   label: "Extract text from element",
   credits: 2,
-  icon: (props: LucideProps) => (
-    <TextIcon className="stroke-rose-400" {...props} />
-  ),
+  icon: (props) => <TextIcon className="stroke-rose-400" {...props} />,
   isEntryPoint: false,
   inputs: [
     {

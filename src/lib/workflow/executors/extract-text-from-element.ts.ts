@@ -21,16 +21,19 @@ export default async function extractTextFromElementExecutor(
     const selector = executionContext.getInput(TaskParamName.Selector);
 
     if (!selector) {
-      log.error("Selector undefined");
-      executionContext.logDb.ERROR(taskId, "Selector undefined");
+      log.error(`${TaskParamName.Selector} undefined`);
+      executionContext.logDb.ERROR(
+        taskId,
+        `${TaskParamName.Selector} undefined`,
+      );
       return { success: false, errorType: "internal" };
     }
 
     const html = executionContext.getInput(TaskParamName.Html);
 
     if (!html) {
-      log.error("HTML undefined");
-      executionContext.logDb.ERROR(taskId, "HTML undefined");
+      log.error(`${TaskParamName.Html} undefined`);
+      executionContext.logDb.ERROR(taskId, `${TaskParamName.Html} undefined`);
       return { success: false, errorType: "internal" };
     }
 

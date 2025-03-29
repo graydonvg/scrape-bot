@@ -1,13 +1,11 @@
 import { Task, TaskParamName, TaskParamType, TaskType } from "@/lib/types/task";
-import { GlobeIcon, LucideProps } from "lucide-react";
+import { GlobeIcon } from "lucide-react";
 
 export const goToWebsiteTask = {
   type: TaskType.GoToWebiste,
   label: "Go to website",
   credits: 5,
-  icon: (props: LucideProps) => (
-    <GlobeIcon className="stroke-pink-400" {...props} />
-  ),
+  icon: (props) => <GlobeIcon className="stroke-pink-400" {...props} />,
   isEntryPoint: true,
   inputs: [
     {

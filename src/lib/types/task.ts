@@ -5,8 +5,9 @@ import { Database } from "../supabase/database.types";
 export type TaskDb = Database["public"]["Tables"]["tasks"]["Row"];
 
 export enum TaskParamType {
-  String = "STRING",
   BrowserInstance = "BROWSER_INSTANCE",
+  String = "STRING",
+  Select = "SELECT",
 }
 
 export enum TaskParamName {
@@ -15,12 +16,18 @@ export enum TaskParamName {
   Html = "HTML",
   Selector = "Selector",
   ExtractedText = "Extracted text",
+  Value = "Value to enter",
+  Visibility = "Visibility",
+  MaxWaitTime = "Maximum time to wait (ms)",
 }
 
 export enum TaskType {
   GoToWebiste = "GO_TO_WEBSITE",
   GetPageHtml = "GET_PAGE_HTML",
   ExtractTextFromElement = "EXTRACT_TEXT_FROM_ELEMENT",
+  FillInputField = "FILL_INPUT_FIELD",
+  ClickElement = "CLICK_ELEMENT",
+  WaitForElement = "WAIT_FOR_ELEMENT",
 }
 
 export type TaskInput = {

@@ -3,7 +3,7 @@ import { Handle, Position, useEdges } from "@xyflow/react";
 import NodeInputField from "./node-input-field";
 import { nodeHandleColor } from "./common";
 import useWorkflowsStore from "@/lib/store/workflows-store";
-import { TaskInput } from "@/lib/types/task";
+import { TaskInput, TaskParamType } from "@/lib/types/task";
 
 type Props = {
   nodeId: string;
@@ -42,7 +42,8 @@ export default function NodeInput({ nodeId, input }: Props) {
           position={Position.Left}
           className={cn(
             "!bg-muted-foreground !border-background !size-4 !border-2",
-            nodeHandleColor[input.type],
+            // Select has no handle
+            input.type !== TaskParamType.Select && nodeHandleColor[input.type],
           )}
         />
       )}

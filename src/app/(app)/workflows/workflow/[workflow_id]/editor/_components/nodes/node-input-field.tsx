@@ -4,6 +4,7 @@ import { useCallback } from "react";
 import BrowserInstanceInput from "./inputs/browser-instance-input";
 import { TaskInput, TaskParamType } from "@/lib/types/task";
 import { WorkflowNode } from "@/lib/types/workflow";
+import SelectInput from "./inputs/select-input";
 
 type Props = {
   nodeId: string;
@@ -41,6 +42,15 @@ export default function NodeInputField({ nodeId, input, disabled }: Props) {
 
     case TaskParamType.BrowserInstance:
       return <BrowserInstanceInput input={input} />;
+
+    case TaskParamType.Select:
+      return (
+        <SelectInput
+          input={input}
+          defaultValue={inputValue}
+          updateNodeInputValue={updateNodeInputValue}
+        />
+      );
 
     default:
       return <p className="text-muted-foreground text-xs">Not implemented</p>;

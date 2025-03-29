@@ -1,6 +1,9 @@
 import { TaskParamType } from "@/lib/types/task";
 
-export const nodeHandleColor: Record<TaskParamType, string> = {
-  [TaskParamType.BrowserInstance]: "!bg-amber-400",
-  [TaskParamType.String]: "!bg-violet-400",
+// Select has no handle
+type ExcludedTaskParamType = Exclude<TaskParamType, TaskParamType.Select>;
+
+export const nodeHandleColor: Record<ExcludedTaskParamType, string> = {
+  BROWSER_INSTANCE: "!bg-amber-400",
+  STRING: "!bg-violet-400",
 };

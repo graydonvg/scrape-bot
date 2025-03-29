@@ -9,6 +9,9 @@ import {
   ExecutionContext,
   ExecutorFunctionReturn,
 } from "@/lib/types/execution";
+import fillInputFieldExecutor from "./fill-input-field";
+import clickElementExecutor from "./click-element-executor";
+import waitForElementExecutor from "./wait-for-element-executor";
 
 type ExecutorFn<T extends Task> = (
   taskId: string,
@@ -24,4 +27,7 @@ export const executorRegistry: ExecutorRegistry = {
   GO_TO_WEBSITE: goToWebsiteExecutor,
   GET_PAGE_HTML: getPageHtmlExecutor,
   EXTRACT_TEXT_FROM_ELEMENT: extractTextFromElementExecutor,
+  FILL_INPUT_FIELD: fillInputFieldExecutor,
+  CLICK_ELEMENT: clickElementExecutor,
+  WAIT_FOR_ELEMENT: waitForElementExecutor,
 };

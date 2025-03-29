@@ -40,10 +40,6 @@ export default function TaskParameterCard({
             !includesBrowserInstance && (
               <p className="text-sm">{fallbackText}</p>
             )}
-          {params &&
-            Object.entries(params).map(([key, value]) => (
-              <TaskParameter key={key} label={key} value={value} />
-            ))}
           {includesBrowserInstance && (
             <div className="flex h-9 items-center">
               <p className="text-sm leading-none font-medium whitespace-nowrap select-none">
@@ -51,6 +47,10 @@ export default function TaskParameterCard({
               </p>
             </div>
           )}
+          {params &&
+            Object.entries(params).map(([key, value]) => (
+              <TaskParameter key={key} label={key} value={value} />
+            ))}
         </div>
       </CardContent>
     </Card>

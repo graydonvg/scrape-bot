@@ -1,6 +1,6 @@
 "use client";
 
-import { FileCode2Icon } from "lucide-react";
+import { ClockIcon, FileCode2Icon, HandIcon } from "lucide-react";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -17,6 +17,18 @@ const items = [
     icon: FileCode2Icon,
     isOpen: true,
     taskTypes: [TaskType.GetPageHtml, TaskType.ExtractTextFromElement],
+  },
+  {
+    category: "User Interaction",
+    icon: HandIcon,
+    isOpen: true,
+    taskTypes: [TaskType.FillInputField, TaskType.ClickElement],
+  },
+  {
+    category: "Timing Controls",
+    icon: ClockIcon,
+    isOpen: true,
+    taskTypes: [TaskType.WaitForElement],
   },
 ];
 
@@ -37,7 +49,7 @@ export default function TaskMenu() {
         />
       </div>
       <SidebarGroupContent>
-        <SidebarMenu>
+        <SidebarMenu className="space-y-2">
           {stateItems.map((item) => (
             <CollapsibleTaskCategory
               key={item.category}

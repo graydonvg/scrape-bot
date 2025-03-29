@@ -1,5 +1,4 @@
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { TaskInput } from "@/lib/types/task";
 import {
@@ -10,6 +9,7 @@ import {
   useId,
   useState,
 } from "react";
+import InputLabel from "./input-label";
 
 type Props = {
   input: TaskInput;
@@ -32,11 +32,8 @@ export default function StringInput({ input, value, onBlur, disabled }: Props) {
   }, [value]);
 
   return (
-    <div className="w-full space-y-1 p-1">
-      <Label htmlFor={id} className="flex text-xs">
-        {input.name}
-        {input.required && <span className="ml-2 text-red-400">*</span>}
-      </Label>
+    <div className="w-full space-y-1">
+      <InputLabel id={id} label={input.name} required={input.required} />
       <Component
         id={id}
         placeholder={input.helperText}
