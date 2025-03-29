@@ -8,9 +8,10 @@ import { Badge } from "@/components/ui/badge";
 import { WorkflowStatusDb } from "@/lib/types/workflow";
 import ExecuteWorkflowButton from "./execute-workflow-button";
 import { useState } from "react";
-import ScheduleSection from "./schedule-section";
 import ExecutionDetails from "./execution-details";
 import getWorkflows from "../_data-access/get-workkflows";
+import TooltipWrapper from "@/components/tooltip-wrapper";
+import ScheduleSection from "./schedule/schedule-section";
 
 const statusColors: Record<WorkflowStatusDb, string> = {
   DRAFT: "bg-yellow-400 text-yellow-600",
@@ -39,14 +40,21 @@ export default function WorkflowCard({ workflow }: Props) {
           </Badge>
           <div className="flex flex-col justify-center">
             <div className="flex items-center gap-2">
-              <h3 className="text-muted-foreground text-xl font-bold">
-                <Link
-                  href={`/workflows/workflow/${workflow.workflowId}/editor`}
-                  className="ring-offset-card hover:underline"
-                >
-                  {workflow.name}
-                </Link>
-              </h3>
+              <TooltipWrapper
+                tooltipContent={workflow.description}
+                hidden={
+                  !workflow.description || workflow.description.length === 0
+                }
+              >
+                <h3 className="text-muted-foreground text-xl font-bold">
+                  <Link
+                    href={`/workflows/workflow/${workflow.workflowId}/editor`}
+                    className="ring-offset-card hover:underline"
+                  >
+                    {workflow.name}
+                  </Link>
+                </h3>
+              </TooltipWrapper>
               {isDraft && (
                 <Badge className="rounded-full bg-yellow-100 text-yellow-800">
                   Draft

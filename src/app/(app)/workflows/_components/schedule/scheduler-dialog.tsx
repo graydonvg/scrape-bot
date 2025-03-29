@@ -17,17 +17,17 @@ import {
   TriangleAlertIcon,
 } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
-import updateWorkflowCronAction from "../_actions/update-workflow-cron-action";
 import { toast } from "sonner";
 import { userErrorMessages } from "@/lib/constants";
 import { ActionReturn } from "@/lib/types/action";
 import { useEffect, useState } from "react";
 import cronstrue from "cronstrue";
 import { CronExpressionParser } from "cron-parser";
-import removeWorkflowScheduleAction from "../_actions/remove-workflow-schedule-action";
 import ButtonWithSpinner from "@/components/button-with-spinner";
 import useUserStore from "@/lib/store/user-store";
 import CustomAlert from "@/components/custom-alert";
+import updateWorkflowCronAction from "../../_actions/update-workflow-cron-action";
+import removeWorkflowScheduleAction from "../../_actions/remove-workflow-schedule-action";
 
 const UPDATE_CRON_TOAST_ID = "update-cron";
 const REMOVE_SCHEDULE_TOAST_ID = "remove-schedule";

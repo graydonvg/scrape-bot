@@ -1,10 +1,10 @@
 import { Suspense } from "react";
 import WorkflowsSkeleton from "./_components/workflows-skeleton";
-import CreateWorkflowDialog from "./_components/create-workflow-dialog";
 import { Metadata } from "next";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Workflows from "./_components/workflows";
 import PageHeader from "@/components/page-header";
+import CreateWorkflowDialog from "./_components/create-workflow/create-workflow-dialog";
 
 export const metadata: Metadata = {
   title: "Workflows",

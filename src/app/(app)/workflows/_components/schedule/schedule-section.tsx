@@ -1,9 +1,9 @@
 import { CoinsIcon, CornerDownRightIcon, MoveRightIcon } from "lucide-react";
-import SchedulerDialog from "./scheduler-dialog";
 import TooltipWrapper from "@/components/tooltip-wrapper";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import useUserStore from "@/lib/store/user-store";
+import SchedulerDialog from "./scheduler-dialog";
 
 type Props = {
   workflowId: string;

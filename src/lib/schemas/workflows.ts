@@ -23,6 +23,10 @@ export type DuplicateWorkflowSchemaType = z.infer<
   typeof duplicateWorkflowSchema
 >;
 
+export const renameWorkflowSchema = duplicateWorkflowSchema;
+
+export type RenameWorkflowSchemaType = z.infer<typeof duplicateWorkflowSchema>;
+
 export const deleteWorkflowSchema = z.object({
   workflowId: z.string().uuid(),
 });
@@ -57,13 +61,6 @@ export const executeWorkflowSchema = z.object({
 });
 
 export type ExecuteWorkflowSchemaType = z.infer<typeof executeWorkflowSchema>;
-
-export const renameWorkflowSchema = z.object({
-  workflowId: z.string().uuid(),
-  workflowName: z.string(),
-});
-
-export type RenameWorkflowSchemaType = z.infer<typeof renameWorkflowSchema>;
 
 export const updateWorkflowCronSchema = z.object({
   workflowId: z.string().uuid(),

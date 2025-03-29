@@ -15,12 +15,14 @@ import {
   CopyIcon,
   HistoryIcon,
   MoreVerticalIcon,
+  PencilIcon,
   Trash2Icon,
 } from "lucide-react";
 import DeleteWorkflowDialog from "./delete-workflow-dialog";
 import { useState } from "react";
 import Link from "next/link";
-import DuplicateWorkflowDialog from "./duplicate-workflow-dialog";
+import DuplicateWorkflowDialog from "./duplicate-workflow/duplicate-workflow-dialog";
+import RenameWorkflowDialog from "./rename-workflow/rename-workflow-dialog";
 
 type Props = {
   workflowId: string;
@@ -36,6 +38,7 @@ export default function WorkflowActionsMenu({
   isLoading,
 }: Props) {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [openRenameDialog, setOpenRenameDialog] = useState(false);
   const [openDuplicateWorkflowDialog, setOpenDuplicateWorkflowDialog] =
     useState(false);
 
@@ -59,6 +62,10 @@ export default function WorkflowActionsMenu({
               Executions
             </DropdownMenuItem>
           </Link>
+          <DropdownMenuItem onClick={() => setOpenRenameDialog(true)}>
+            <PencilIcon />
+            Rename
+          </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => setOpenDuplicateWorkflowDialog(true)}
           >
@@ -74,6 +81,13 @@ export default function WorkflowActionsMenu({
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+      <RenameWorkflowDialog
+        open={openRenameDialog}
+        setOpen={setOpenRenameDialog}
+        workflowId={workflowId}
+        workflowName={workflowName}
+        workflowDescription={workflowDescription}
+      />
       <DuplicateWorkflowDialog
         open={openDuplicateWorkflowDialog}
         setOpen={setOpenDuplicateWorkflowDialog}

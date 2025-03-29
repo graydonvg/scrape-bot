@@ -1,5 +1,3 @@
-"use client";
-
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,11 +10,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import {
-  createWorkflowSchema,
   CreateWorkflowSchemaType,
+  DuplicateWorkflowSchemaType,
+  renameWorkflowSchema,
+  RenameWorkflowSchemaType,
 } from "@/lib/schemas/workflows";
 import { Textarea } from "@/components/ui/textarea";
-import createWorkflowAction from "../_actions/create-workflow-action";
 import { toast } from "sonner";
 import { useAction } from "next-safe-action/hooks";
 import { userErrorMessages } from "@/lib/constants";
@@ -24,22 +23,33 @@ import useWorkflowsStore from "@/lib/store/workflows-store";
 import CustomFormLabel from "@/components/custom-form-label";
 import ButtonWithSpinner from "@/components/button-with-spinner";
 import { ActionReturn } from "@/lib/types/action";
+import renameWorkflowAction from "../../_actions/rename-workflow-action";
+import { SaveIcon } from "lucide-react";
 
-const TOAST_ID = "create-workflow";
-
-const defaultValues = {
-  name: "",
-  description: "",
+type Props = {
+  setOpen: (open: boolean) => void;
+  workflowId: string;
+  workflowName: string;
+  workflowDescription: string | null;
 };
 
-export default function CreateWorkflowForm() {
+export default function RenameWorkflowForm({
+  setOpen,
+  workflowId,
+  workflowName,
+  workflowDescription,
+}: Props) {
   const { existingWorkflowNames } = useWorkflowsStore();
-  const form = useForm<CreateWorkflowSchemaType>({
-    resolver: zodResolver(createWorkflowSchema),
-    defaultValues,
+  const form = useForm<RenameWorkflowSchemaType>({
+    resolver: zodResolver(renameWorkflowSchema),
+    defaultValues: {
+      workflowId,
+      name: workflowName,
+      description: workflowDescription ? workflowDescription : undefined,
+    },
   });
-  const { execute, isPending } = useAction(createWorkflowAction, {
-    onExecute: () => toast.loading("Creating workflow...", { id: TOAST_ID }),
+  const { execute, isPending } = useAction(renameWorkflowAction, {
+    onExecute: () => toast.loading("Renaming workflow...", { id: workflowId }),
     onSuccess: ({ data }) => handleSuccess(data),
     onError: ({ error: { validationErrors } }) => handleError(validationErrors),
   });
@@ -90,17 +100,29 @@ export default function CreateWorkflowForm() {
           type="submit"
           loading={isPending}
           className="w-full capitalize"
+          startIcon={<SaveIcon />}
         >
-          Proceed
+          Save
         </ButtonWithSpinner>
       </form>
     </Form>
   );
 
   function handleSubmit(formData: CreateWorkflowSchemaType) {
-    const workflowNameExists = existingWorkflowNames?.includes(formData.name);
+    const trimmedNewName = formData.name.trim();
+    const trimmedNewDescription = formData.description
+      ? formData.description?.trim()
+      : null;
+    const workflowNameExists = existingWorkflowNames?.includes(trimmedNewName);
 
-    if (workflowNameExists) {
+    if (
+      trimmedNewName === workflowName &&
+      trimmedNewDescription === workflowDescription
+    ) {
+      return setOpen(false);
+    }
+
+    if (workflowNameExists && trimmedNewName !== workflowName) {
       form.setError(
         "name",
         {
@@ -115,10 +137,16 @@ export default function CreateWorkflowForm() {
       return;
     }
 
-    execute(formData);
+    execute({
+      workflowId,
+      name: trimmedNewName,
+      description: trimmedNewDescription ?? undefined,
+    });
   }
 
-  function handleSuccess(data?: ActionReturn<keyof CreateWorkflowSchemaType>) {
+  function handleSuccess(
+    data?: ActionReturn<keyof DuplicateWorkflowSchemaType>,
+  ) {
     if (data && !data.success) {
       if (data.field) {
         form.setError(
@@ -132,14 +160,15 @@ export default function CreateWorkflowForm() {
           },
         );
         return toast.error(userErrorMessages.GenericFormValidation, {
-          id: TOAST_ID,
+          id: workflowId,
         });
       }
 
-      return toast.error(data.message, { id: TOAST_ID });
+      return toast.error(data.message, { id: workflowId });
     }
 
-    toast.success("Workflow created", { id: TOAST_ID });
+    setOpen(false);
+    toast.success("Workflow renamed", { id: workflowId });
   }
 
   function handleError(validationErrors?: {
@@ -167,10 +196,10 @@ export default function CreateWorkflowForm() {
       });
 
       return toast.error(userErrorMessages.GenericFormValidation, {
-        id: TOAST_ID,
+        id: workflowId,
       });
     }
 
-    toast.error(userErrorMessages.Unexpected, { id: TOAST_ID });
+    toast.error(userErrorMessages.Unexpected, { id: workflowId });
   }
 }

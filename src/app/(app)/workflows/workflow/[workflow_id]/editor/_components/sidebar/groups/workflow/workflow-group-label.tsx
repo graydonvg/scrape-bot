@@ -6,18 +6,21 @@ import { Loader2Icon, NetworkIcon, PencilIcon } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
-import renameWorkflowAction from "../../../../_actions/rename-workflow-action";
 import { ActionReturn } from "@/lib/types/action";
 import useWorkflowsStore from "@/lib/store/workflows-store";
+import renameWorkflowAction from "@/app/(app)/workflows/_actions/rename-workflow-action";
+import { RenameWorkflowSchemaType } from "@/lib/schemas/workflows";
 
 type Props = {
   workflowId: string;
   workflowName: string;
+  workflowDescription: string | null;
 };
 
 export default function WorkflowGroupLabel({
   workflowId,
   workflowName,
+  workflowDescription,
 }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const { existingWorkflowNames } = useWorkflowsStore();
@@ -69,9 +72,9 @@ export default function WorkflowGroupLabel({
     const trimmedNewName = newName.trim();
     const workflowNameExists = existingWorkflowNames?.includes(trimmedNewName);
 
-    if (workflowNameExists && !(trimmedNewName === workflowName)) {
+    if (workflowNameExists && trimmedNewName !== workflowName) {
       inputRef.current?.focus();
-      return toast.warning(
+      return toast.error(
         `Workflow name "${trimmedNewName}" already exists. Please provide a unique name.`,
       );
     }
@@ -83,16 +86,23 @@ export default function WorkflowGroupLabel({
       return;
     }
 
+    toast.loading("Renaming worklfow...", { id: workflowId });
     setNewName(trimmedNewName);
-    execute({ workflowId, workflowName: trimmedNewName });
+    execute({
+      workflowId,
+      name: trimmedNewName,
+      description: workflowDescription ?? undefined,
+    });
   }
 
-  function handleSuccess(data?: ActionReturn) {
+  function handleSuccess(data?: ActionReturn<keyof RenameWorkflowSchemaType>) {
     if (data && !data.success) {
-      setNewName(workflowName);
-
-      return toast.error(data.message);
+      setRenameWorkflow(true);
+      inputRef.current?.focus();
+      return toast.error(data.message, { id: workflowId });
     }
+
+    toast.success("Workflow renamed", { id: workflowId });
   }
 
   function handleError() {

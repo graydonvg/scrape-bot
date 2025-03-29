@@ -1,8 +1,8 @@
-import CreateWorkflowDialog from "./create-workflow-dialog";
 import CustomAlert from "@/components/custom-alert";
 import getWorkflows from "../_data-access/get-workkflows";
 import WorkflowCards from "./workflow-cards";
 import NoResultsFound from "@/components/no-results-found";
+import CreateWorkflowDialog from "./create-workflow/create-workflow-dialog";
 
 export default async function Workflows() {
   const workflows = await getWorkflows();

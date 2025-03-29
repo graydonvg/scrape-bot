@@ -21,7 +21,7 @@ const renameWorkflowAction = actionClient
       parsedInput: formData,
     }: {
       parsedInput: RenameWorkflowSchemaType;
-    }): Promise<ActionReturn> => {
+    }): Promise<ActionReturn<keyof RenameWorkflowSchemaType>> => {
       let log = new Logger();
       log = log.with({ context: "renameWorkflowAction" });
 
@@ -41,13 +41,22 @@ const renameWorkflowAction = actionClient
         const { error } = await supabase
           .from("workflows")
           .update({
-            name: formData.workflowName,
+            name: formData.name,
+            description: formData.description ? formData.description : null,
           })
           .eq("userId", user.id)
           .eq("workflowId", formData.workflowId);
 
         if (error) {
-          log.error(loggerErrorMessages.Update, {
+          if (error.message.includes('constraint "user_workflow_name_unique"'))
+            return {
+              success: false,
+              field: "name",
+              type: "duplicate",
+              message: `Workflow name "${formData.name}" already exists. Please provide a unique name.`,
+            };
+
+          log.error(loggerErrorMessages.Insert, {
             error,
             formData,
           });

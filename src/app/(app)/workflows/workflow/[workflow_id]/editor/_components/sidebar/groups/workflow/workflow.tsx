@@ -33,6 +33,7 @@ export default function Workflow({ workflow }: Props) {
       <WorkflowGroupLabel
         workflowId={workflow!.workflowId}
         workflowName={workflow!.name}
+        workflowDescription={workflow!.description}
       />
       <SidebarGroupContent>
         <SidebarMenu>
