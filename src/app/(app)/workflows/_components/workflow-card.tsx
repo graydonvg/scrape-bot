@@ -90,6 +90,7 @@ export default function WorkflowCard({ workflow }: Props) {
           <WorkflowActionsMenu
             isLoading={isLoading}
             workflowName={workflow.name}
+            workflowDescription={workflow.description}
             workflowId={workflow.workflowId}
           />
         </div>

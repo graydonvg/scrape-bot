@@ -11,23 +11,33 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { HistoryIcon, MoreVerticalIcon, Trash2Icon } from "lucide-react";
+import {
+  CopyIcon,
+  HistoryIcon,
+  MoreVerticalIcon,
+  Trash2Icon,
+} from "lucide-react";
 import DeleteWorkflowDialog from "./delete-workflow-dialog";
 import { useState } from "react";
 import Link from "next/link";
+import DuplicateWorkflowDialog from "./duplicate-workflow-dialog";
 
 type Props = {
-  isLoading: boolean;
-  workflowName: string;
   workflowId: string;
+  workflowName: string;
+  workflowDescription: string | null;
+  isLoading: boolean;
 };
 
 export default function WorkflowActionsMenu({
-  isLoading,
-  workflowName,
   workflowId,
+  workflowName,
+  workflowDescription,
+  isLoading,
 }: Props) {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [openDuplicateWorkflowDialog, setOpenDuplicateWorkflowDialog] =
+    useState(false);
 
   return (
     <>
@@ -42,12 +52,19 @@ export default function WorkflowActionsMenu({
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
+
           <Link href={`/workflows/workflow/${workflowId}/executions`}>
             <DropdownMenuItem>
               <HistoryIcon />
               Executions
             </DropdownMenuItem>
           </Link>
+          <DropdownMenuItem
+            onClick={() => setOpenDuplicateWorkflowDialog(true)}
+          >
+            <CopyIcon />
+            Duplicate
+          </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => setOpenDeleteDialog(true)}
             className="text-destructive focus:text-destructive flex items-center gap-2"
@@ -57,6 +74,13 @@ export default function WorkflowActionsMenu({
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+      <DuplicateWorkflowDialog
+        open={openDuplicateWorkflowDialog}
+        setOpen={setOpenDuplicateWorkflowDialog}
+        workflowId={workflowId}
+        workflowName={workflowName}
+        workflowDescription={workflowDescription}
+      />
       <DeleteWorkflowDialog
         open={openDeleteDialog}
         setOpen={setOpenDeleteDialog}

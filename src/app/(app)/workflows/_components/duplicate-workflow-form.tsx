@@ -1,5 +1,3 @@
-"use client";
-
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,11 +10,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import {
-  createWorkflowSchema,
   CreateWorkflowSchemaType,
+  duplicateWorkflowSchema,
+  DuplicateWorkflowSchemaType,
 } from "@/lib/schemas/workflows";
 import { Textarea } from "@/components/ui/textarea";
-import createWorkflowAction from "../_actions/create-workflow-action";
 import { toast } from "sonner";
 import { useAction } from "next-safe-action/hooks";
 import { userErrorMessages } from "@/lib/constants";
@@ -24,22 +22,34 @@ import useWorkflowsStore from "@/lib/store/workflows-store";
 import CustomFormLabel from "@/components/custom-form-label";
 import ButtonWithSpinner from "@/components/button-with-spinner";
 import { ActionReturn } from "@/lib/types/action";
+import duplicateWorkflowAction from "../_actions/duplicate-workflow-action";
 
-const TOAST_ID = "create-workflow";
+const TOAST_ID = "duplicate-workflow";
 
-const defaultValues = {
-  name: "",
-  description: "",
+type Props = {
+  setOpen: (open: boolean) => void;
+  workflowId: string;
+  workflowName: string;
+  workflowDescription: string | null;
 };
 
-export default function CreateWorkflowForm() {
+export default function DuplicateWorkflowForm({
+  setOpen,
+  workflowId,
+  workflowName,
+  workflowDescription,
+}: Props) {
   const { existingWorkflowNames } = useWorkflowsStore();
-  const form = useForm<CreateWorkflowSchemaType>({
-    resolver: zodResolver(createWorkflowSchema),
-    defaultValues,
+  const form = useForm<DuplicateWorkflowSchemaType>({
+    resolver: zodResolver(duplicateWorkflowSchema),
+    defaultValues: {
+      workflowId,
+      name: `${workflowName} copy`,
+      description: workflowDescription ? workflowDescription : undefined,
+    },
   });
-  const { execute, isPending } = useAction(createWorkflowAction, {
-    onExecute: () => toast.loading("Creating workflow...", { id: TOAST_ID }),
+  const { execute, isPending } = useAction(duplicateWorkflowAction, {
+    onExecute: () => toast.loading("Duplicating workflow...", { id: TOAST_ID }),
     onSuccess: ({ data }) => handleSuccess(data),
     onError: ({ error: { validationErrors } }) => handleError(validationErrors),
   });
@@ -115,10 +125,12 @@ export default function CreateWorkflowForm() {
       return;
     }
 
-    execute(formData);
+    execute({ ...formData, workflowId });
   }
 
-  function handleSuccess(data?: ActionReturn<keyof CreateWorkflowSchemaType>) {
+  function handleSuccess(
+    data?: ActionReturn<keyof DuplicateWorkflowSchemaType>,
+  ) {
     if (data && !data.success) {
       if (data.field) {
         form.setError(
@@ -139,7 +151,8 @@ export default function CreateWorkflowForm() {
       return toast.error(data.message, { id: TOAST_ID });
     }
 
-    toast.success("Workflow created", { id: TOAST_ID });
+    setOpen(false);
+    toast.success("Workflow duplicated", { id: TOAST_ID });
   }
 
   function handleError(validationErrors?: {
