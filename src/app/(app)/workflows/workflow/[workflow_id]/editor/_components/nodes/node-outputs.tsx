@@ -6,6 +6,8 @@ type Props = {
 };
 
 export default function NodeOutputs({ outputs }: Props) {
+  if (outputs.length === 0) return null;
+
   return (
     <div className="divide-background divide-y-2 rounded-b-xl">
       {outputs.map((output) => (

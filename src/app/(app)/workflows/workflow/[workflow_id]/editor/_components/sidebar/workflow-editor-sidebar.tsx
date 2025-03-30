@@ -9,7 +9,12 @@ type Props = {
 
 export default function WorkflowEditorSidebar({ workflow }: Props) {
   return (
-    <div className="bg-sidebar flex h-full w-[320px] max-w-[320px] min-w-[320px] flex-col divide-y border-r">
+    <div
+      className="bg-sidebar flex h-[calc(100vh-(--spacing(12)))] w-[320px] max-w-[320px] min-w-[320px] flex-1 flex-col divide-y overflow-y-auto border-r"
+      style={{
+        scrollbarWidth: "thin",
+      }}
+    >
       <Workflow workflow={workflow} />
       <TaskMenu />
       <ActionButtons

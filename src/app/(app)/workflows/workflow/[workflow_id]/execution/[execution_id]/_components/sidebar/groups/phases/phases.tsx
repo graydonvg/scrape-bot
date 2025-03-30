@@ -41,7 +41,7 @@ export default function Phases({ tasks }: Props) {
 
   return (
     <SidebarGroup
-      className="group/phases relative h-full overflow-y-auto pt-0 pb-4"
+      className="group/phases relative min-h-[200px] flex-1 overflow-y-auto pt-0 pb-4"
       style={{
         scrollbarWidth: "thin",
       }}

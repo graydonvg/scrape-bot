@@ -3,6 +3,7 @@ import { extractTextFromElementTask, getPageHtmlTask } from "./data-extraction";
 import { Task, TaskType } from "@/lib/types/task";
 import { clickElementTask, fillInputFieldTask } from "./user-interaction";
 import { waitForElementTask } from "./timing-controls";
+import { deliverViaWebhookTask } from "./results";
 
 type TaskRegistry = {
   [K in TaskType]: Task & {
@@ -17,4 +18,5 @@ export const taskRegistry: TaskRegistry = {
   FILL_INPUT_FIELD: fillInputFieldTask,
   CLICK_ELEMENT: clickElementTask,
   WAIT_FOR_ELEMENT: waitForElementTask,
+  DELIVER_VIA_WEBHOOK: deliverViaWebhookTask,
 };

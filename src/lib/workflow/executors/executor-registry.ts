@@ -12,6 +12,7 @@ import {
 import fillInputFieldExecutor from "./fill-input-field";
 import clickElementExecutor from "./click-element-executor";
 import waitForElementExecutor from "./wait-for-element-executor";
+import deliverViaWebhookExecutor from "./deliver-via-webhook-executor";
 
 type ExecutorFn<T extends Task> = (
   taskId: string,
@@ -30,4 +31,5 @@ export const executorRegistry: ExecutorRegistry = {
   FILL_INPUT_FIELD: fillInputFieldExecutor,
   CLICK_ELEMENT: clickElementExecutor,
   WAIT_FOR_ELEMENT: waitForElementExecutor,
+  DELIVER_VIA_WEBHOOK: deliverViaWebhookExecutor,
 };

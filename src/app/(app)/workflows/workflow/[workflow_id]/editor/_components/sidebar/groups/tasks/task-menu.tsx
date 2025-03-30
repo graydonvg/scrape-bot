@@ -1,6 +1,6 @@
 "use client";
 
-import { ClockIcon, FileCode2Icon, HandIcon } from "lucide-react";
+import { ClockIcon, FileCode2Icon, FileTextIcon, HandIcon } from "lucide-react";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -30,6 +30,12 @@ const items = [
     isOpen: true,
     taskTypes: [TaskType.WaitForElement],
   },
+  {
+    category: "Results",
+    icon: FileTextIcon,
+    isOpen: true,
+    taskTypes: [TaskType.DeliverViaWebhook],
+  },
 ];
 
 export default function TaskMenu() {
@@ -37,7 +43,7 @@ export default function TaskMenu() {
 
   return (
     <SidebarGroup
-      className="group/tasks relative h-full overflow-y-auto pt-0 pb-4"
+      className="group/tasks relative min-h-[200px] flex-1 overflow-y-auto pt-0 pb-4"
       style={{
         scrollbarWidth: "thin",
       }}

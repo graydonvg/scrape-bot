@@ -25,7 +25,7 @@ export default function TaskParameter({ label, value }: Props) {
           ref={inputRef}
           readOnly
           value={value}
-          className="pointer-events-none min-w-40 truncate pr-12"
+          className="pointer-events-none truncate pr-12"
         />
         {!copied ? (
           <TooltipWrapper tooltipContent="Copy to clipboard">

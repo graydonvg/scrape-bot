@@ -64,6 +64,11 @@ export default async function waitForElementExecutor(
 
     return { success: true };
   } catch (error) {
+    if (error instanceof Error && error.name === "TimeoutError") {
+      executionContext.logDb.ERROR(taskId, error.message);
+      return { success: false, errorType: "user" };
+    }
+
     executionContext.logDb.ERROR(taskId, userErrorMessages.Unexpected);
     log.error(loggerErrorMessages.Unexpected, { error });
     return { success: false, errorType: "internal" };

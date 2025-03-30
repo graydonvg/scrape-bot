@@ -19,6 +19,8 @@ export enum TaskParamName {
   Value = "Value to enter",
   Visibility = "Visibility",
   MaxWaitTime = "Maximum time to wait (ms)",
+  TargetUrl = "Target URL",
+  Body = "Body",
 }
 
 export enum TaskType {
@@ -28,6 +30,7 @@ export enum TaskType {
   FillInputField = "FILL_INPUT_FIELD",
   ClickElement = "CLICK_ELEMENT",
   WaitForElement = "WAIT_FOR_ELEMENT",
+  DeliverViaWebhook = "DELIVER_VIA_WEBHOOK",
 }
 
 export type TaskInput = {
