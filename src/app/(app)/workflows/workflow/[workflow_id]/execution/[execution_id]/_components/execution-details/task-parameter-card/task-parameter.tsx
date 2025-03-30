@@ -18,9 +18,9 @@ export default function TaskParameter({ label, value }: Props) {
   const [copied, setCopied] = useState(false);
 
   return (
-    <div className="flex items-center">
-      <Label className="mr-4 basis-1/3 whitespace-nowrap">{label}:</Label>
-      <div className="relative flex basis-2/3 items-center">
+    <div className="flex items-center gap-4">
+      <Label className="w-1/3 whitespace-nowrap">{label}:</Label>
+      <div className="relative flex flex-1 items-center">
         <Input
           ref={inputRef}
           readOnly

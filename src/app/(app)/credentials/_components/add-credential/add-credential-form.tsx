@@ -1,5 +1,3 @@
-"use client";
-
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,34 +10,40 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import {
-  createWorkflowSchema,
-  CreateWorkflowSchemaType,
-} from "@/lib/schemas/workflows";
-import { Textarea } from "@/components/ui/textarea";
+  addCredentialSchema,
+  AddCredentialSchemaType,
+} from "@/lib/schemas/credential";
 import { toast } from "sonner";
 import { useAction } from "next-safe-action/hooks";
 import { userErrorMessages } from "@/lib/constants";
-import useWorkflowsStore from "@/lib/store/workflows-store";
 import CustomFormLabel from "@/components/custom-form-label";
 import ButtonWithSpinner from "@/components/button-with-spinner";
 import { ActionReturn } from "@/lib/types/action";
-import createWorkflowAction from "../../_actions/create-workflow-action";
+import { PlusIcon } from "lucide-react";
+import addCredentialAction from "../../_actions/add-credential-action";
+import { Textarea } from "@/components/ui/textarea";
+import useCredentialsStore from "@/lib/store/credentials-store";
+import { Dispatch, SetStateAction } from "react";
 
 const TOAST_ID = "create-workflow";
 
 const defaultValues = {
   name: "",
-  description: "",
+  value: "",
 };
 
-export default function CreateWorkflowForm() {
-  const { existingWorkflowNames } = useWorkflowsStore();
-  const form = useForm<CreateWorkflowSchemaType>({
-    resolver: zodResolver(createWorkflowSchema),
+type Props = {
+  setOpen: Dispatch<SetStateAction<boolean>>;
+};
+
+export default function AddCredentialForm({ setOpen }: Props) {
+  const { existingCredentialNames } = useCredentialsStore();
+  const form = useForm<AddCredentialSchemaType>({
+    resolver: zodResolver(addCredentialSchema),
     defaultValues,
   });
-  const { execute, isPending } = useAction(createWorkflowAction, {
-    onExecute: () => toast.loading("Creating workflow...", { id: TOAST_ID }),
+  const { execute, isPending } = useAction(addCredentialAction, {
+    onExecute: () => toast.loading("Adding credential...", { id: TOAST_ID }),
     onSuccess: ({ data }) => handleSuccess(data),
     onError: ({ error: { validationErrors } }) => handleError(validationErrors),
   });
@@ -59,28 +63,30 @@ export default function CreateWorkflowForm() {
                   {...field}
                 />
               </FormControl>
+              <FormDescription>
+                This name will be used to identify the credential
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
         <FormField
           control={form.control}
-          name="description"
+          name="value"
           render={({ field }) => (
             <FormItem>
-              <CustomFormLabel label="Description" optional />
+              <CustomFormLabel label="Value" optional={false} />
               <FormControl>
                 <Textarea
                   {...field}
                   className="resize-none"
-                  placeholder="Your description..."
+                  placeholder="Your credential..."
                 />
               </FormControl>
               <FormDescription>
-                Provide a brief description of what your workflow does.
+                Enter the value associated with this credential.
                 <br />
-                This is optional, but can help you remember the workflow&apos;s
-                purpose.
+                This value will be securely encrypted and stored.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -90,22 +96,25 @@ export default function CreateWorkflowForm() {
           type="submit"
           loading={isPending}
           className="w-full capitalize"
+          startIcon={<PlusIcon />}
         >
-          Proceed
+          Add
         </ButtonWithSpinner>
       </form>
     </Form>
   );
 
-  function handleSubmit(formData: CreateWorkflowSchemaType) {
-    const workflowNameExists = existingWorkflowNames?.includes(formData.name);
+  function handleSubmit(formData: AddCredentialSchemaType) {
+    const credentialNameExists = existingCredentialNames?.includes(
+      formData.name,
+    );
 
-    if (workflowNameExists) {
+    if (credentialNameExists) {
       form.setError(
         "name",
         {
           type: "duplicate",
-          message: `Workflow name "${formData.name}" already exists. Please provide a unique name.`,
+          message: `Credential name "${formData.name}" already exists. Please provide a unique name.`,
         },
         {
           shouldFocus: true,
@@ -118,7 +127,7 @@ export default function CreateWorkflowForm() {
     execute(formData);
   }
 
-  function handleSuccess(data?: ActionReturn<keyof CreateWorkflowSchemaType>) {
+  function handleSuccess(data?: ActionReturn<keyof AddCredentialSchemaType>) {
     if (data && !data.success) {
       if (data.field) {
         form.setError(
@@ -139,14 +148,15 @@ export default function CreateWorkflowForm() {
       return toast.error(data.message, { id: TOAST_ID });
     }
 
-    toast.success("Workflow created", { id: TOAST_ID });
+    setOpen(false);
+    toast.success("Credential added", { id: TOAST_ID });
   }
 
   function handleError(validationErrors?: {
     formErrors: string[];
     fieldErrors: {
       name?: string[] | undefined;
-      description?: string[] | undefined;
+      value?: string[] | undefined;
     };
   }) {
     if (validationErrors) {

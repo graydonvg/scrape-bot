@@ -1,4 +1,4 @@
-import { AlertCircleIcon, TriangleAlertIcon } from "lucide-react";
+import { AlertCircleIcon, ShieldIcon, TriangleAlertIcon } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle, alertVariants } from "./ui/alert";
 import { VariantProps } from "class-variance-authority";
 
@@ -13,6 +13,8 @@ export default function CustomAlert({ title, description, variant }: Props) {
     <Alert variant={variant} className="text-center text-pretty sm:text-left">
       {variant === "destructive" && <AlertCircleIcon />}
       {variant === "warning" && <TriangleAlertIcon />}
+      {variant === "success" && <ShieldIcon />}
+
       <AlertTitle>{title}</AlertTitle>
       <AlertDescription>{description}</AlertDescription>
     </Alert>

@@ -5,7 +5,7 @@ export const getPageHtmlTask = {
   type: TaskType.GetPageHtml,
   label: "Get page HTML",
   credits: 2,
-  icon: (props) => <CodeIcon className="stroke-rose-400" {...props} />,
+  icon: (props) => <CodeIcon className="stroke-orange-400" {...props} />,
   isEntryPoint: false,
   inputs: [
     {
@@ -30,7 +30,7 @@ export const extractTextFromElementTask = {
   type: TaskType.ExtractTextFromElement,
   label: "Extract text from element",
   credits: 2,
-  icon: (props) => <TextIcon className="stroke-rose-400" {...props} />,
+  icon: (props) => <TextIcon className="stroke-orange-400" {...props} />,
   isEntryPoint: false,
   inputs: [
     {

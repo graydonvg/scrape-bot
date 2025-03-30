@@ -4,18 +4,24 @@ import { ReactNode } from "react";
 type Props = {
   title: string;
   description: string;
+  icon?: ReactNode;
   children?: ReactNode;
 };
 
 export default function NoResultsFound({
   title,
   description,
+  icon,
   children,
 }: Props) {
   return (
     <div className="flex-center size-full flex-col gap-4">
       <div className="bg-accent flex-center size-20 rounded-full">
-        <InboxIcon className="stroke-primary size-10 dark:stroke-blue-500" />
+        {icon ? (
+          icon
+        ) : (
+          <InboxIcon className="stroke-primary size-10 dark:stroke-blue-500" />
+        )}
       </div>
 
       <div className="flex flex-col gap-1 text-center">

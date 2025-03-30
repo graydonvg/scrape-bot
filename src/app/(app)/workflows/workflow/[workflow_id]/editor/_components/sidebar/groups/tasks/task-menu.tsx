@@ -13,16 +13,16 @@ import { TaskType } from "@/lib/types/task";
 
 const items = [
   {
-    category: "Data Extraction",
-    icon: FileCode2Icon,
-    isOpen: true,
-    taskTypes: [TaskType.GetPageHtml, TaskType.ExtractTextFromElement],
-  },
-  {
     category: "User Interaction",
     icon: HandIcon,
     isOpen: true,
     taskTypes: [TaskType.FillInputField, TaskType.ClickElement],
+  },
+  {
+    category: "Data Extraction",
+    icon: FileCode2Icon,
+    isOpen: true,
+    taskTypes: [TaskType.GetPageHtml, TaskType.ExtractTextFromElement],
   },
   {
     category: "Timing Controls",

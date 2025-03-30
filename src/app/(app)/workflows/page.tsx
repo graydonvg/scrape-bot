@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function WorkflowsPage() {
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex flex-1 flex-col">
       <PageHeader title="Workflows" subtitle="Manage your workflows">
         <CreateWorkflowDialog />
       </PageHeader>

@@ -9,6 +9,30 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      credentials: {
+        Row: {
+          createdAt: string;
+          credentialId: string;
+          name: string;
+          userId: string;
+          value: string;
+        };
+        Insert: {
+          createdAt?: string;
+          credentialId?: string;
+          name: string;
+          userId?: string;
+          value: string;
+        };
+        Update: {
+          createdAt?: string;
+          credentialId?: string;
+          name?: string;
+          userId?: string;
+          value?: string;
+        };
+        Relationships: [];
+      };
       taskLogs: {
         Row: {
           logLevel: Database["public"]["Enums"]["LogLevel"];

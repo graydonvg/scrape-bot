@@ -5,7 +5,7 @@ export const fillInputFieldTask = {
   type: TaskType.FillInputField,
   label: "Fill input field",
   credits: 1,
-  icon: (props) => <Edit3Icon className="stroke-orange-400" {...props} />,
+  icon: (props) => <Edit3Icon className="stroke-red-400" {...props} />,
   isEntryPoint: false,
   inputs: [
     {
@@ -37,7 +37,7 @@ export const clickElementTask = {
   label: "Click element",
   credits: 1,
   icon: (props) => (
-    <MousePointerClickIcon className="stroke-orange-400" {...props} />
+    <MousePointerClickIcon className="stroke-red-400" {...props} />
   ),
   isEntryPoint: false,
   inputs: [
