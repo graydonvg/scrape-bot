@@ -95,7 +95,7 @@ export const extractPropertyFromJsonTask = {
   isEntryPoint: false,
   inputs: [
     {
-      name: TaskParamName.JSON,
+      name: TaskParamName.Json,
       type: TaskParamType.String,
       required: true,
     },

@@ -1,6 +1,12 @@
 "use client";
 
-import { ClockIcon, FileCode2Icon, FileTextIcon, HandIcon } from "lucide-react";
+import {
+  ClockIcon,
+  FileCode2Icon,
+  FileCodeIcon,
+  FileTextIcon,
+  HandIcon,
+} from "lucide-react";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -28,6 +34,12 @@ const items = [
       TaskType.ExtractDataWithAi,
       TaskType.ExtractPropertyFromJson,
     ],
+  },
+  {
+    category: "Data Insertion",
+    icon: FileCodeIcon,
+    isOpen: true,
+    taskTypes: [TaskType.AddPropertyToJson],
   },
   {
     category: "Timing Controls",

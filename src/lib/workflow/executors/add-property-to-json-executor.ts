@@ -6,13 +6,13 @@ import {
   ExecutorFunctionReturn,
 } from "@/lib/types/execution";
 import { TaskParamName } from "@/lib/types/task";
-import { extractPropertyFromJsonTask } from "../tasks/data-extraction";
+import { addPropertyToJsonTask } from "../tasks/data-insertion";
 
-export default async function extractPropertyFromJsonExecutor(
-  executionContext: ExecutionContext<typeof extractPropertyFromJsonTask>,
+export default async function addPropertyToJsonExecutor(
+  executionContext: ExecutionContext<typeof addPropertyToJsonTask>,
 ): Promise<ExecutorFunctionReturn> {
   const logger = executionContext.logger.with({
-    executor: "extractPropertyFromJsonExecutor",
+    executor: "addPropertyToJsonExecutor",
   });
 
   let taskId: string | null = null;
@@ -41,18 +41,23 @@ export default async function extractPropertyFromJsonExecutor(
       return { success: false, errorType: "internal" };
     }
 
-    const json = JSON.parse(jsonData);
-    const propertyValue = json[propertyName];
+    const propertyValue = executionContext.getInput(
+      TaskParamName.PropertyValue,
+    );
 
-    if (propertyValue === undefined) {
+    if (!propertyValue) {
+      logger.error(`${TaskParamName.PropertyValue} undefined`);
       executionContext.logDb.ERROR(
         taskId,
-        `${TaskParamName.PropertyName} "${propertyName}" not found`,
+        `${TaskParamName.PropertyValue} undefined`,
       );
-      return { success: false, errorType: "user" };
+      return { success: false, errorType: "internal" };
     }
 
-    executionContext.setOutput(TaskParamName.PropertyValue, propertyValue);
+    const json = JSON.parse(jsonData);
+    json[propertyName] = propertyValue;
+
+    executionContext.setOutput(TaskParamName.UpdatedJson, JSON.stringify(json));
 
     return { success: true };
   } catch (error) {

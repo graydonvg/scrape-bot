@@ -6,10 +6,7 @@ export const deliverViaWebhookTask = {
   label: "Deliver via webhook",
   credits: 1,
   icon: (props) => (
-    <WebhookIcon
-      className="stroke-green-600 dark:stroke-green-400"
-      {...props}
-    />
+    <WebhookIcon className="stroke-sky-600 dark:stroke-sky-400" {...props} />
   ),
   isEntryPoint: false,
   inputs: [

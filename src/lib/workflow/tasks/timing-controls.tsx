@@ -5,7 +5,9 @@ export const waitForElementTask = {
   type: TaskType.WaitForElement,
   label: "Wait for element",
   credits: 1,
-  icon: (props) => <EyeIcon className="stroke-yellow-400" {...props} />,
+  icon: (props) => (
+    <EyeIcon className="stroke-green-600 dark:stroke-green-400" {...props} />
+  ),
   isEntryPoint: false,
 
   inputs: [

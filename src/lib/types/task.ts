@@ -26,9 +26,10 @@ export enum TaskParamName {
   Content = "Content",
   Credential = "Credential",
   Prompt = "Prompt",
-  JSON = "JSON",
+  Json = "JSON",
   PropertyName = "Property name",
   PropertyValue = "Property value",
+  UpdatedJson = "Updated JSON",
 }
 
 export enum TaskType {
@@ -41,6 +42,7 @@ export enum TaskType {
   DeliverViaWebhook = "DELIVER_VIA_WEBHOOK",
   ExtractDataWithAi = "EXTRACT_DATA_WITH_AI",
   ExtractPropertyFromJson = "EXTRACT_PROPERTY_FROM_JSON",
+  AddPropertyToJson = "ADD_PROPERTY_TO_JSON",
 }
 
 export type TaskInput = {
