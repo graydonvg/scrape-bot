@@ -1,12 +1,12 @@
 import CustomAlert from "@/components/custom-alert";
-import getUserCredentials from "../_data-access/get-user-credentials";
+import getUserCredentialsServer from "../_data-access/get-user-credentials-server";
 import NoResultsFound from "@/components/no-results-found";
 import { ShieldOffIcon } from "lucide-react";
 import AddCredentialDialog from "./add-credential/add-credential-dialog";
 import CredentialCards from "./credential-cards";
 
 export default async function UserCredentials() {
-  const credentials = await getUserCredentials();
+  const credentials = await getUserCredentialsServer();
 
   if (!credentials) {
     return (

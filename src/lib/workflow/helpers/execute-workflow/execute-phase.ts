@@ -17,9 +17,9 @@ export default async function executePhase(
   phase: WorkflowExecutionPhase,
   phaseContext: ExecutionPhaseContext,
   logCollector: LogCollector,
-  log: Logger,
+  logger: Logger,
 ) {
-  log = log.with({ function: "executePhase" });
+  logger = logger.with({ function: "executePhase" });
 
   try {
     const phaseResults: PhaseResult[] = [];
@@ -32,7 +32,7 @@ export default async function executePhase(
 
       if (!executorFn) {
         logCollector.ERROR(task.taskId, "Task executor not found");
-        log.error("Task executor not found");
+        logger.error("Task executor not found");
 
         phaseResults.push({
           success: false,
@@ -48,14 +48,11 @@ export default async function executePhase(
         node,
         phaseContext,
         logCollector,
+        logger,
       );
 
       // Wrap the promise to keep track of the task details
-      const executorPromise: Promise<PhaseResult> = executorFn(
-        task.taskId,
-        executionContext,
-        log,
-      )
+      const executorPromise: Promise<PhaseResult> = executorFn(executionContext)
         .then((result) => {
           if (!result.success) {
             return {
@@ -129,7 +126,7 @@ export default async function executePhase(
       } else {
         // The promise rejected.
         logCollector.ERROR(result.reason.taskId, userErrorMessages.Unexpected);
-        log.error("Executor promise rejected", { error: result.reason });
+        logger.error("Executor promise rejected", { error: result.reason });
 
         phaseResults.push({
           success: false,
@@ -143,7 +140,7 @@ export default async function executePhase(
 
     return phaseResults;
   } catch (error) {
-    log.error(loggerErrorMessages.Unexpected, { error });
+    logger.error(loggerErrorMessages.Unexpected, { error });
     throw error;
   }
 }

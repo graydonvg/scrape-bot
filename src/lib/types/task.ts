@@ -8,6 +8,7 @@ export enum TaskParamType {
   BrowserInstance = "BROWSER_INSTANCE",
   String = "STRING",
   Select = "SELECT",
+  Credential = "CREDENTIAL",
 }
 
 export enum TaskParamName {
@@ -16,11 +17,18 @@ export enum TaskParamName {
   Html = "HTML",
   Selector = "Selector",
   ExtractedText = "Extracted text",
+  ExtractedData = "Extracted data (JSON)",
   Value = "Value to enter",
   Visibility = "Visibility",
   MaxWaitTime = "Maximum time to wait (ms)",
   TargetUrl = "Target URL",
   Body = "Body",
+  Content = "Content",
+  Credential = "Credential",
+  Prompt = "Prompt",
+  JSON = "JSON",
+  PropertyName = "Property name",
+  PropertyValue = "Property value",
 }
 
 export enum TaskType {
@@ -31,6 +39,8 @@ export enum TaskType {
   ClickElement = "CLICK_ELEMENT",
   WaitForElement = "WAIT_FOR_ELEMENT",
   DeliverViaWebhook = "DELIVER_VIA_WEBHOOK",
+  ExtractDataWithAi = "EXTRACT_DATA_WITH_AI",
+  ExtractPropertyFromJson = "EXTRACT_PROPERTY_FROM_JSON",
 }
 
 export type TaskInput = {

@@ -9,7 +9,7 @@ export const createWorkflowSchema = z.object({
   description: z
     .string()
     .trim()
-    .max(80, { message: "Maximum 80 characters allowed" })
+    .max(500, { message: "Maximum 500 characters allowed" })
     .optional(),
 });
 

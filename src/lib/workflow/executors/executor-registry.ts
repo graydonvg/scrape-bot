@@ -3,7 +3,6 @@ import "server-only";
 import goToWebsiteExecutor from "./go-to-website";
 import getPageHtmlExecutor from "./get-page-html";
 import extractTextFromElementExecutor from "./extract-text-from-element.ts";
-import { Logger } from "next-axiom";
 import { Task, TaskType } from "@/lib/types/task";
 import {
   ExecutionContext,
@@ -13,11 +12,11 @@ import fillInputFieldExecutor from "./fill-input-field";
 import clickElementExecutor from "./click-element-executor";
 import waitForElementExecutor from "./wait-for-element-executor";
 import deliverViaWebhookExecutor from "./deliver-via-webhook-executor";
+import extractDataWithAiExecutor from "./extract-data-with-ai-executor";
+import extractPropertyFromJsonExecutor from "./extract-property-from-json-executor";
 
 type ExecutorFn<T extends Task> = (
-  taskId: string,
   executionContext: ExecutionContext<T>,
-  log: Logger,
 ) => Promise<ExecutorFunctionReturn>;
 
 type ExecutorRegistry = {
@@ -32,4 +31,6 @@ export const executorRegistry: ExecutorRegistry = {
   CLICK_ELEMENT: clickElementExecutor,
   WAIT_FOR_ELEMENT: waitForElementExecutor,
   DELIVER_VIA_WEBHOOK: deliverViaWebhookExecutor,
+  EXTRACT_DATA_WITH_AI: extractDataWithAiExecutor,
+  EXTRACT_PROPERTY_FROM_JSON: extractPropertyFromJsonExecutor,
 };

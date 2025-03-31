@@ -17,7 +17,7 @@ import {
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "@/lib/supabase/database.types";
 
-let log = new Logger();
+let logger = new Logger();
 
 export default async function executeWorkflow(
   supabase: SupabaseClient<Database>,
@@ -26,7 +26,7 @@ export default async function executeWorkflow(
   executionId: string,
   nextExecutionAt?: string,
 ) {
-  log = log.with({
+  logger = logger.with({
     context: "executeWorkflow",
     userId,
     workflowId,
@@ -42,7 +42,7 @@ export default async function executeWorkflow(
         .eq("workflowExecutionId", executionId);
 
     if (selectExecutionDataError || workflowExecutionData.length === 0) {
-      log.error(loggerErrorMessages.Select, {
+      logger.error(loggerErrorMessages.Select, {
         error: selectExecutionDataError,
       });
       // TODO: Handle error
@@ -54,7 +54,7 @@ export default async function executeWorkflow(
       userId,
       workflowId,
       executionId,
-      log,
+      logger,
       nextExecutionAt,
     );
 
@@ -73,7 +73,7 @@ export default async function executeWorkflow(
      		 set in phase 1 to be lost.
  		 * - To call the cleanup function once execution completes.
  		 */
-    const phaseContext: ExecutionPhaseContext = { tasks: {} };
+    const phaseContext: ExecutionPhaseContext = { userId, tasks: {} };
     const workflowSuccesses: (boolean | "partial")[] = [];
 
     for (const phase of phases) {
@@ -84,7 +84,7 @@ export default async function executeWorkflow(
           phase,
           phaseContext,
           edges,
-          log,
+          logger,
         );
 
       workflowSuccesses.push(success);
@@ -111,15 +111,15 @@ export default async function executeWorkflow(
       status,
       totalCreditsConsumed,
       totalCreditsToRefund,
-      log,
+      logger,
     );
 
-    await cleanupPhaseContext(phaseContext, log);
+    await cleanupPhaseContext(phaseContext, logger);
 
     revalidatePath(`/workflows`);
   } catch (error) {
     // TODO: Handle error
-    log.error(loggerErrorMessages.Unexpected, { error });
+    logger.error(loggerErrorMessages.Unexpected, { error });
     throw error;
   }
 }

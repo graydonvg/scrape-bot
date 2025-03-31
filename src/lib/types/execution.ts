@@ -3,6 +3,7 @@ import { Database } from "../supabase/database.types";
 import { Task, TaskDb } from "./task";
 import { LogCollector } from "./log";
 import { WorkflowNode } from "./workflow";
+import { Logger } from "next-axiom";
 
 export type WorkflowExecutionStatusDb =
   Database["public"]["Enums"]["WorkflowExecutionStatus"];
@@ -50,9 +51,11 @@ export type PhaseResult = {
 export type ExecutionPhaseContext = {
   browser?: Browser;
   page?: Page;
+  userId: string;
   tasks: Record<
     string,
     {
+      taskId: string;
       inputs: Record<string, string>;
       outputs: Record<string, string>;
     }
@@ -60,6 +63,10 @@ export type ExecutionPhaseContext = {
 };
 
 export type ExecutionContext<T extends Task> = {
+  getUserId: () => string;
+
+  getTaskId: () => string;
+
   getInput: (name: T["inputs"][number]["name"]) => string;
 
   setOutput: (name: T["outputs"][number]["name"], value: string) => void;
@@ -71,4 +78,5 @@ export type ExecutionContext<T extends Task> = {
   setPage: (page: Page) => void;
 
   logDb: LogCollector;
+  logger: Logger;
 };

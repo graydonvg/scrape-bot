@@ -13,9 +13,9 @@ export default async function finalizePhase(
   phaseResults: PhaseResult[],
   phaseContext: ExecutionPhaseContext,
   logCollector: LogCollector,
-  log: Logger,
+  logger: Logger,
 ) {
-  log = log.with({ function: "finalizePhase" });
+  logger = logger.with({ function: "finalizePhase" });
 
   try {
     const taskPromises = phaseResults.map((result) => {
@@ -64,10 +64,10 @@ export default async function finalizePhase(
 
     if (errors.length > 0) {
       // TODO: Handle errors
-      log.error(loggerErrorMessages.Update, { errors });
+      logger.error(loggerErrorMessages.Update, { errors });
     }
   } catch (error) {
-    log.error(loggerErrorMessages.Unexpected, { error });
+    logger.error(loggerErrorMessages.Unexpected, { error });
     throw error;
   }
 }

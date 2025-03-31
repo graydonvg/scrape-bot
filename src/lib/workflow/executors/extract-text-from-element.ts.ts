@@ -3,7 +3,6 @@ import "server-only";
 import { loggerErrorMessages, userErrorMessages } from "@/lib/constants";
 import { extractTextFromElementTask } from "../tasks/data-extraction";
 import * as cheerio from "cheerio";
-import { Logger } from "next-axiom";
 import {
   ExecutionContext,
   ExecutorFunctionReturn,
@@ -11,17 +10,23 @@ import {
 import { TaskParamName } from "@/lib/types/task";
 
 export default async function extractTextFromElementExecutor(
-  taskId: string,
   executionContext: ExecutionContext<typeof extractTextFromElementTask>,
-  log: Logger,
 ): Promise<ExecutorFunctionReturn> {
-  log.with({ executor: "extractTextFromElementExecutor" });
+  const logger = executionContext.logger.with({
+    executor: "extractTextFromElementExecutor",
+  });
+
+  let taskId: string | null = null;
 
   try {
+    taskId = executionContext.getTaskId();
+
+    if (!taskId) logger.error("Task ID undefined");
+
     const selector = executionContext.getInput(TaskParamName.Selector);
 
     if (!selector) {
-      log.error(`${TaskParamName.Selector} undefined`);
+      logger.error(`${TaskParamName.Selector} undefined`);
       executionContext.logDb.ERROR(
         taskId,
         `${TaskParamName.Selector} undefined`,
@@ -32,7 +37,7 @@ export default async function extractTextFromElementExecutor(
     const html = executionContext.getInput(TaskParamName.Html);
 
     if (!html) {
-      log.error(`${TaskParamName.Html} undefined`);
+      logger.error(`${TaskParamName.Html} undefined`);
       executionContext.logDb.ERROR(taskId, `${TaskParamName.Html} undefined`);
       return { success: false, errorType: "internal" };
     }
@@ -64,8 +69,11 @@ export default async function extractTextFromElementExecutor(
 
     return { success: true };
   } catch (error) {
-    executionContext.logDb.ERROR(taskId, userErrorMessages.Unexpected);
-    log.error(loggerErrorMessages.Unexpected, { error });
+    if (taskId) {
+      executionContext.logDb.ERROR(taskId, userErrorMessages.Unexpected);
+    }
+
+    logger.error(loggerErrorMessages.Unexpected, { error });
     return { success: false, errorType: "internal" };
   }
 }

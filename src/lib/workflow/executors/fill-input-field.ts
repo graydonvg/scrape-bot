@@ -1,7 +1,6 @@
 import "server-only";
 
 import { loggerErrorMessages, userErrorMessages } from "@/lib/constants";
-import { Logger } from "next-axiom";
 import {
   ExecutionContext,
   ExecutorFunctionReturn,
@@ -10,17 +9,23 @@ import { TaskParamName } from "@/lib/types/task";
 import { fillInputFieldTask } from "../tasks/user-interaction";
 
 export default async function fillInputFieldExecutor(
-  taskId: string,
   executionContext: ExecutionContext<typeof fillInputFieldTask>,
-  log: Logger,
 ): Promise<ExecutorFunctionReturn> {
-  log.with({ executor: "fillInputFieldExecutor" });
+  const logger = executionContext.logger.with({
+    executor: "fillInputFieldExecutor",
+  });
+
+  let taskId: string | null = null;
 
   try {
+    taskId = executionContext.getTaskId();
+
+    if (!taskId) logger.error("Task ID undefined");
+
     const selector = executionContext.getInput(TaskParamName.Selector);
 
     if (!selector) {
-      log.error(`${TaskParamName.Selector} undefined`);
+      logger.error(`${TaskParamName.Selector} undefined`);
       executionContext.logDb.ERROR(
         taskId,
         `${TaskParamName.Selector} undefined`,
@@ -31,7 +36,7 @@ export default async function fillInputFieldExecutor(
     const value = executionContext.getInput(TaskParamName.Value);
 
     if (!value) {
-      log.error(`${TaskParamName.Value} undefined`);
+      logger.error(`${TaskParamName.Value} undefined`);
       executionContext.logDb.ERROR(taskId, `${TaskParamName.Value} undefined`);
       return { success: false, errorType: "internal" };
     }
@@ -42,8 +47,11 @@ export default async function fillInputFieldExecutor(
 
     return { success: true };
   } catch (error) {
-    executionContext.logDb.ERROR(taskId, userErrorMessages.Unexpected);
-    log.error(loggerErrorMessages.Unexpected, { error });
+    if (taskId) {
+      executionContext.logDb.ERROR(taskId, userErrorMessages.Unexpected);
+    }
+
+    logger.error(loggerErrorMessages.Unexpected, { error });
     return { success: false, errorType: "internal" };
   }
 }

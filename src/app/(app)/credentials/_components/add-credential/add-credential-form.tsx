@@ -79,7 +79,7 @@ export default function AddCredentialForm({ setOpen }: Props) {
               <FormControl>
                 <Textarea
                   {...field}
-                  className="resize-none"
+                  className="h-[120px] resize-none"
                   placeholder="Your credential..."
                 />
               </FormControl>

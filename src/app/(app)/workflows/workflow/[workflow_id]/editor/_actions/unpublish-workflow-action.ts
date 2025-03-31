@@ -12,7 +12,6 @@ import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { redirect } from "next/navigation";
 import { ActionReturn } from "@/lib/types/action";
 import { revalidatePath } from "next/cache";
-import { taskRegistry } from "@/lib/workflow/tasks/task-registry";
 
 const unpublishWorkflowAction = actionClient
   .metadata({ actionName: "unpublishWorkflowAction" })
@@ -46,9 +45,7 @@ const unpublishWorkflowAction = actionClient
           .update({
             status: "DRAFT",
             executionPlan: null,
-            // GO_TO_WEBSITE is the entry point and will always be present
-            // The default credit cost will always be at least the cost of the entry point
-            creditCost: taskRegistry.GO_TO_WEBSITE.credits,
+            creditCost: 0,
           })
           .eq("userId", user.id)
           .eq("workflowId", formData.workflowId)

@@ -1,5 +1,10 @@
 import { goToWebsiteTask } from "./entry-point";
-import { extractTextFromElementTask, getPageHtmlTask } from "./data-extraction";
+import {
+  extractDataWithAiTask,
+  extractTextFromElementTask,
+  getPageHtmlTask,
+  extractPropertyFromJsonTask,
+} from "./data-extraction";
 import { Task, TaskType } from "@/lib/types/task";
 import { clickElementTask, fillInputFieldTask } from "./user-interaction";
 import { waitForElementTask } from "./timing-controls";
@@ -19,4 +24,6 @@ export const taskRegistry: TaskRegistry = {
   CLICK_ELEMENT: clickElementTask,
   WAIT_FOR_ELEMENT: waitForElementTask,
   DELIVER_VIA_WEBHOOK: deliverViaWebhookTask,
+  EXTRACT_DATA_WITH_AI: extractDataWithAiTask,
+  EXTRACT_PROPERTY_FROM_JSON: extractPropertyFromJsonTask,
 };

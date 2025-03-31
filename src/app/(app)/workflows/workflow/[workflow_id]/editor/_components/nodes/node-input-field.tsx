@@ -5,6 +5,7 @@ import BrowserInstanceInput from "./inputs/browser-instance-input";
 import { TaskInput, TaskParamType } from "@/lib/types/task";
 import { WorkflowNode } from "@/lib/types/workflow";
 import SelectInput from "./inputs/select-input";
+import CredentialInput from "./inputs/credential-input";
 
 type Props = {
   nodeId: string;
@@ -46,6 +47,15 @@ export default function NodeInputField({ nodeId, input, disabled }: Props) {
     case TaskParamType.Select:
       return (
         <SelectInput
+          input={input}
+          defaultValue={inputValue}
+          updateNodeInputValue={updateNodeInputValue}
+        />
+      );
+
+    case TaskParamType.Credential:
+      return (
+        <CredentialInput
           input={input}
           defaultValue={inputValue}
           updateNodeInputValue={updateNodeInputValue}

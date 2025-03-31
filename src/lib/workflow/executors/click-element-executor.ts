@@ -1,7 +1,6 @@
 import "server-only";
 
 import { loggerErrorMessages, userErrorMessages } from "@/lib/constants";
-import { Logger } from "next-axiom";
 import {
   ExecutionContext,
   ExecutorFunctionReturn,
@@ -10,17 +9,23 @@ import { TaskParamName } from "@/lib/types/task";
 import { clickElementTask } from "../tasks/user-interaction";
 
 export default async function clickElementExecutor(
-  taskId: string,
   executionContext: ExecutionContext<typeof clickElementTask>,
-  log: Logger,
 ): Promise<ExecutorFunctionReturn> {
-  log.with({ executor: "clickElementExecutor" });
+  const logger = executionContext.logger.with({
+    executor: "clickElementExecutor",
+  });
+
+  let taskId: string | null = null;
 
   try {
+    taskId = executionContext.getTaskId();
+
+    if (!taskId) logger.error("Task ID undefined");
+
     const selector = executionContext.getInput(TaskParamName.Selector);
 
     if (!selector) {
-      log.error(`${TaskParamName.Selector} undefined`);
+      logger.error(`${TaskParamName.Selector} undefined`);
       executionContext.logDb.ERROR(
         taskId,
         `${TaskParamName.Selector} undefined`,
@@ -34,8 +39,11 @@ export default async function clickElementExecutor(
 
     return { success: true };
   } catch (error) {
-    executionContext.logDb.ERROR(taskId, userErrorMessages.Unexpected);
-    log.error(loggerErrorMessages.Unexpected, { error });
+    if (taskId) {
+      executionContext.logDb.ERROR(taskId, userErrorMessages.Unexpected);
+    }
+
+    logger.error(loggerErrorMessages.Unexpected, { error });
     return { success: false, errorType: "internal" };
   }
 }

@@ -1,12 +1,14 @@
+import "server-only";
+
 import { loggerErrorMessages } from "@/lib/constants";
 import createSupabaseServerClient from "@/lib/supabase/supabase-server";
 import { Logger } from "next-axiom";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { redirect } from "next/navigation";
 
-export default async function getUserCredentials() {
+export default async function getUserCredentialsServer() {
   let log = new Logger();
-  log = log.with({ context: "getUserCredentials" });
+  log = log.with({ context: "getUserCredentialsServer" });
 
   try {
     const supabase = await createSupabaseServerClient();
@@ -25,7 +27,7 @@ export default async function getUserCredentials() {
       .from("credentials")
       .select("*")
       .eq("userId", user.id)
-      .order("createdAt", { ascending: false });
+      .order("name", { ascending: true });
 
     if (error) {
       log.error(loggerErrorMessages.Select, {
@@ -42,7 +44,5 @@ export default async function getUserCredentials() {
 
     log.error(loggerErrorMessages.Unexpected, { error });
     return null;
-  } finally {
-    log.flush();
   }
 }

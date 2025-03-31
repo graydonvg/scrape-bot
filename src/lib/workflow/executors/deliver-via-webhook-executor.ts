@@ -1,7 +1,6 @@
 import "server-only";
 
 import { loggerErrorMessages, userErrorMessages } from "@/lib/constants";
-import { Logger } from "next-axiom";
 import {
   ExecutionContext,
   ExecutorFunctionReturn,
@@ -10,17 +9,23 @@ import { TaskParamName } from "@/lib/types/task";
 import { deliverViaWebhookTask } from "../tasks/results";
 
 export default async function deliverViaWebhookExecutor(
-  taskId: string,
   executionContext: ExecutionContext<typeof deliverViaWebhookTask>,
-  log: Logger,
 ): Promise<ExecutorFunctionReturn> {
-  log.with({ executor: "deliverViaWebhookExecutor" });
+  const logger = executionContext.logger.with({
+    executor: "deliverViaWebhookExecutor",
+  });
+
+  let taskId: string | null = null;
 
   try {
+    taskId = executionContext.getTaskId();
+
+    if (!taskId) logger.error("Task ID undefined");
+
     const targetUrl = executionContext.getInput(TaskParamName.TargetUrl);
 
     if (!targetUrl) {
-      log.error(`${TaskParamName.TargetUrl} undefined`);
+      logger.error(`${TaskParamName.TargetUrl} undefined`);
       executionContext.logDb.ERROR(
         taskId,
         `${TaskParamName.TargetUrl} undefined`,
@@ -31,7 +36,7 @@ export default async function deliverViaWebhookExecutor(
     const body = executionContext.getInput(TaskParamName.Body);
 
     if (!body) {
-      log.error(`${TaskParamName.Body} undefined`);
+      logger.error(`${TaskParamName.Body} undefined`);
       executionContext.logDb.ERROR(taskId, `${TaskParamName.Body} undefined`);
       return { success: false, errorType: "internal" };
     }
@@ -58,8 +63,11 @@ export default async function deliverViaWebhookExecutor(
 
     return { success: true };
   } catch (error) {
-    executionContext.logDb.ERROR(taskId, userErrorMessages.Unexpected);
-    log.error(loggerErrorMessages.Unexpected, { error });
+    if (taskId) {
+      executionContext.logDb.ERROR(taskId, userErrorMessages.Unexpected);
+    }
+
+    logger.error(loggerErrorMessages.Unexpected, { error });
     return { success: false, errorType: "internal" };
   }
 }

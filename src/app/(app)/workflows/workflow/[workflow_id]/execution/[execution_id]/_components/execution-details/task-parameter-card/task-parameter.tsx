@@ -18,14 +18,14 @@ export default function TaskParameter({ label, value }: Props) {
   const [copied, setCopied] = useState(false);
 
   return (
-    <div className="flex items-center gap-4">
-      <Label className="w-1/3 whitespace-nowrap">{label}:</Label>
-      <div className="relative flex flex-1 items-center">
+    <div className="flex items-center gap-4 overflow-visible">
+      <Label className="min-w-1/3 shrink-0 whitespace-nowrap">{label}:</Label>
+      <div className="relative flex w-full items-center">
         <Input
           ref={inputRef}
           readOnly
           value={value}
-          className="pointer-events-none truncate pr-12"
+          className="truncate pr-12"
         />
         {!copied ? (
           <TooltipWrapper tooltipContent="Copy to clipboard">

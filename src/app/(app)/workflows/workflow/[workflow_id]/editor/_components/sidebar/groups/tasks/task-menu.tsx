@@ -22,7 +22,12 @@ const items = [
     category: "Data Extraction",
     icon: FileCode2Icon,
     isOpen: true,
-    taskTypes: [TaskType.GetPageHtml, TaskType.ExtractTextFromElement],
+    taskTypes: [
+      TaskType.GetPageHtml,
+      TaskType.ExtractTextFromElement,
+      TaskType.ExtractDataWithAi,
+      TaskType.ExtractPropertyFromJson,
+    ],
   },
   {
     category: "Timing Controls",

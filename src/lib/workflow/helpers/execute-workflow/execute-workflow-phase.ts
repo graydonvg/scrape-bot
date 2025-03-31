@@ -21,9 +21,9 @@ export default async function executeWorkflowPhase(
   phase: WorkflowExecutionPhase,
   phaseContext: ExecutionPhaseContext,
   edges: Edge[],
-  log: Logger,
+  logger: Logger,
 ) {
-  log = log.with({ function: "executeWorkflowPhase" });
+  logger = logger.with({ function: "executeWorkflowPhase" });
 
   try {
     // Create a log collector for each phase.
@@ -44,7 +44,7 @@ export default async function executeWorkflowPhase(
         edges,
         phaseContext,
         logCollector,
-        log,
+        logger,
         task.taskId,
       );
 
@@ -89,14 +89,14 @@ export default async function executeWorkflowPhase(
 
     if (errors.length > 0) {
       // TODO: Handle errors
-      log.error(loggerErrorMessages.Update, { errors });
+      logger.error(loggerErrorMessages.Update, { errors });
     }
 
     const phaseResults = await executePhase(
       phase,
       phaseContext,
       logCollector,
-      log,
+      logger,
     );
 
     await finalizePhase(
@@ -105,7 +105,7 @@ export default async function executeWorkflowPhase(
       phaseResults,
       phaseContext,
       logCollector,
-      log,
+      logger,
     );
 
     let success: boolean | "partial" = true;
@@ -137,7 +137,7 @@ export default async function executeWorkflowPhase(
 
     return { success, creditsConsumed, creditsToRefund };
   } catch (error) {
-    log.error(loggerErrorMessages.Unexpected, { error });
+    logger.error(loggerErrorMessages.Unexpected, { error });
     throw error;
   }
 }

@@ -23,12 +23,12 @@ export function populatePhaseContext(
   edges: Edge[],
   phaseContext: ExecutionPhaseContext,
   logCollector: LogCollector,
-  log: Logger,
+  logger: Logger,
   taskId: string,
 ) {
-  log = log.with({ function: "populatePhaseContext" });
+  logger = logger.with({ function: "populatePhaseContext" });
 
-  phaseContext.tasks[node.id] = { inputs: {}, outputs: {} };
+  phaseContext.tasks[node.id] = { taskId, inputs: {}, outputs: {} };
 
   const taskInputs = taskRegistry[node.data.type].inputs;
 
@@ -55,7 +55,7 @@ export function populatePhaseContext(
     if (!connectedEdge) {
       // This should not happen because the workflow has been validated
       logCollector.ERROR(taskId, "Missing connection for input");
-      log.error("Missing edge for input", { input, node, edges });
+      logger.error("Missing edge for input", { input, node, edges });
       continue;
     }
 
@@ -82,8 +82,13 @@ export function createExecutionContext(
   node: WorkflowNode,
   phaseContext: ExecutionPhaseContext,
   logCollector: LogCollector,
+  logger: Logger,
 ): ExecutionContext<Task> {
   return {
+    getUserId: () => phaseContext.userId,
+
+    getTaskId: () => phaseContext.tasks[node.id].taskId,
+
     getInput: (name: TaskParamName) => phaseContext.tasks[node.id].inputs[name],
 
     setOutput: (name, value) => {
@@ -97,20 +102,21 @@ export function createExecutionContext(
     getPage: () => phaseContext.page,
 
     logDb: logCollector,
+    logger,
   };
 }
 
 export async function cleanupPhaseContext(
   phaseContext: ExecutionPhaseContext,
-  log: Logger,
+  logger: Logger,
 ) {
   if (phaseContext.browser) {
-    log = log.with({ function: "cleanupPhaseContext" });
+    logger = logger.with({ function: "cleanupPhaseContext" });
 
     try {
       await phaseContext.browser.close();
     } catch (error) {
-      log.error("Failed to close browser", { error });
+      logger.error("Failed to close browser", { error });
     }
   }
 }

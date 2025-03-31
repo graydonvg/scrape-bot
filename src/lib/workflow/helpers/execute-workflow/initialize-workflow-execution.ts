@@ -10,10 +10,10 @@ export default async function initializeWorkflowExecution(
   userId: string,
   workflowId: string,
   executionId: string,
-  log: Logger,
+  logger: Logger,
   nextExecutionAt?: string,
 ) {
-  log = log.with({ function: "initializeWorkflowExecution" });
+  logger = logger.with({ function: "initializeWorkflowExecution" });
 
   try {
     const workflowExecutionsPromise = supabase
@@ -59,10 +59,10 @@ export default async function initializeWorkflowExecution(
 
     if (errors.length > 0) {
       // TODO: Handle errors
-      log.error(loggerErrorMessages.Update, { errors });
+      logger.error(loggerErrorMessages.Update, { errors });
     }
   } catch (error) {
-    log.error(loggerErrorMessages.Unexpected, { error });
+    logger.error(loggerErrorMessages.Unexpected, { error });
     throw error;
   }
 }

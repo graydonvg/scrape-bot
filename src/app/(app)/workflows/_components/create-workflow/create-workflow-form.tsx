@@ -72,7 +72,7 @@ export default function CreateWorkflowForm() {
               <FormControl>
                 <Textarea
                   {...field}
-                  className="resize-none"
+                  className="h-[120px] resize-none"
                   placeholder="Your description..."
                 />
               </FormControl>
