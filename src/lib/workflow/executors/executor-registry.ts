@@ -15,6 +15,8 @@ import deliverViaWebhookExecutor from "./deliver-via-webhook-executor";
 import extractDataWithAiExecutor from "./extract-data-with-ai-executor";
 import extractPropertyFromJsonExecutor from "./extract-property-from-json-executor";
 import addPropertyToJsonExecutor from "./add-property-to-json-executor";
+import navigateToUrlExecutor from "./navigate-to-url-executor";
+import scrollToElementExecutor from "./scroll-to-element-executor";
 
 type ExecutorFn<T extends Task> = (
   executionContext: ExecutionContext<T>,
@@ -35,4 +37,6 @@ export const executorRegistry: ExecutorRegistry = {
   EXTRACT_DATA_WITH_AI: extractDataWithAiExecutor,
   EXTRACT_PROPERTY_FROM_JSON: extractPropertyFromJsonExecutor,
   ADD_PROPERTY_TO_JSON: addPropertyToJsonExecutor,
+  NAVIGATE_TO_URL: navigateToUrlExecutor,
+  SCROLL_TO_ELEMENT: scrollToElementExecutor,
 };

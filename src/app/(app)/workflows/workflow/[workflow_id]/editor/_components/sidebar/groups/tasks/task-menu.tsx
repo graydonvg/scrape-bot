@@ -22,7 +22,12 @@ const items = [
     category: "User Interaction",
     icon: HandIcon,
     isOpen: true,
-    taskTypes: [TaskType.FillInputField, TaskType.ClickElement],
+    taskTypes: [
+      TaskType.FillInputField,
+      TaskType.ClickElement,
+      TaskType.NavigateToUrl,
+      TaskType.ScrollToElement,
+    ],
   },
   {
     category: "Data Extraction",

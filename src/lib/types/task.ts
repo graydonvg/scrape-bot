@@ -43,6 +43,8 @@ export enum TaskType {
   ExtractDataWithAi = "EXTRACT_DATA_WITH_AI",
   ExtractPropertyFromJson = "EXTRACT_PROPERTY_FROM_JSON",
   AddPropertyToJson = "ADD_PROPERTY_TO_JSON",
+  NavigateToUrl = "NAVIGATE_TO_URL",
+  ScrollToElement = "SCROLL_TO_ELEMENT",
 }
 
 export type TaskInput = {

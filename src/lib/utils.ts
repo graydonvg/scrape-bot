@@ -52,6 +52,6 @@ export function getFormattedWorkflowExecutionStatus(status: string) {
   return status.split("_").join(" ");
 }
 
-export async function wait(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+// export async function wait(ms: number) {
+//   return new Promise((resolve) => setTimeout(resolve, ms));
+// }

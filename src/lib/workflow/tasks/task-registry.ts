@@ -6,7 +6,12 @@ import {
   extractPropertyFromJsonTask,
 } from "./data-extraction";
 import { Task, TaskType } from "@/lib/types/task";
-import { clickElementTask, fillInputFieldTask } from "./user-interaction";
+import {
+  clickElementTask,
+  fillInputFieldTask,
+  navigateToUrlTask,
+  scrollToElementTask,
+} from "./user-interaction";
 import { waitForElementTask } from "./timing-controls";
 import { deliverViaWebhookTask } from "./results";
 import { addPropertyToJsonTask } from "./data-insertion";
@@ -28,4 +33,6 @@ export const taskRegistry: TaskRegistry = {
   EXTRACT_DATA_WITH_AI: extractDataWithAiTask,
   EXTRACT_PROPERTY_FROM_JSON: extractPropertyFromJsonTask,
   ADD_PROPERTY_TO_JSON: addPropertyToJsonTask,
+  NAVIGATE_TO_URL: navigateToUrlTask,
+  SCROLL_TO_ELEMENT: scrollToElementTask,
 };
