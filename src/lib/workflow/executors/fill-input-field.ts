@@ -41,9 +41,23 @@ export default async function fillInputFieldExecutor(
       return { success: false, errorType: "internal" };
     }
 
-    await executionContext.getPage()?.type(selector, value, { delay: 100 });
+    try {
+      await executionContext.getPage()?.type(selector, value, { delay: 100 });
+    } catch (error) {
+      if (error instanceof Error) {
+        executionContext.logDb.ERROR(taskId, error.message);
 
-    executionContext.logDb.INFO(taskId, "Value entered successfully");
+        if (error.message.includes("No element found for selector")) {
+          return { success: false, errorType: "user" };
+        }
+
+        return { success: false, errorType: "internal" };
+      }
+
+      return { success: false, errorType: "internal" };
+    }
+
+    executionContext.logDb.INFO(taskId, "Value entered");
 
     return { success: true };
   } catch (error) {

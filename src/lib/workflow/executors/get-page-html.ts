@@ -30,7 +30,7 @@ export default async function getPageHtmlExecutor(
       return { success: false, errorType: "internal" };
     }
 
-    executionContext.logDb.INFO(taskId, "HTML extracted successfully");
+    executionContext.logDb.INFO(taskId, "Extracted HTML from page");
 
     executionContext.setOutput(TaskParamName.Html, html);
 

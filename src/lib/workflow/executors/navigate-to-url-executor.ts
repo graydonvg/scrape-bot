@@ -33,6 +33,8 @@ export default async function navigateToUrlExecutor(
       return { success: false, errorType: "internal" };
     }
 
+    executionContext.logDb.INFO(taskId, `Navigating to ${url}`);
+
     await executionContext.getPage()?.goto(url);
 
     executionContext.logDb.INFO(taskId, `Visiting ${url}`);

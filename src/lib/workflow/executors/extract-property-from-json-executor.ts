@@ -52,6 +52,8 @@ export default async function extractPropertyFromJsonExecutor(
       return { success: false, errorType: "user" };
     }
 
+    executionContext.logDb.INFO(taskId, "Extracted property from JSON");
+
     executionContext.setOutput(TaskParamName.PropertyValue, propertyValue);
 
     return { success: true };

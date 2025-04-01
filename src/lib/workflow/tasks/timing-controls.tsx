@@ -37,13 +37,6 @@ export const waitForElementTask = {
         },
       ],
     },
-    {
-      name: TaskParamName.MaxWaitTime,
-      type: TaskParamType.String,
-      required: false,
-      hideHandle: true,
-      helperText: "Defaults to `30000` (30 seconds)",
-    },
   ],
   outputs: [
     {

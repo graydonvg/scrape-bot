@@ -20,7 +20,6 @@ export enum TaskParamName {
   ExtractedData = "Extracted data (JSON)",
   Value = "Value to enter",
   Visibility = "Visibility",
-  MaxWaitTime = "Maximum time to wait (ms)",
   TargetUrl = "Target URL",
   Body = "Body",
   Content = "Content",

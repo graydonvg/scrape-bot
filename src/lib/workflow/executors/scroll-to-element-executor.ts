@@ -55,7 +55,7 @@ export default async function scrollToElementExecutor(
       return scrollResult;
     }
 
-    executionContext.logDb.INFO(taskId, "Scrolled to element successfully");
+    executionContext.logDb.INFO(taskId, "Scrolled to element");
 
     return { success: true };
   } catch (error) {

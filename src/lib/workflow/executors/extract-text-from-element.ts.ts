@@ -60,10 +60,7 @@ export default async function extractTextFromElementExecutor(
       return { success: false, errorType: "user" };
     }
 
-    executionContext.logDb.INFO(
-      taskId,
-      "Extracted text from element successfully",
-    );
+    executionContext.logDb.INFO(taskId, "Extracted text from element");
 
     executionContext.setOutput(TaskParamName.ExtractedText, extractedText);
 

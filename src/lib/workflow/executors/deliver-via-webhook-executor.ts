@@ -36,10 +36,17 @@ export default async function deliverViaWebhookExecutor(
     const body = executionContext.getInput(TaskParamName.Body);
 
     if (!body) {
-      logger.error(`${TaskParamName.Body} undefined`);
+      // There should not be an issue with retrieving the body.
+      // If the body is undefined, the user most likely provided an invalid input
+      // in a previous task.
       executionContext.logDb.ERROR(taskId, `${TaskParamName.Body} undefined`);
+
+      // Since this will end the executor early, keep the error type as internal so that
+      // the user does not get charged
       return { success: false, errorType: "internal" };
     }
+
+    executionContext.logDb.INFO(taskId, "Delivering result");
 
     const response = await fetch(targetUrl, {
       method: "POST",
@@ -57,9 +64,7 @@ export default async function deliverViaWebhookExecutor(
       return { success: false, errorType: "user" };
     }
 
-    const responseBody = await response.json();
-
-    executionContext.logDb.INFO(taskId, JSON.stringify(responseBody, null, 2));
+    executionContext.logDb.INFO(taskId, "Result delivered");
 
     return { success: true };
   } catch (error) {

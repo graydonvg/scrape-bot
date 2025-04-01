@@ -29,7 +29,7 @@ export default async function goToWebsiteExecutor(
       headless: false, // false to open the browser window for testing
     });
 
-    executionContext.logDb.INFO(taskId, "Browser launched successfully");
+    executionContext.logDb.INFO(taskId, "Browser launched");
 
     executionContext.setBrowser(browser);
 

@@ -44,46 +44,36 @@ export default async function waitForElementExecutor(
       return { success: false, errorType: "internal" };
     }
 
-    const maxWaitTime = executionContext.getInput(TaskParamName.MaxWaitTime);
+    executionContext.logDb.INFO(taskId, "Waiting for element");
 
-    const maxWaitTimeNumber = parseInt(maxWaitTime);
-    const isInvalidMaxWaitTime =
-      maxWaitTime && maxWaitTime.length > 0 && isNaN(maxWaitTimeNumber);
+    try {
+      const element = await executionContext
+        .getPage()
+        ?.waitForSelector(selector, {
+          visible: visibility === "visible",
+          hidden: visibility === "hidden",
+        });
 
-    if (isInvalidMaxWaitTime) {
-      executionContext.logDb.ERROR(
-        taskId,
-        `${TaskParamName.MaxWaitTime} is not a valid number. Using default value.`,
-      );
-      return { success: false, errorType: "user" };
-    }
+      if (!element) {
+        executionContext.logDb.ERROR(taskId, "Element not found");
+        return { success: false, errorType: "user" };
+      }
+    } catch (error) {
+      if (error instanceof Error && error.name === "TimeoutError") {
+        if (taskId) {
+          executionContext.logDb.ERROR(taskId, error.message);
+        }
 
-    const element = await executionContext
-      .getPage()
-      ?.waitForSelector(selector, {
-        visible: visibility === "visible",
-        hidden: visibility === "hidden",
-        timeout:
-          maxWaitTime && !isInvalidMaxWaitTime ? maxWaitTimeNumber : undefined,
-      });
+        return { success: false, errorType: "user" };
+      }
 
-    if (!element) {
-      executionContext.logDb.ERROR(taskId, "Element not found");
-      return { success: false, errorType: "user" };
+      throw error;
     }
 
     executionContext.logDb.INFO(taskId, `Element became ${visibility}`);
 
     return { success: true };
   } catch (error) {
-    if (error instanceof Error && error.name === "TimeoutError") {
-      if (taskId) {
-        executionContext.logDb.ERROR(taskId, error.message);
-      }
-
-      return { success: false, errorType: "user" };
-    }
-
     if (taskId) {
       executionContext.logDb.ERROR(taskId, userErrorMessages.Unexpected);
     }

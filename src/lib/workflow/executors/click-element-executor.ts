@@ -33,9 +33,23 @@ export default async function clickElementExecutor(
       return { success: false, errorType: "internal" };
     }
 
-    await executionContext.getPage()?.click(selector);
+    try {
+      await executionContext.getPage()?.click(selector);
+    } catch (error) {
+      if (error instanceof Error) {
+        executionContext.logDb.ERROR(taskId, error.message);
 
-    executionContext.logDb.INFO(taskId, "Element clicked successfully");
+        if (error.message.includes("No element found for selector")) {
+          return { success: false, errorType: "user" };
+        }
+
+        return { success: false, errorType: "internal" };
+      }
+
+      return { success: false, errorType: "internal" };
+    }
+
+    executionContext.logDb.INFO(taskId, "Element clicked");
 
     return { success: true };
   } catch (error) {

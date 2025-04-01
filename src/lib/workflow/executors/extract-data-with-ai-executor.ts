@@ -121,6 +121,8 @@ export default async function extractDataWithAiExecutor(
       loginButtonSelector: "body > div > form > input.btn.btn-primary",
     };
 
+    executionContext.logDb.INFO(taskId, "Extracted data from content");
+
     executionContext.setOutput(
       TaskParamName.ExtractedData,
       JSON.stringify(mockExtractedData),

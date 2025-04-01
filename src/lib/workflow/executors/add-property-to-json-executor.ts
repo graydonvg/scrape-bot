@@ -57,6 +57,8 @@ export default async function addPropertyToJsonExecutor(
     const json = JSON.parse(jsonData);
     json[propertyName] = propertyValue;
 
+    executionContext.logDb.INFO(taskId, "Property added to JSON");
+
     executionContext.setOutput(TaskParamName.UpdatedJson, JSON.stringify(json));
 
     return { success: true };
