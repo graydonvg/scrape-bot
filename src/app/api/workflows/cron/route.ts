@@ -2,48 +2,11 @@ import { loggerErrorMessages, userErrorMessages } from "@/lib/constants";
 import createSupabaseService from "@/lib/supabase/supabase-service";
 import { AxiomRequest, Logger, withAxiom } from "next-axiom";
 import { NextResponse } from "next/server";
-import arcjet, { detectBot } from "@/lib/arcjet";
-
-const aj = arcjet.withRule(
-  detectBot({
-    mode: "LIVE",
-    allow: [],
-  }),
-);
-// .withRule(
-//   fixedWindow({
-//     mode: "LIVE",
-//     window: "60s",
-//     max: 10,
-//   }),
-// );
 
 export const GET = withAxiom(async (request: AxiomRequest) => {
-  const log = request.log;
-
   try {
-    const decision = await aj.protect(request);
-
-    for (const { reason } of decision.results) {
-      if (reason.isError()) {
-        log.error("Arcjet error", { message: reason.message });
-        return NextResponse.json(userErrorMessages.Unexpected, { status: 500 });
-      }
-    }
-
-    if (decision.isDenied()) {
-      if (decision.reason.isBot()) {
-        return NextResponse.json({ error: "Forbidden!" }, { status: 403 });
-      }
-
-      // if (decision.reason.isRateLimit()) {
-      //   return NextResponse.json(
-      //     { error: "Too Many Requests" },
-      //     { status: 429 },
-      //   );
-      // }
-    }
-
+    const log = request.log;
+    const now = new Date().toISOString();
     const supabaseService = createSupabaseService();
 
     const { data: workflows, error } = await supabaseService
@@ -51,7 +14,7 @@ export const GET = withAxiom(async (request: AxiomRequest) => {
       .select("workflowId")
       .not("cron", "is", null)
       .eq("status", "PUBLISHED")
-      .lte("nextExecutionAt", new Date().toISOString());
+      .lte("nextExecutionAt", now);
 
     if (error) {
       log.error(loggerErrorMessages.Select, {
@@ -66,7 +29,7 @@ export const GET = withAxiom(async (request: AxiomRequest) => {
 
     return NextResponse.json({ workflowsToRun: workflows }, { status: 200 });
   } catch (error) {
-    log.error(loggerErrorMessages.Unexpected, { error });
+    request.log?.error(loggerErrorMessages.Unexpected, { error });
 
     return NextResponse.json(userErrorMessages.Unexpected, { status: 500 });
   }

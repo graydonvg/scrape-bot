@@ -34,7 +34,7 @@ export default function CredentialCards({ credentials }: Props) {
           >
             <div className="flex items-center gap-2">
               <div className="bg-primary/10 flex-center size-8 rounded-full">
-                <LockKeyholeIcon className="stroke-primary size-4.5" />
+                <LockKeyholeIcon className="stroke-primary size-4.5 dark:stroke-blue-500" />
               </div>
               <div>
                 <p className="font-bold">{credential.name}</p>

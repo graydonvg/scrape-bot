@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { CoinsIcon, Loader2Icon } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import getUserAvailableCredits from "@/data-access/get-user-available-credits";
+import getUserAvailableCredits from "@/app/(app)/_data-access/get-user-available-credits";
 import AnimatedCounter from "../../../../components/animated-counter";
 import useWorkflowsStore from "@/lib/store/workflows-store";
 import { Button } from "../../../../components/ui/button";

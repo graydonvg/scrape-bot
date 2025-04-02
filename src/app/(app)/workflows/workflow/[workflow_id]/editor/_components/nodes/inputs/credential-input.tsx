@@ -34,11 +34,12 @@ export default function CredentialInput({
       <Select
         defaultValue={defaultValue}
         onValueChange={(value) => updateNodeInputValue(value)}
+        // open={true}
       >
         <SelectTrigger id={id} className="bg-background w-full">
           <SelectValue placeholder="Select an option" />
         </SelectTrigger>
-        <SelectContent className="max-h-[160px]">
+        <SelectContent className="max-h-[192px]">
           {query.data?.map((credential) => (
             <SelectItem
               key={credential.credentialId}

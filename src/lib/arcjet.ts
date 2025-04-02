@@ -10,5 +10,6 @@ export { shield, detectBot, fixedWindow, tokenBucket };
 
 export default arcjet({
   key: process.env.ARCJET_KEY!,
+  characteristics: ["fingerprint"],
   rules: [],
 });

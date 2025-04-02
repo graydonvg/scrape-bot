@@ -1,9 +1,10 @@
 import { clsx, type ClassValue } from "clsx";
-import { intervalToDuration } from "date-fns";
+import { endOfMonth, intervalToDuration, startOfMonth } from "date-fns";
 import { twMerge } from "tailwind-merge";
 import { WorkflowExecutionPlan } from "./types/execution";
 import { WorkflowNode } from "./types/workflow";
 import { taskRegistry } from "./workflow/tasks/task-registry";
+import { Period } from "./types/analytics";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -28,6 +29,15 @@ export function datesToDurationString(start?: Date | null, end?: Date | null) {
   });
 
   return `${duration.minutes || 0}m ${duration.seconds || 0}s`;
+}
+
+export function periodToDateRange(period: Period) {
+  const startDate = startOfMonth(
+    new Date(period.year, period.month),
+  ).toISOString();
+  const endDate = endOfMonth(new Date(period.year, period.month)).toISOString();
+
+  return { startDate, endDate };
 }
 
 export function calculateTotalCreditCostFromNodes(nodes: WorkflowNode[]) {

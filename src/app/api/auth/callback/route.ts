@@ -3,6 +3,8 @@ import createSupabaseServerClient from "@/lib/supabase/supabase-server";
 import { NextResponse } from "next/server";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { withAxiom, AxiomRequest } from "next-axiom";
+import ip from "@arcjet/ip";
+import { loggerErrorMessages } from "@/lib/constants";
 
 const aj = arcjet
   .withRule(
@@ -25,15 +27,17 @@ const aj = arcjet
   );
 
 export const GET = withAxiom(async (request: AxiomRequest) => {
-  const log = request.log;
-
   try {
+    const log = request.log;
     const { searchParams, origin } = new URL(request.url);
     const code = searchParams.get("code");
     // if "next" is in param, use it as the redirect URL
     const next = searchParams.get("next") ?? "/";
 
-    const decision = await aj.protect(request);
+    const requestIp =
+      process.env.NODE_ENV === "development" ? "127.0.0.1" : ip(request);
+
+    const decision = await aj.protect(request, { fingerprint: requestIp });
 
     for (const { reason } of decision.results) {
       if (reason.isError()) {
@@ -88,7 +92,8 @@ export const GET = withAxiom(async (request: AxiomRequest) => {
     // Throw the “error” to trigger the redirection
     if (isRedirectError(error)) throw error;
 
-    log.error("Internal Server Error", { error });
-    return NextResponse.redirect(`${origin}/signin?success=false`);
+    request.log?.error(loggerErrorMessages.Unexpected, { error });
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+    return NextResponse.redirect(`${siteUrl}/signin?success=false`);
   }
 });

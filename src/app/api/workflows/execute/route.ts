@@ -1,6 +1,6 @@
 import { loggerErrorMessages, userErrorMessages } from "@/lib/constants";
 import { timingSafeEqual } from "crypto";
-import { AxiomRequest, withAxiom } from "next-axiom";
+import { AxiomRequest, Logger, withAxiom } from "next-axiom";
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { WorkflowExecutionPlan } from "@/lib/types/execution";
@@ -10,62 +10,11 @@ import { taskRegistry } from "@/lib/workflow/tasks/task-registry";
 import executeWorkflow from "@/lib/workflow/helpers/execute-workflow/execute-workflow";
 import createSupabaseService from "@/lib/supabase/supabase-service";
 import { CronExpressionParser } from "cron-parser";
-import arcjet, { shield, detectBot } from "@/lib/arcjet";
 import { calculateTotalCreditCostFromExecutionPlan } from "@/lib/utils";
 
-const aj = arcjet
-  .withRule(
-    shield({
-      mode: "LIVE",
-    }),
-  )
-  .withRule(
-    detectBot({
-      mode: "LIVE",
-      allow: [],
-    }),
-  );
-// .withRule(
-//   fixedWindow({
-//     mode: "LIVE",
-//     window: "60s",
-//     max: 10,
-//   }),
-// );
-
 export const GET = withAxiom(async (request: AxiomRequest) => {
-  const log = request.log;
-
   try {
-    const decision = await aj.protect(request);
-
-    for (const { reason } of decision.results) {
-      if (reason.isError()) {
-        log.error("Arcjet error", { message: reason.message });
-        return NextResponse.json(userErrorMessages.Unexpected, { status: 500 });
-      }
-    }
-
-    if (decision.isDenied()) {
-      if (decision.reason.isShield()) {
-        return NextResponse.json(
-          { error: "You are suspicious!" },
-          { status: 403 },
-        );
-      }
-
-      if (decision.reason.isBot()) {
-        return NextResponse.json({ error: "Forbidden!" }, { status: 403 });
-      }
-
-      // if (decision.reason.isRateLimit()) {
-      //   return NextResponse.json(
-      //     { error: "Too Many Requests" },
-      //     { status: 429 },
-      //   );
-      // }
-    }
-
+    const log = request.log;
     const headersList = await headers();
     const authHeader = headersList.get("Authorization");
 
@@ -76,7 +25,7 @@ export const GET = withAxiom(async (request: AxiomRequest) => {
 
     const secret = authHeader.split(" ")[1];
 
-    if (!isValidSecret(secret)) {
+    if (!isValidSecret(secret, log)) {
       log.warn(loggerErrorMessages.Unauthorized);
       return NextResponse.json("Unauthorized", { status: 401 });
     }
@@ -229,22 +178,21 @@ export const GET = withAxiom(async (request: AxiomRequest) => {
 
     return NextResponse.json(null, { status: 200 });
   } catch (error) {
-    log.error(loggerErrorMessages.Unexpected, { error });
+    request.log?.error(loggerErrorMessages.Unexpected, { error });
 
     return NextResponse.json(userErrorMessages.Unexpected, { status: 500 });
   }
 });
 
-function isValidSecret(secret: string) {
+function isValidSecret(secret: string, log: Logger) {
   const API_SECRET = process.env.API_SECRET;
 
   if (!API_SECRET) return false;
 
   try {
     return timingSafeEqual(Buffer.from(secret), Buffer.from(API_SECRET));
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
+    log.error("Error validating secret", { error });
     return false;
   }
 }

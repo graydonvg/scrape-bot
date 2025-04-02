@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 
 type Props = {
   title: string;
-  subtitle: string;
+  subtitle?: string;
   containerClassName?: string;
   children?: ReactNode;
 };
@@ -23,7 +23,7 @@ export default function PageHeader({
     >
       <div className="mr-6 flex flex-col">
         <h1 className="flex-wrap text-3xl font-bold">{title}</h1>
-        <p className="text-muted-foreground">{subtitle}</p>
+        {subtitle && <p className="text-muted-foreground">{subtitle}</p>}
       </div>
       {children}
     </div>
