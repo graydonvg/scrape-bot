@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/chart";
 import { CoinsIcon } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
-import getPeriodCreditUsage from "../app/(app)/(home)/_data-access/get-period-credit-usage";
+import getPeriodCreditUsage from "../app/(app)/dashboard/_data-access/get-period-credit-usage";
 
 const chartConfig = {
   success: {

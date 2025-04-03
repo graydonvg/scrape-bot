@@ -7,12 +7,17 @@ import StatsCards from "./_components/stats-cards/stats-cards";
 import StatsCardSkeleton from "./_components/stats-cards/stats-card-skeleton";
 import WorkflowExecutionStatus from "./_components/workflow-execution-status/workflow-execution-status";
 import PeriodCreditUsage from "./_components/period-credit-usage";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Dashboard",
+};
 
 type Params = {
   searchParams: Promise<{ month?: string; year?: string }>;
 };
 
-export default async function Home({ searchParams }: Params) {
+export default async function DashboardPage({ searchParams }: Params) {
   const currentDate = new Date();
   const params = await searchParams;
   const { month, year } = params;
@@ -23,7 +28,7 @@ export default async function Home({ searchParams }: Params) {
 
   return (
     <div className="flex flex-1 flex-col">
-      <PageHeader title="Home">
+      <PageHeader title="Dashboard">
         <Suspense fallback={<Skeleton className="h-9 w-[180px]" />}>
           <PeriodSelectorServer selectedPeriod={period} />
         </Suspense>

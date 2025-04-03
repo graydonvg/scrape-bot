@@ -8,15 +8,15 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { siteConfig } from "@/config/site";
+import { appConfig } from "@/config/app";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export function NavMain() {
   const { isMobile, setOpenMobile } = useSidebar();
   const pathname = usePathname();
-  const paths = pathname === "/" ? ["/"] : pathname.split("/");
-  const routes = siteConfig.navMain;
+  const paths = pathname.split("/");
+  const routes = appConfig.navMain;
   const activeRoute = getActiveRoute(routes, paths);
 
   return (

@@ -29,7 +29,7 @@ import useUserStore from "@/lib/store/user-store";
 import { useEffect } from "react";
 import { UserDb } from "@/lib/types/user";
 import UserMenuLabel from "./user-menu-label";
-import { ThemeMenu } from "./theme-menu";
+import { ThemeMenu } from "../../../../../components/theme-menu";
 
 type Props = {
   user: UserDb;

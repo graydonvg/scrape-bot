@@ -17,7 +17,7 @@ export default function SidebarLogo() {
     <SidebarMenu>
       <SidebarMenuItem className="flex items-center justify-between">
         <SidebarMenuButton className="hover:bg-sidebar active:bg-sidebar p-0 group-data-[collapsible=icon]:p-0! md:shrink-0">
-          <Logo isLink />
+          <Logo />
         </SidebarMenuButton>
         {isMobile && (
           <Button

@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/site";
 import { loggerErrorMessages, userErrorMessages } from "@/lib/constants";
 import createSupabaseService from "@/lib/supabase/supabase-service";
 import { AxiomRequest, Logger, withAxiom } from "next-axiom";
@@ -36,7 +37,7 @@ export const GET = withAxiom(async (request: AxiomRequest) => {
 });
 
 function triggerWorkflow(workflowId: string, log: Logger) {
-  const triggerApiUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/api/workflows/execute?workflowId=${workflowId}`;
+  const triggerApiUrl = `${siteConfig.siteUrl}/api/workflows/execute?workflowId=${workflowId}`;
 
   fetch(triggerApiUrl, {
     headers: {

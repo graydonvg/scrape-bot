@@ -84,12 +84,12 @@ export default function NodeHeader({ nodeId, taskType }: Props) {
           </TooltipWrapper>
           {!task.isEntryPoint && (
             <>
-              <TooltipWrapper tooltipContent="Delete node">
+              <TooltipWrapper tooltipContent="Delete task">
                 <Button variant="ghost" size="icon" onClick={deleteNode}>
                   <Trash2Icon />
                 </Button>
               </TooltipWrapper>
-              <TooltipWrapper tooltipContent="Copy node">
+              <TooltipWrapper tooltipContent="Copy task">
                 <Button variant="ghost" size="icon" onClick={createNodeCopy}>
                   <CopyIcon />
                 </Button>

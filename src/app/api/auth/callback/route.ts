@@ -5,6 +5,7 @@ import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { withAxiom, AxiomRequest } from "next-axiom";
 import ip from "@arcjet/ip";
 import { loggerErrorMessages } from "@/lib/constants";
+import { siteConfig } from "@/config/site";
 
 const aj = arcjet
   .withRule(
@@ -32,7 +33,7 @@ export const GET = withAxiom(async (request: AxiomRequest) => {
     const { searchParams, origin } = new URL(request.url);
     const code = searchParams.get("code");
     // if "next" is in param, use it as the redirect URL
-    const next = searchParams.get("next") ?? "/";
+    const next = searchParams.get("next") ?? "/dashboard";
 
     const requestIp =
       process.env.NODE_ENV === "development" ? "127.0.0.1" : ip(request);
@@ -93,7 +94,7 @@ export const GET = withAxiom(async (request: AxiomRequest) => {
     if (isRedirectError(error)) throw error;
 
     request.log?.error(loggerErrorMessages.Unexpected, { error });
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+    const siteUrl = siteConfig.siteUrl;
     return NextResponse.redirect(`${siteUrl}/signin?success=false`);
   }
 });

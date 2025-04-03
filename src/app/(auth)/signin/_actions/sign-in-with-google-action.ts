@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { Logger } from "next-axiom";
 import { loggerErrorMessages, userErrorMessages } from "@/lib/constants";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
+import { siteConfig } from "@/config/site";
 
 export default async function signInWithGoogleAction() {
   let log = new Logger();
@@ -27,7 +28,7 @@ export default async function signInWithGoogleAction() {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/api/auth/callback`,
+        redirectTo: `${siteConfig.siteUrl}/api/auth/callback?next=/dashboard`,
         queryParams: {
           access_type: "offline",
           prompt: "consent",

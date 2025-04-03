@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function NotFoundPage() {
   return (
     <div className="flex min-h-screen w-full flex-col p-6 md:p-10">
-      <Logo isLink />
+      <Logo />
       <div className="flex-center flex-1 flex-col text-center">
         <h1 className="text-primary mb-4 text-6xl font-bold">404</h1>
         <h2 className="mb-4 text-2xl font-semibold capitalize">
