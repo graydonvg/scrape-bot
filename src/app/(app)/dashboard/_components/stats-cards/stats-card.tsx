@@ -18,12 +18,15 @@ type Props = {
 
 export default function StatsCard({ title, description, value, icon }: Props) {
   const Icon = icon;
+
   return (
     <Card className="relative col-span-3 flex min-h-[120px] flex-col justify-between overflow-hidden lg:col-span-1">
       <CardHeader className="pb-2">
-        <CardTitle>{title}</CardTitle>
+        <CardTitle>
+          <h2>{title}</h2>
+        </CardTitle>
         <CardDescription className="text-xs text-pretty">
-          {description}
+          <p>{description}</p>
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -33,7 +36,7 @@ export default function StatsCard({ title, description, value, icon }: Props) {
       </CardContent>
       <Icon
         size={120}
-        className="text-muted-foreground stroke-primary absolute -right-8 -bottom-4 opacity-20 dark:opacity-10"
+        className="text-muted-foreground stroke-primary absolute -right-8 -bottom-4 opacity-10"
       />
     </Card>
   );

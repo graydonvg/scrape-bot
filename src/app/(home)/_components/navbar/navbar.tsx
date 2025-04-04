@@ -5,7 +5,7 @@ import NavbarButtons from "./navbar-buttons";
 
 export default function Navbar() {
   return (
-    <nav className="bg-background flex h-16 items-center border-b">
+    <nav className="bg-background flex h-16 items-center border-b shadow-md">
       <div className="container flex justify-between px-6 py-0 lg:px-16 xl:px-24">
         <Logo />
         <Suspense fallback={<Skeleton className="h-8 w-20" />}>

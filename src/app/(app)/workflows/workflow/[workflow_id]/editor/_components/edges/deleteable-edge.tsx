@@ -31,9 +31,10 @@ export default function DeleteableEdge(props: EdgeProps) {
         >
           <TooltipWrapper tooltipContent="Delete connection">
             <Button
+              aria-label="Delete connection"
               variant="outline"
               size="icon"
-              className="hover:bg-destructive hover:text-destructive-foreground pointer-events-auto size-5 cursor-pointer rounded-full border text-xs leading-none"
+              className="hover:bg-destructive hover:text-destructive-foreground pointer-events-auto size-9 cursor-pointer rounded-full border text-xs leading-none"
               onClick={() =>
                 setEdges((edges) =>
                   edges.filter((edge) => edge.id !== props.id),

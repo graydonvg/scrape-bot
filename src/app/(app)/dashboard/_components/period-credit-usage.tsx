@@ -1,6 +1,6 @@
 import { Period } from "@/lib/types/analytics";
+import CreditUsageChart from "@/components/credit-usage-chart";
 import getPeriodCreditUsage from "../_data-access/get-period-credit-usage";
-import CreditUsageChart from "../../../../components/credit-usage-chart";
 
 type Props = {
   selectedPeriod: Period;

@@ -44,11 +44,13 @@ export default function WorkflowExecutionStatusChart({ data }: Props) {
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-2xl font-bold">
           <Layers2Icon className="stroke-primary size-6 dark:stroke-blue-500" />
-          Workflow execution status
+          <h2>Workflow execution status</h2>
         </CardTitle>
         <CardDescription className="text-pretty">
-          Daily number of successful, failed, and partially failed workflow
-          executions for the selected period
+          <p>
+            Daily number of successful, failed, and partially failed workflow
+            executions for the selected period
+          </p>
         </CardDescription>
       </CardHeader>
       <CardContent>

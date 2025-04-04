@@ -77,7 +77,10 @@ export default function NodeHeader({ nodeId, taskType }: Props) {
         <div className="flex items-center gap-1">
           {task.isEntryPoint && <Badge>Entry point</Badge>}
           <TooltipWrapper tooltipContent="Credits consumed when executed">
-            <Badge className="flex items-center gap-2 text-xs">
+            <Badge
+              aria-label="Credits consumed when executed"
+              className="flex items-center gap-2 text-xs"
+            >
               <CoinsIcon />
               {task.credits}
             </Badge>
@@ -85,18 +88,32 @@ export default function NodeHeader({ nodeId, taskType }: Props) {
           {!task.isEntryPoint && (
             <>
               <TooltipWrapper tooltipContent="Delete task">
-                <Button variant="ghost" size="icon" onClick={deleteNode}>
+                <Button
+                  aria-label="Delete task"
+                  variant="ghost"
+                  size="icon"
+                  onClick={deleteNode}
+                >
                   <Trash2Icon />
                 </Button>
               </TooltipWrapper>
-              <TooltipWrapper tooltipContent="Copy task">
-                <Button variant="ghost" size="icon" onClick={createNodeCopy}>
+              <TooltipWrapper
+                aria-label="Delete task"
+                tooltipContent="Copy task"
+              >
+                <Button
+                  aria-label="Copy task"
+                  variant="ghost"
+                  size="icon"
+                  onClick={createNodeCopy}
+                >
                   <CopyIcon />
                 </Button>
               </TooltipWrapper>
             </>
           )}
           <Button
+            aria-label="Drag handle"
             variant="ghost"
             size="icon"
             className="drag-handle cursor-grab active:cursor-grabbing"

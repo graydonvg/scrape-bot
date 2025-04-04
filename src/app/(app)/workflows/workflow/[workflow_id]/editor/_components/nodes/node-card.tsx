@@ -39,7 +39,7 @@ export default function NodeCard({ nodeId, isSelected, children }: Props) {
     <div
       onDoubleClick={handleDoubleClick}
       className={cn(
-        "bg-muted dark:border-border border-foreground/40 flex w-md cursor-pointer flex-col rounded-xl border-2 text-xs",
+        "bg-muted dark:border-border border-foreground/30 flex w-md cursor-pointer flex-col rounded-xl border-2 text-xs",
         {
           "ring-ring/40 border-ring ring-4 transition-[border,box-shadow] outline-none":
             isSelected,

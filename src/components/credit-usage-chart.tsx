@@ -43,9 +43,11 @@ export default function CreditUsageChart({ title, description, data }: Props) {
         <CardTitle className="flex items-center gap-2 text-2xl font-bold">
           {/* <ChartColumnStackedIcon className="stroke-primary size-6 dark:stroke-blue-500" /> */}
           <CoinsIcon className="stroke-primary size-6 dark:stroke-blue-500" />
-          {title}
+          <h2>{title}</h2>
         </CardTitle>
-        <CardDescription>{description}</CardDescription>
+        <CardDescription>
+          <p>{description}</p>
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="max-h-[200px] w-full">

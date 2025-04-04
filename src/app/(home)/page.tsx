@@ -7,9 +7,11 @@ import Hero from "./_components/hero";
 import SectionWrapper from "./_components/section-wrapper";
 import { siteConfig } from "@/config/site";
 import { Metadata } from "next";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
-  title: "Home",
+  title: "No-code Drag & Drop Web Scraper",
 };
 
 export default function HomePage() {
@@ -32,7 +34,7 @@ export default function HomePage() {
               icon={GridIcon}
             />
             <FeatureCard
-              title=" Smart Scheduling"
+              title="Smart Scheduling"
               description="Automate your scraping tasks with a robust scheduling system. Set intervals, manage cron jobs, and run tasks on demand."
               icon={CalendarIcon}
             />
@@ -45,10 +47,17 @@ export default function HomePage() {
         </SectionWrapper>
 
         <SectionWrapper>
-          <h3 className="mb-2 text-3xl font-semibold">Try it out</h3>
-          <p className="text-muted-foreground mb-6 text-base text-pretty">
-            Easily connect your nodes to create custom execution paths.
-          </p>
+          <div className="mb-6 grid grid-cols-[1fr_auto] items-baseline-last gap-12">
+            <div className="space-y-2">
+              <h3 className="text-3xl font-semibold">Try it out</h3>
+              <p className="text-muted-foreground text-base text-pretty">
+                Easily connect your nodes to create custom execution paths.
+              </p>
+            </div>
+            <Link href="/workflows">
+              <Button size="sm">Start building</Button>
+            </Link>
+          </div>
           <WorkflowDemo />
         </SectionWrapper>
       </main>
