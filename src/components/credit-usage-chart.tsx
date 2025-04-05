@@ -15,9 +15,9 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { CoinsIcon } from "lucide-react";
+import { ChartColumnStackedIcon } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
-import getPeriodCreditUsage from "../app/(app)/dashboard/_data-access/get-period-credit-usage";
+import getPeriodCreditUsage from "../data-access/get-period-credit-usage";
 
 const chartConfig = {
   success: {
@@ -41,8 +41,7 @@ export default function CreditUsageChart({ title, description, data }: Props) {
     <Card className="col-span-3">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-2xl font-bold">
-          {/* <ChartColumnStackedIcon className="stroke-primary size-6 dark:stroke-blue-500" /> */}
-          <CoinsIcon className="stroke-primary size-6 dark:stroke-blue-500" />
+          <ChartColumnStackedIcon className="stroke-primary size-6 dark:stroke-blue-500" />
           <h2>{title}</h2>
         </CardTitle>
         <CardDescription>

@@ -36,7 +36,7 @@ export default function StatsCard({ title, description, value, icon }: Props) {
       </CardContent>
       <Icon
         size={120}
-        className="text-muted-foreground stroke-primary absolute -right-8 -bottom-4 opacity-10"
+        className="stroke-primary absolute -right-8 -bottom-4 opacity-10"
       />
     </Card>
   );

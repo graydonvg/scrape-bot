@@ -20,7 +20,7 @@ export default async function getUserAvailableCredits() {
     log = log.with({ userId: user.id });
 
     const { data, error } = await supabase
-      .from("users")
+      .from("userCredits")
       .select("availableCredits")
       .eq("userId", user.id);
 

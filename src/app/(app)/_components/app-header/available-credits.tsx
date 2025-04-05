@@ -4,13 +4,16 @@ import Link from "next/link";
 import { CoinsIcon, Loader2Icon } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import getUserAvailableCredits from "@/app/(app)/_data-access/get-user-available-credits";
-import AnimatedCounter from "../../../../components/animated-counter";
 import useWorkflowsStore from "@/lib/store/workflows-store";
-import { Button } from "../../../../components/ui/button";
-import TooltipWrapper from "../../../../components/tooltip-wrapper";
 import { cn } from "@/lib/utils";
+import TooltipWrapper from "@/components/tooltip-wrapper";
+import { Button } from "@/components/ui/button";
+import AnimatedCounter from "@/components/animated-counter";
+import { useEffect } from "react";
+import useUserStore from "@/lib/store/user-store";
 
 export default function AvailableCredits() {
+  const { setUserCreditBalance } = useUserStore();
   const { workflowExecutionStatus } = useWorkflowsStore();
   const query = useQuery({
     queryKey: ["available-credits"],
@@ -18,6 +21,11 @@ export default function AvailableCredits() {
     refetchInterval: () =>
       workflowExecutionStatus === "EXECUTING" ? 1000 : false,
   });
+
+  useEffect(() => {
+    if (query.data?.availableCredits)
+      setUserCreditBalance(query.data?.availableCredits);
+  }, [query.data?.availableCredits, setUserCreditBalance]);
 
   return (
     <TooltipWrapper tooltipContent="Available credits">

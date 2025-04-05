@@ -121,34 +121,84 @@ export type Database = {
           },
         ];
       };
-      users: {
+      userCredits: {
         Row: {
           availableCredits: number;
-          avatarUrl: string | null;
-          email: string;
-          firstName: string | null;
-          lastName: string | null;
-          reservedCredits: number | null;
-          updatedAt: string;
+          reservedCredits: number;
           userId: string;
         };
         Insert: {
           availableCredits?: number;
+          reservedCredits?: number;
+          userId?: string;
+        };
+        Update: {
+          availableCredits?: number;
+          reservedCredits?: number;
+          userId?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "userCredits_userId_fkey";
+            columns: ["userId"];
+            isOneToOne: true;
+            referencedRelation: "users";
+            referencedColumns: ["userId"];
+          },
+        ];
+      };
+      userPurchases: {
+        Row: {
+          amount: number;
+          createdAt: string;
+          currency: string;
+          description: string;
+          stripeId: string;
+          userId: string;
+          userPurchaseId: string;
+        };
+        Insert: {
+          amount: number;
+          createdAt?: string;
+          currency: string;
+          description: string;
+          stripeId: string;
+          userId: string;
+          userPurchaseId?: string;
+        };
+        Update: {
+          amount?: number;
+          createdAt?: string;
+          currency?: string;
+          description?: string;
+          stripeId?: string;
+          userId?: string;
+          userPurchaseId?: string;
+        };
+        Relationships: [];
+      };
+      users: {
+        Row: {
+          avatarUrl: string | null;
+          email: string;
+          firstName: string | null;
+          lastName: string | null;
+          updatedAt: string;
+          userId: string;
+        };
+        Insert: {
           avatarUrl?: string | null;
           email: string;
           firstName?: string | null;
           lastName?: string | null;
-          reservedCredits?: number | null;
           updatedAt?: string;
           userId: string;
         };
         Update: {
-          availableCredits?: number;
           avatarUrl?: string | null;
           email?: string;
           firstName?: string | null;
           lastName?: string | null;
-          reservedCredits?: number | null;
           updatedAt?: string;
           userId?: string;
         };
@@ -271,6 +321,13 @@ export type Database = {
           p_user_id: string;
           p_credits_consumed: number;
           p_credits_to_refund: number;
+        };
+        Returns: Json;
+      };
+      increment_available_credits: {
+        Args: {
+          user_id: string;
+          increment_amount: number;
         };
         Returns: Json;
       };

@@ -5,16 +5,25 @@ import CountUp from "react-countup";
 
 type Props = {
   value: number;
+  className?: string;
 };
 
-export default function AnimatedCounter({ value }: Props) {
+export default function AnimatedCounter({ value, className }: Props) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  if (!mounted) return "-";
+  if (!mounted) return <span className={className}>-</span>;
 
-  return <CountUp end={value} decimals={0} preserveValue duration={0.5} />;
+  return (
+    <CountUp
+      end={value}
+      decimals={0}
+      preserveValue
+      duration={0.5}
+      className={className}
+    />
+  );
 }

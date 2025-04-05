@@ -4,7 +4,7 @@ import createSupabaseService from "@/lib/supabase/supabase-service";
 import { AxiomRequest, Logger, withAxiom } from "next-axiom";
 import { NextResponse } from "next/server";
 
-export const GET = withAxiom(async (request: AxiomRequest) => {
+export const POST = withAxiom(async (request: AxiomRequest) => {
   try {
     const log = request.log;
     const now = new Date().toISOString();

@@ -28,8 +28,6 @@ export default function ExecuteWorkflowButton({
     onError: () => handleError(),
   });
 
-  console.log(userCreditBalance !== null && userCreditBalance < creditCost);
-
   return (
     <ButtonWithSpinner
       variant="outline"

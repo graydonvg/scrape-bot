@@ -6,9 +6,9 @@ import { Logger } from "next-axiom";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { redirect } from "next/navigation";
 
-export default async function getUserDataServer() {
+export default async function getUserPurchaseHistory() {
   let log = new Logger();
-  log = log.with({ context: "getUserDataServer" });
+  log = log.with({ context: "getUserPurchaseHistory" });
 
   try {
     const supabase = await createSupabaseServerClient();
@@ -24,11 +24,10 @@ export default async function getUserDataServer() {
     log = log.with({ userId: user.id });
 
     const { data, error } = await supabase
-      .from("users")
-      .select(
-        "email, firstName, lastName, avatarUrl, ...userCredits!inner(availableCredits)",
-      )
-      .eq("userId", user.id);
+      .from("userPurchases")
+      .select("*")
+      .eq("userId", user.id)
+      .order("createdAt", { ascending: false });
 
     if (error) {
       log.error(loggerErrorMessages.Select, {
@@ -37,7 +36,7 @@ export default async function getUserDataServer() {
       return null;
     }
 
-    return data[0];
+    return data;
   } catch (error) {
     // When you call the redirect() function (from next/navigation), it throws a special error (with the code NEXT_REDIRECT) to immediately halt further processing and trigger the redirection. This “error” is meant to be caught internally by Next.js, not by the try/catch blocks.
     // Throw the “error” to trigger the redirection

@@ -25,11 +25,9 @@ import { createSupabaseBrowserClient } from "@/lib/supabase/supabase-browser";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useLogger } from "next-axiom";
-import useUserStore from "@/lib/store/user-store";
-import { useEffect } from "react";
 import { UserDb } from "@/lib/types/user";
 import UserMenuLabel from "./user-menu-label";
-import { ThemeMenu } from "../../../../../components/theme-menu";
+import { ThemeMenu } from "@/components/theme-menu";
 
 type Props = {
   user: UserDb;
@@ -39,14 +37,9 @@ export function NavUserClient({ user }: Props) {
   const log = useLogger();
   const router = useRouter();
   const supabase = createSupabaseBrowserClient();
-  const { setUserCreditBalance } = useUserStore();
   const userFullName = getUserFullName();
   const userName = getUsername(userFullName);
   const avatarFallbackChars = getUserAvatarFallbackChars(userFullName);
-
-  useEffect(() => {
-    if (user) setUserCreditBalance(user.availableCredits);
-  }, [user, setUserCreditBalance]);
 
   return (
     <SidebarMenu>
