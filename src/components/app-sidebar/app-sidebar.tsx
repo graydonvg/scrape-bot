@@ -8,10 +8,10 @@ import {
 import { ComponentProps, Suspense } from "react";
 import { NavMain } from "./nav-main";
 import { Skeleton } from "@/components/ui/skeleton";
-import NavUserServer from "@/app/(app)/_components/app-sidebar/nav-user/nav-user-server";
 import SidebarLogo from "./sidebar-logo";
 import Sidebar from "./sidebar";
 import SidebarControl from "./sidebar-control";
+import NavUserServer from "./nav-user/nav-user-server";
 
 export default function AppSidebar({
   ...props

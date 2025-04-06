@@ -11,7 +11,9 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
-  title: "No-code Drag & Drop Web Scraper",
+  title: {
+    absolute: `${siteConfig.name} | No-code Drag & Drop Web Scraper`,
+  },
 };
 
 export default function HomePage() {

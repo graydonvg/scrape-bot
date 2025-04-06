@@ -24,7 +24,7 @@ export default function CredentialsPage() {
           description="All information is securely encrypted, ensuring your data remains safe."
         />
 
-        <ScrollArea className="flex-1 rounded-xl border">
+        <ScrollArea className="max-h-[calc(100vh-303.6px)] min-h-[250px] flex-1 rounded-xl border">
           <Suspense fallback={<CredentialsSkeleton />}>
             <div className="p-4">
               <UserCredentials />

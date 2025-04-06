@@ -5,9 +5,9 @@ import {
   SidebarProvider,
 } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
-import AppHeader from "./_components/app-header/app-header";
-import AppContainer from "./_components/app-container";
-import AppSidebar from "./_components/app-sidebar/app-sidebar";
+import AppHeader from "@/components/app-header/app-header";
+import AppSidebar from "@/components/app-sidebar/app-sidebar";
+import AppContainer from "@/components/app-container";
 
 type Props = {
   children: ReactNode;

@@ -34,7 +34,7 @@ export default function TaskParameterCard({
         <CardTitle className="text-base">{title}</CardTitle>
         <CardDescription>{subtitle}</CardDescription>
       </CardHeader>
-      <CardContent className="py-4">
+      <CardContent className="overflow-x-auto py-4">
         <div className="flex flex-col gap-2">
           {(!params || Object.keys(params).length === 0) &&
             !includesBrowserInstance && (

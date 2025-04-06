@@ -18,7 +18,7 @@ export default function WorkflowsPage() {
       </PageHeader>
 
       <div className="relative flex size-full">
-        <ScrollArea className="flex-1 rounded-xl border">
+        <ScrollArea className="max-h-[calc(100vh-204px)] min-h-[350px] flex-1 rounded-xl border">
           <Suspense fallback={<WorkflowsSkeleton />}>
             <div className="p-4">
               <Workflows />

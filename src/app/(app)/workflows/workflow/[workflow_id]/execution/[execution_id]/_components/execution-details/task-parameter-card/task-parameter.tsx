@@ -18,7 +18,7 @@ export default function TaskParameter({ label, value }: Props) {
   const [copied, setCopied] = useState(false);
 
   return (
-    <div className="flex items-center gap-4 overflow-visible">
+    <div className="flex items-center gap-4">
       <Label className="min-w-1/3 shrink-0 whitespace-nowrap">{label}:</Label>
       <div className="relative flex w-full items-center">
         <Input

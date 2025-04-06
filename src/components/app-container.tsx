@@ -19,18 +19,18 @@ export default function AppContainer({ children }: Props) {
 
   return (
     <div
-      className={cn(
-        "flex max-h-[calc(100vh-(--spacing(12)))] flex-1 flex-col",
-        {
-          "fixed inset-0 top-px max-h-screen pt-12 pl-0 md:pl-12":
-            isSidebarExpandable,
-          container: !removeContainerClass,
-          "pt-20! pl-8! md:pl-20!":
-            isSidebarExpandable && !removeContainerClass,
-        },
-      )}
+      className={cn("flex flex-1 flex-col overflow-y-auto", {
+        "fixed inset-0 mt-12 h-[calc(100vh-(--spacing(12)))] md:left-12":
+          isSidebarExpandable,
+      })}
     >
-      {children}
+      <div
+        className={cn("flex flex-1 flex-col", {
+          container: !removeContainerClass,
+        })}
+      >
+        {children}
+      </div>
     </div>
   );
 }

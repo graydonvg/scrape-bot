@@ -1,4 +1,4 @@
-import getUserDataServer from "@/app/(app)/_data-access/get-user-data-server";
+import getUserDataServer from "@/data-access/get-user-data-server";
 import { redirect } from "next/navigation";
 import { NavUserClient } from "./nav-user-client";
 

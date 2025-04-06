@@ -128,9 +128,9 @@ export default function ExecutionDetails({ initialData }: Props) {
   if (!workflowExecutionData) notFound();
 
   return (
-    <div className="flex flex-1">
+    <div className="flex">
       <WorkflowExecutionSidebar workflowExecutionData={workflowExecutionData} />
-      <div className="size-full">
+      <div className="h-[calc(100vh-(--spacing(12)))] w-full overflow-y-auto">
         {workflowExecutionStatus.isLoading && (
           <ExecutionStatusMessage
             title="Execution in progress"

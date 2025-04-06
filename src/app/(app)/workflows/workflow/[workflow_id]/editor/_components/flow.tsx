@@ -252,7 +252,7 @@ export default function Flow({ workflow }: Props) {
         gap={12}
         size={1}
         patternClassName="!fill-muted-foreground"
-        className="!bg-primary/10 dark:!bg-background"
+        className="!bg-primary/5 dark:!bg-background"
       />
     </ReactFlow>
   );
