@@ -64,7 +64,7 @@ export default function ExecutionDetails({ workflow }: Props) {
       </div>
       {nextExecutionAt && (
         <div className="flex items-center gap-2 text-sm">
-          <ClockIcon className="size-3.5" />
+          <ClockIcon className="size-3.5 shrink-0" />
           <span>Next execution at:</span>
           <span>{formattedNextExecutionAt}</span>
           <span>({formattedNextExecutionAtUtc} UTC)</span>
