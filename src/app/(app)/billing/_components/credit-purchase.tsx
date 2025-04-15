@@ -51,6 +51,7 @@ export default function CreditPurchase() {
         <RadioGroup
           value={selectedPackId}
           onValueChange={(value: CreditPackId) => setSelectedPackId(value)}
+          className="overflow-x-auto"
         >
           {billingConfig.creditPacks.map((pack) => (
             <div

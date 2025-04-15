@@ -5,10 +5,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
 import getUserPurchaseHistory from "../_data-access/get-user-purchase-history";
 import { ArrowLeftRightIcon } from "lucide-react";
 import CustomAlert from "@/components/custom-alert";
-import InvoiceButton from "./invoice-button";
+import { TransactionHistoryTable } from "./transaction-history-table/transaction-history-table";
 
 export default async function TransactionHistoryCard() {
   const purchases = await getUserPurchaseHistory();
@@ -25,34 +26,20 @@ export default async function TransactionHistoryCard() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {!purchases && (
+        {(!purchases || !purchases.count) && (
           <CustomAlert
             variant="destructive"
             title="Error"
             description="Something went wrong. Please try again later."
           />
         )}
-        {purchases?.length === 0 && (
+        {purchases?.count === 0 && (
           <p className="text-muted-foreground">No transactions yet</p>
         )}
-        {purchases?.map((purchase) => (
-          <div
-            key={purchase.userPurchaseId}
-            className="flex items-center gap-8"
-          >
-            <div>{purchase.description}</div>
-            <InvoiceButton purchaseId={purchase.userPurchaseId} />
-          </div>
-        ))}
+        {purchases && purchases.count! > 0 && (
+          <TransactionHistoryTable initialData={purchases} />
+        )}
       </CardContent>
     </Card>
   );
 }
-
-// function formatDate(date: Date) {
-//   return Intl.DateTimeFormat("en-US", {
-//     year: "numeric",
-//     month: "long",
-//     day: "numeric",
-//   }).format(date);
-// }

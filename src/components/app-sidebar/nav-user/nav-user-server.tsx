@@ -1,9 +1,9 @@
-import getUserDataServer from "@/data-access/get-user-data-server";
+import getUserData from "@/data-access/get-user-data";
 import { redirect } from "next/navigation";
 import { NavUserClient } from "./nav-user-client";
 
 export default async function NavUserServer() {
-  const userData = await getUserDataServer();
+  const userData = await getUserData();
 
   if (!userData) return redirect("/signin");
 

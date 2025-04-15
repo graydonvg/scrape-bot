@@ -47,6 +47,7 @@ export default async function handleCheckoutSessionCompleted(
       amount: event.amount_total! / 100,
       currency: event.currency!,
       description: `${purchasedCreditPack.name} - ${purchasedCreditPack.label}`,
+      status: "SUCCESS",
     });
 
   const results = await Promise.allSettled([

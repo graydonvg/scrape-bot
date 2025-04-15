@@ -38,6 +38,7 @@ export default async function handlePaymentFailed(
     amount: 0,
     currency: event.currency!,
     description: `${purchasedCreditPack.name} - ${purchasedCreditPack.label}`,
+    status: "FAILED",
   });
 
   if (error) {

@@ -6,9 +6,9 @@ import { Logger } from "next-axiom";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { redirect } from "next/navigation";
 
-export default async function getUserDataServer() {
+export default async function getUserData() {
   let log = new Logger();
-  log = log.with({ context: "getUserDataServer" });
+  log = log.with({ context: "getUserData" });
 
   try {
     const supabase = await createSupabaseServerClient();
@@ -25,9 +25,7 @@ export default async function getUserDataServer() {
 
     const { data, error } = await supabase
       .from("users")
-      .select(
-        "email, firstName, lastName, avatarUrl, ...userCredits!inner(availableCredits)",
-      )
+      .select("email, firstName, lastName, avatarUrl")
       .eq("userId", user.id);
 
     if (error) {

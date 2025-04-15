@@ -8,20 +8,20 @@ import TransactionHistoryCard from "./_components/transaction-history-card";
 
 export default function BillingPage() {
   return (
-    <div>
+    <div className="flex flex-1 flex-col">
       <PageHeader title="Billing" />
       <div className="space-y-8">
-        <Suspense fallback={<Skeleton className="h-[166px] w-full" />}>
+        <Suspense fallback={<Skeleton className="h-[170px] w-full" />}>
           <BalanceCard />
         </Suspense>
         <CreditPurchase />
         <Suspense
-          fallback={<Skeleton className="col-span-3 h-[300px] w-full" />}
+          fallback={<Skeleton className="col-span-3 h-[331px] w-full" />}
         >
           <CreditUsageCard />
         </Suspense>
         <Suspense
-          fallback={<Skeleton className="col-span-3 h-[300px] w-full" />}
+          fallback={<Skeleton className="col-span-3 h-[517px] w-full" />}
         >
           <TransactionHistoryCard />
         </Suspense>

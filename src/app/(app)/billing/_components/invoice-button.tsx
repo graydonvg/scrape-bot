@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { useLogger } from "next-axiom";
 import { loggerErrorMessages, userErrorMessages } from "@/lib/constants";
+import { DownloadIcon } from "lucide-react";
 
 type Props = {
   purchaseId: string;
@@ -41,7 +42,15 @@ export default function InvoiceButton({ purchaseId }: Props) {
   }
 
   return (
-    <ButtonWithSpinner onClick={handleOnClick} loading={isLoading}>
+    <ButtonWithSpinner
+      variant="ghost"
+      size="sm"
+      onClick={handleOnClick}
+      loading={isLoading}
+      startIcon={<DownloadIcon className="size-3" />}
+      className="text-muted-foreground px-1! text-xs"
+      spinnerClassName="size-3"
+    >
       Invoice
     </ButtonWithSpinner>
   );

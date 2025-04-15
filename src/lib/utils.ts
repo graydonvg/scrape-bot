@@ -18,6 +18,14 @@ export function formatPrice(amount: number, currency: string = "ZAR") {
   }).format(amount);
 }
 
+export function formatDate(date: Date) {
+  return Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(date);
+}
+
 export function stringToDate(dateString?: string | null) {
   return dateString ? new Date(dateString) : null;
 }
