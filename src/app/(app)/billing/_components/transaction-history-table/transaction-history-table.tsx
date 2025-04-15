@@ -19,11 +19,11 @@ import { columns } from "./columns";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import getUserPurchaseHistoryClient from "../../_data-access/get-user-purchase-history-client";
-import getUserPurchaseHistory from "../../_data-access/get-user-purchase-history";
+import getUserPurchaseHistoryServer from "../../_data-access/get-user-purchase-history-server";
 import { DataTablePagination } from "@/components/data-table/data-table-pagination";
 
 type Props = {
-  initialData: Awaited<ReturnType<typeof getUserPurchaseHistory>>;
+  initialData: Awaited<ReturnType<typeof getUserPurchaseHistoryServer>>;
 };
 
 export function TransactionHistoryTable({ initialData }: Props) {
@@ -112,7 +112,7 @@ export function TransactionHistoryTable({ initialData }: Props) {
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
+                  {row.getAllCells().map((cell) => (
                     <TableCell
                       key={cell.id}
                       className="first:pl-5 last:w-min last:pr-5"

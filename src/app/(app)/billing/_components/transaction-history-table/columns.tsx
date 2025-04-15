@@ -4,10 +4,10 @@ import { formatDate, formatPrice } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import InvoiceButton from "../invoice-button";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
-import getUserPurchaseHistory from "../../_data-access/get-user-purchase-history";
+import getUserPurchaseHistoryServer from "../../_data-access/get-user-purchase-history-server";
 
 type Payment = Exclude<
-  Awaited<ReturnType<typeof getUserPurchaseHistory>>,
+  Awaited<ReturnType<typeof getUserPurchaseHistoryServer>>,
   null
 >["data"][number];
 
@@ -60,7 +60,6 @@ export const columns: ColumnDef<Payment>[] = [
         className="text-right"
       />
     ),
-    enableHiding: false,
     cell: ({ row }) => {
       const purchaseId = row.original.userPurchaseId;
 

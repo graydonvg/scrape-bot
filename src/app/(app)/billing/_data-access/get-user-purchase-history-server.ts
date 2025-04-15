@@ -6,9 +6,9 @@ import { Logger } from "next-axiom";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { redirect } from "next/navigation";
 
-export default async function getUserPurchaseHistory() {
+export default async function getUserPurchaseHistoryServer() {
   let log = new Logger();
-  log = log.with({ context: "getUserPurchaseHistory" });
+  log = log.with({ context: "getUserPurchaseHistoryServer" });
 
   try {
     const supabase = await createSupabaseServerClient();

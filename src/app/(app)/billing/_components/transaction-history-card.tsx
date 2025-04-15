@@ -6,13 +6,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import getUserPurchaseHistory from "../_data-access/get-user-purchase-history";
+import getUserPurchaseHistoryServer from "../_data-access/get-user-purchase-history-server";
 import { ArrowLeftRightIcon } from "lucide-react";
 import CustomAlert from "@/components/custom-alert";
 import { TransactionHistoryTable } from "./transaction-history-table/transaction-history-table";
 
 export default async function TransactionHistoryCard() {
-  const purchases = await getUserPurchaseHistory();
+  const purchases = await getUserPurchaseHistoryServer();
 
   return (
     <Card>

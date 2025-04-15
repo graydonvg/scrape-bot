@@ -1,12 +1,22 @@
 import { loggerErrorMessages } from "@/lib/constants";
 import { Logger } from "next-axiom";
 import { createSupabaseBrowserClient } from "@/lib/supabase/supabase-browser";
+import { SortingState } from "@tanstack/react-table";
 
-export default async function getAllWorkflowExecutionsClient(
-  workflowId: string,
-  rangeStart: number,
-  rangeEnd: number,
-) {
+type Params = {
+  workflowId: string;
+  pagination: {
+    rows: number;
+    page: number;
+  };
+  sorting: SortingState;
+};
+
+export default async function getAllWorkflowExecutionsClient({
+  workflowId,
+  pagination,
+  sorting,
+}: Params) {
   let log = new Logger();
   log = log.with({
     context: "getAllWorkflowExecutions",
@@ -26,21 +36,27 @@ export default async function getAllWorkflowExecutionsClient(
 
     log = log.with({ userId: user.id });
 
-    const {
-      data: workflowExecutions,
-      count,
-      error,
-    } = await supabase
+    const query = supabase
       .from("workflowExecutions")
       .select("*, tasks(taskId), ...workflows!inner(workflowName:name)", {
         count: "exact",
       })
       .eq("userId", user.id)
-      .eq("workflowId", workflowId)
-      .order("startedAt", { ascending: false })
+      .eq("workflowId", workflowId);
+
+    sorting.forEach((sort) => query.order(sort.id, { ascending: !sort.desc }));
+
+    const from = pagination.page * pagination.rows;
+    const to = from + pagination.rows - 1;
+
+    const {
+      data: workflowExecutions,
+      count,
+      error,
+    } = await query
       .order("phase", { ascending: true, referencedTable: "tasks" })
       .limit(1, { foreignTable: "tasks" })
-      .range(rangeStart, rangeEnd);
+      .range(from, to);
 
     if (error) {
       log.error(loggerErrorMessages.Select, {

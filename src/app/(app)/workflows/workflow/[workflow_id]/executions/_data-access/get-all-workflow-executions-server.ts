@@ -42,7 +42,7 @@ export default async function getAllWorkflowExecutionsServer(
       .order("startedAt", { ascending: false })
       .order("phase", { ascending: true, referencedTable: "tasks" })
       .limit(1, { foreignTable: "tasks" })
-      .range(0, 4);
+      .limit(5);
 
     if (error) {
       log.error(loggerErrorMessages.Select, {
