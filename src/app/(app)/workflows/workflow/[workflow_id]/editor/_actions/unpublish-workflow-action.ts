@@ -46,6 +46,8 @@ const unpublishWorkflowAction = actionClient
             status: "DRAFT",
             executionPlan: null,
             creditCost: 0,
+            cron: null,
+            nextExecutionAt: null,
           })
           .eq("userId", user.id)
           .eq("workflowId", formData.workflowId)
