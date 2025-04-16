@@ -5,6 +5,11 @@ import { Suspense } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import CredentialsSkeleton from "./_components/credentials-skeleton";
 import AddCredentialDialog from "./_components/add-credential/add-credential-dialog";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Credentials",
+};
 
 export default function CredentialsPage() {
   return (

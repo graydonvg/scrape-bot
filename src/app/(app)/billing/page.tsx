@@ -5,6 +5,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import CreditPurchase from "./_components/credit-purchase";
 import CreditUsageCard from "./_components/credit-usage-card";
 import TransactionHistoryCard from "./_components/transaction-history-card";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Billing",
+};
 
 export default function BillingPage() {
   return (
