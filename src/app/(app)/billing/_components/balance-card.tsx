@@ -16,7 +16,7 @@ export default function BalanceCard() {
   const { userCreditBalance } = useUserStore();
 
   return (
-    <Card className="from-primary/10 via-primary/5 to-background border-primary/20 relative overflow-hidden bg-gradient-to-br shadow-lg">
+    <Card className="relative overflow-hidden">
       <CardHeader className="pb-1">
         <CardTitle className="flex items-center gap-2">
           <h2 className="text-lg font-semibold">Available Credits</h2>
