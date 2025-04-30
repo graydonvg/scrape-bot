@@ -49,7 +49,7 @@ export default function WorkflowExecutionStatusChart({ data }: Props) {
         <CardDescription className="text-pretty">
           <p>
             Daily number of successful, failed, and partially failed workflow
-            executions for the selected period
+            executions for the selected period.
           </p>
         </CardDescription>
       </CardHeader>

@@ -83,7 +83,7 @@ const signUpAction = actionClient
         };
       }
 
-      redirect("/");
+      redirect("/dashboard");
     },
   );
 

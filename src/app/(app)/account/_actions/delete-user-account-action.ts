@@ -1,17 +1,18 @@
-import "server-only";
+"use server";
 
-import { loggerErrorMessages } from "@/lib/constants";
 import createSupabaseServerClient from "@/lib/supabase/supabase-server";
+import { ActionReturn } from "@/lib/types/action";
 import { Logger } from "next-axiom";
-import { isRedirectError } from "next/dist/client/components/redirect-error";
+import { loggerErrorMessages, userErrorMessages } from "@/lib/constants";
 import { redirect } from "next/navigation";
-import { cache } from "react";
+import { isRedirectError } from "next/dist/client/components/redirect-error";
+import createSupabaseService from "@/lib/supabase/supabase-service";
 
-const getWorkflow = cache(async (workflowId: string) => {
-  let log = new Logger();
-  log = log.with({ context: "getWorkflow" });
+export async function deleteUserAccountAction(): Promise<ActionReturn> {
+  let log = new Logger().with({ context: "deleteUserAccountAction" });
 
   try {
+    const supabaseService = createSupabaseService();
     const supabase = await createSupabaseServerClient();
     const {
       data: { user },
@@ -24,30 +25,26 @@ const getWorkflow = cache(async (workflowId: string) => {
 
     log = log.with({ userId: user.id });
 
-    const { data, error } = await supabase
-      .from("workflows")
-      .select(
-        "workflowId, name, description, definition, status, lastExecutedAt, lastExecutionStatus, creditCost",
-      )
-      .eq("userId", user.id)
-      .eq("workflowId", workflowId);
+    const { error } = await supabaseService.auth.admin.deleteUser(user.id);
 
     if (error) {
-      log.error(loggerErrorMessages.Select, {
-        error,
-      });
-      return null;
+      log.error("Failed to delete user account", { error });
+      return {
+        success: false,
+        message: userErrorMessages.Unexpected,
+      };
     }
 
-    return data[0];
+    redirect("/");
   } catch (error) {
     // When you call the redirect() function (from next/navigation), it throws a special error (with the code NEXT_REDIRECT) to immediately halt further processing and trigger the redirection. This “error” is meant to be caught internally by Next.js, not by the try/catch blocks.
     // Throw the “error” to trigger the redirection
     if (isRedirectError(error)) throw error;
 
     log.error(loggerErrorMessages.Unexpected, { error });
-    return null;
+    return {
+      success: false,
+      message: userErrorMessages.Unexpected,
+    };
   }
-});
-
-export default getWorkflow;
+}

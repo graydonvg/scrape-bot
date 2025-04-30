@@ -5,6 +5,7 @@ import { WorkflowExecutionPlan } from "./types/execution";
 import { WorkflowNode } from "./types/workflow";
 import { taskRegistry } from "./workflow/tasks/task-registry";
 import { Period } from "./types/analytics";
+import { UserDb } from "./types/user";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -76,6 +77,24 @@ export function calculateTotalCreditCostFromExecutionPlan(
 
 export function getFormattedWorkflowExecutionStatus(status: string) {
   return status.split("_").join(" ");
+}
+
+export function getUserFullName(user: UserDb) {
+  const userFullName = `${user.firstName ? user.firstName : ""} ${user.lastName ? user.lastName : ""}`;
+
+  return userFullName.trim();
+}
+
+export function getUserAvatarFallbackChars(user: UserDb) {
+  const userFullName = getUserFullName(user);
+
+  return userFullName.length
+    ? userFullName
+        .split(" ")
+        .slice(0, 2)
+        .map((name) => name.charAt(0))
+        .join("")
+    : user.email.charAt(0);
 }
 
 // export async function wait(ms: number) {

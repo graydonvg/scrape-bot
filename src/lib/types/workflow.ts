@@ -12,6 +12,6 @@ export type WorkflowNodeData = {
   [key: string]: unknown;
 };
 
-export type WorkflowNode = Node & {
+export interface WorkflowNode extends Node {
   data: WorkflowNodeData;
-};
+}

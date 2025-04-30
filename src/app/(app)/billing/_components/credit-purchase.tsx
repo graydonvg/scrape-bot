@@ -44,7 +44,7 @@ export default function CreditPurchase() {
           Purchase Credits
         </CardTitle>
         <CardDescription>
-          Select the number of credits you would like to purchase
+          Select the number of credits you would like to purchase.
         </CardDescription>
       </CardHeader>
       <CardContent>

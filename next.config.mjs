@@ -3,6 +3,20 @@
 import { withAxiom } from "next-axiom";
 
 const nextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+        pathname: "/a/**",
+      },
+      {
+        protocol: "https",
+        hostname: "glsavotvghmcohmwhmxw.supabase.co",
+        pathname: "/storage/v1/object/public/avatars/**",
+      },
+    ],
+  },
   experimental: {
     staleTimes: {
       // This config can be used to override the cache behavior for the client router. These values indicate the time, in seconds, that the cache should be considered reusable. When the prefetch Link prop is left unspecified, this will use the dynamic value. When the prefetch Link prop is set to true, this will use the static value.

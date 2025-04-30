@@ -24,7 +24,7 @@ import { ActionReturn } from "@/lib/types/action";
 
 const TOAST_ID = "sign-up";
 
-const initialValues = {
+const defaultValues = {
   firstName: "",
   lastName: "",
   email: "",
@@ -35,7 +35,7 @@ const initialValues = {
 export default function SignUpPage() {
   const form = useForm<SignUpSchemaType>({
     resolver: zodResolver(signUpSchema),
-    defaultValues: initialValues,
+    defaultValues,
   });
   const { execute, isPending } = useAction(signUpAction, {
     onExecute: () => toast.loading("Signing up...", { id: TOAST_ID }),
@@ -144,7 +144,7 @@ export default function SignUpPage() {
             loading={isPending}
             className="mt-2 w-full capitalize"
           >
-            {!isPending ? "Sign up" : "Signing up..."}
+            Sign up
           </ButtonWithSpinner>
         </div>
         <div className="text-center text-sm">

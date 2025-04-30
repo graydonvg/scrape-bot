@@ -5,7 +5,7 @@ import { NavUserClient } from "./nav-user-client";
 export default async function NavUserServer() {
   const userData = await getUserData();
 
-  if (!userData) return redirect("/signin");
+  if (!userData) redirect("/signin");
 
   return <NavUserClient user={userData} />;
 }

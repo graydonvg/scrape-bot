@@ -22,18 +22,18 @@ export default async function TransactionHistoryCard() {
           <h2>Transaction History</h2>
         </CardTitle>
         <CardDescription>
-          <p>View your transaction history and download invoices</p>
+          <p>View your transaction history and download invoices.</p>
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {(!purchases || !purchases.count) && (
+        {!purchases && (
           <CustomAlert
             variant="destructive"
             title="Error"
             description="Something went wrong. Please try again later."
           />
         )}
-        {purchases?.count === 0 && (
+        {purchases && purchases.count === 0 && (
           <p className="text-muted-foreground">No transactions yet</p>
         )}
         {purchases && purchases.count! > 0 && (

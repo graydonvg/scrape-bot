@@ -19,13 +19,13 @@ export const signUpSchema = z
     firstName: z
       .string()
       .trim()
-      .max(50, { message: "First name cannot exceed 50 characters" })
+      .max(50, { message: "First name cannot exceed 32 characters" })
       .or(z.literal(""))
       .optional(),
     lastName: z
       .string()
       .trim()
-      .max(50, { message: "Last name cannot exceed 50 characters" })
+      .max(50, { message: "Last name cannot exceed 32 characters" })
       .or(z.literal(""))
       .optional(),
     email: z

@@ -24,19 +24,19 @@ export default async function StatsCards({ selectedPeriod }: Props) {
     <>
       <StatsCard
         title="Workflow executions"
-        description="Total workflow executions for the selected period"
+        description="Total workflow executions for the selected period."
         value={data?.workflowExecutions}
         icon={CirclePlayIcon}
       />
       <StatsCard
         title="Task executions"
-        description="Total task executions for the selected period"
+        description="Total task executions for the selected period."
         value={data?.taskExecutions}
         icon={WaypointsIcon}
       />
       <StatsCard
         title="Credits consumed"
-        description="Total credits consumed for the selected period"
+        description="Total credits consumed for the selected period."
         value={data?.creditsConsumed}
         icon={CoinsIcon}
       />

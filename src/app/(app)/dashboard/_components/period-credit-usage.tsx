@@ -12,7 +12,7 @@ export default async function PeriodCreditUsage({ selectedPeriod }: Props) {
   return (
     <CreditUsageChart
       title="Credits consumed"
-      description="Daily number of credits consumed for the selected period"
+      description="Daily number of credits consumed for the selected period."
       data={data}
     />
   );

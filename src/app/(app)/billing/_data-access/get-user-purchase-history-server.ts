@@ -18,7 +18,7 @@ export default async function getUserPurchaseHistoryServer() {
 
     if (!user) {
       log.warn(loggerErrorMessages.Unauthorized);
-      return redirect("/signin");
+      redirect("/signin");
     }
 
     log = log.with({ userId: user.id });

@@ -18,8 +18,7 @@ type Stats = {
 };
 
 export default async function getPeriodCreditUsage(selectedPeriod: Period) {
-  let log = new Logger();
-  log = log.with({ context: "getWorkflowExecutionStats" });
+  let log = new Logger().with({ context: "getWorkflowExecutionStats" });
 
   try {
     const supabase = await createSupabaseServerClient();
@@ -29,7 +28,7 @@ export default async function getPeriodCreditUsage(selectedPeriod: Period) {
 
     if (!user) {
       log.warn(loggerErrorMessages.Unauthorized);
-      return redirect("/signin");
+      redirect("/signin");
     }
 
     log = log.with({ userId: user.id });

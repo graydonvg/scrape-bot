@@ -61,7 +61,7 @@ const signInWithPasswordAction = actionClient
         };
       }
 
-      redirect("/");
+      redirect("/dashboard");
     },
   );
 

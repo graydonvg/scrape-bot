@@ -1,4 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useState } from "react";
 
 type Props = {
   userName: string;
@@ -13,11 +14,19 @@ export default function UserMenuLabel({
   email,
   avatarUrl,
 }: Props) {
+  const [hasLoaded, setHasLoaded] = useState(false);
+  const [hasError, setHasError] = useState(false);
+
   return (
     <>
       <Avatar className="size-8 rounded-md">
-        {avatarUrl ? (
-          <AvatarImage src={avatarUrl} alt={`${userName} avatar`} />
+        {avatarUrl && hasLoaded && !hasError ? (
+          <AvatarImage
+            src={avatarUrl}
+            alt={`${userName} avatar`}
+            onLoad={() => setHasLoaded(true)}
+            onError={() => setHasError(true)}
+          />
         ) : (
           <AvatarFallback className="rounded-md uppercase">
             {avatarFallbackChars}

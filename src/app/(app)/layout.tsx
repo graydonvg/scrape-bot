@@ -5,8 +5,8 @@ import {
   SidebarProvider,
 } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
-import AppHeader from "@/components/app-header/app-header";
-import AppSidebar from "@/components/app-sidebar/app-sidebar";
+import AppHeader from "@/app/(app)/_components/app-header/app-header";
+import AppSidebar from "@/app/(app)/_components/app-sidebar/app-sidebar";
 import AppContainer from "@/components/app-container";
 
 type Props = {

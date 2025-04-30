@@ -12,7 +12,7 @@ export default async function CreditUsageCard() {
   return (
     <CreditUsageChart
       title="Credits consumed"
-      description="Daily number of credits consumed this month"
+      description="Daily number of credits consumed this month."
       data={data}
     />
   );
