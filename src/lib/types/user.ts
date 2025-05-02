@@ -1,9 +1,6 @@
 import { Database } from "../supabase/database.types";
 
 export interface UserDb
-  extends Omit<
-    Database["public"]["Tables"]["users"]["Row"],
-    "updatedAt" | "userId"
-  > {
+  extends Omit<Database["public"]["Tables"]["users"]["Row"], "updatedAt"> {
   provider?: string;
 }

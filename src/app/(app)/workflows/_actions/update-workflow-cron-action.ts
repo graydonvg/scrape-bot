@@ -23,8 +23,7 @@ const updateWorkflowCronAction = actionClient
     }: {
       parsedInput: UpdateWorkflowCronSchemaType;
     }): Promise<ActionReturn> => {
-      let log = new Logger();
-      log = log.with({ context: "updateWorkflowCronAction" });
+      let log = new Logger().with({ context: "updateWorkflowCronAction" });
 
       try {
         const supabase = await createSupabaseServerClient();

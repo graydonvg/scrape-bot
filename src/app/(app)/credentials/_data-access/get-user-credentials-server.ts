@@ -7,8 +7,7 @@ import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { redirect } from "next/navigation";
 
 export default async function getUserCredentialsServer() {
-  let log = new Logger();
-  log = log.with({ context: "getUserCredentialsServer" });
+  let log = new Logger().with({ context: "getUserCredentialsServer" });
 
   try {
     const supabase = await createSupabaseServerClient();

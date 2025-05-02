@@ -17,8 +17,7 @@ export default async function getAllWorkflowExecutionsClient({
   pagination,
   sorting,
 }: Params) {
-  let log = new Logger();
-  log = log.with({
+  let log = new Logger().with({
     context: "getAllWorkflowExecutions",
     workflowId,
   });

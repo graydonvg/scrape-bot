@@ -3,8 +3,7 @@ import { createSupabaseBrowserClient } from "@/lib/supabase/supabase-browser";
 import { Logger } from "next-axiom";
 
 export default async function getTaskDetails(taskId: string) {
-  let log = new Logger();
-  log = log.with({
+  let log = new Logger().with({
     context: "getPhaseTaskDetails",
     taskId,
   });

@@ -43,8 +43,7 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  let log = new Logger();
-  log = log.with({ context: "middleware" });
+  const log = new Logger().with({ context: "middleware" });
 
   // Next.js 15 doesn't provide the IP address in the request object so we use
   // the Arcjet utility package to parse the headers and find it. If we're

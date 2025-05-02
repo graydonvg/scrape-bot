@@ -8,8 +8,7 @@ import { redirect } from "next/navigation";
 import { cache } from "react";
 
 const getWorkflow = cache(async (workflowId: string) => {
-  let log = new Logger();
-  log = log.with({ context: "getWorkflow" });
+  let log = new Logger().with({ context: "getWorkflow" });
 
   try {
     const supabase = await createSupabaseServerClient();

@@ -8,8 +8,7 @@ import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { siteConfig } from "@/config/site";
 
 export default async function signInWithGoogleAction() {
-  let log = new Logger();
-  log = log.with({ context: "signInWithPasswordAction" });
+  const log = new Logger().with({ context: "signInWithPasswordAction" });
 
   try {
     const supabase = await createSupabaseServerClient();

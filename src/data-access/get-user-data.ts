@@ -25,7 +25,9 @@ const getUserData = cache(async function getUserData() {
 
     const { data, error } = await supabase
       .from("users")
-      .select("email, firstName, lastName, avatarUrl")
+      .select(
+        "userId, email, firstName, lastName, providerAvatarUrl, customAvatarUrl",
+      )
       .eq("userId", user.id);
 
     if (error) {

@@ -12,7 +12,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormMessage,
@@ -74,9 +73,6 @@ export default function UserNameCard({ user }: Props) {
                     <FormControl>
                       <Input placeholder="Your first name..." {...field} />
                     </FormControl>
-                    <FormDescription>
-                      Please use 32 characters at maximum.
-                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -90,9 +86,6 @@ export default function UserNameCard({ user }: Props) {
                     <FormControl>
                       <Input placeholder="Your last name..." {...field} />
                     </FormControl>
-                    <FormDescription>
-                      Please use 32 characters at maximum.
-                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -101,7 +94,10 @@ export default function UserNameCard({ user }: Props) {
           </form>
         </Form>
       </CardContent>
-      <CardFooter className="justify-end border-t py-3">
+      <CardFooter className="justify-between gap-6 border-t py-3">
+        <p className="text-muted-foreground text-sm text-pretty">
+          Please use 32 characters at maximum per field.
+        </p>
         <ButtonWithSpinner disabled={!fieldHasValue} startIcon={<SaveIcon />}>
           Save
         </ButtonWithSpinner>

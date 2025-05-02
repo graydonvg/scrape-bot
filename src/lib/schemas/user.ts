@@ -2,6 +2,7 @@ import { z } from "zod";
 
 export const userAvatarSchema = z.object({
   avatar: z.instanceof(File),
+  currentFileExt: z.string().optional(),
 });
 
 export type UserAvatarSchemaType = z.infer<typeof userAvatarSchema>;

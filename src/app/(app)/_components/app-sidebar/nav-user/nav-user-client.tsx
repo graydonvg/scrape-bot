@@ -22,7 +22,7 @@ import { useLogger } from "next-axiom";
 import { UserDb } from "@/lib/types/user";
 import UserMenuLabel from "./user-menu-label";
 import { ThemeMenu } from "@/components/theme-menu";
-import { getUserAvatarFallbackChars, getUserFullName } from "@/lib/utils";
+import { getUserAvatarFallbackChars, getUsername } from "@/lib/utils";
 import Link from "next/link";
 
 type Props = {
@@ -33,8 +33,7 @@ export function NavUserClient({ user }: Props) {
   const log = useLogger();
   const router = useRouter();
   const supabase = createSupabaseBrowserClient();
-  const userFullName = getUserFullName(user);
-  const userName = getUsername(userFullName);
+  const userName = getUsername(user);
   const avatarFallbackChars = getUserAvatarFallbackChars(user);
 
   return (
@@ -48,9 +47,8 @@ export function NavUserClient({ user }: Props) {
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               >
                 <UserMenuLabel
+                  user={user}
                   userName={userName}
-                  email={user.email}
-                  avatarUrl={user.avatarUrl}
                   avatarFallbackChars={avatarFallbackChars}
                 />
                 <ChevronsUpDownIcon className="ml-auto size-4" />
@@ -65,9 +63,8 @@ export function NavUserClient({ user }: Props) {
               <DropdownMenuLabel className="p-0 font-normal">
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                   <UserMenuLabel
+                    user={user}
                     userName={userName}
-                    email={user.email}
-                    avatarUrl={user.avatarUrl}
                     avatarFallbackChars={avatarFallbackChars}
                   />
                 </div>
@@ -95,10 +92,6 @@ export function NavUserClient({ user }: Props) {
     </>
   );
 
-  function getUsername(userFullName: string) {
-    return userFullName.length ? userFullName : user.email.split("@")[0];
-  }
-
   async function handleSignOut() {
     try {
       const { error } = await supabase.auth.signOut();
@@ -112,8 +105,6 @@ export function NavUserClient({ user }: Props) {
     } catch (error) {
       log.error("Signout error", { error });
       toast.error("Failed to sign out. An unexpected error occured.");
-    } finally {
-      log.flush();
     }
   }
 }

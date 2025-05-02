@@ -85,6 +85,11 @@ export function getUserFullName(user: UserDb) {
   return userFullName.trim();
 }
 
+export function getUsername(user: UserDb) {
+  const userFullName = getUserFullName(user);
+  return userFullName.length ? userFullName : user.email.split("@")[0];
+}
+
 export function getUserAvatarFallbackChars(user: UserDb) {
   const userFullName = getUserFullName(user);
 

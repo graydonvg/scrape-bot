@@ -9,8 +9,7 @@ import { stringToDate } from "@/lib/utils";
 import { Period } from "@/lib/types/analytics";
 
 export default async function getPeriods() {
-  let log = new Logger();
-  log = log.with({ context: "getPeriods" });
+  let log = new Logger().with({ context: "getPeriods" });
 
   try {
     const supabase = await createSupabaseServerClient();

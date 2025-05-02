@@ -22,8 +22,7 @@ const renameWorkflowAction = actionClient
     }: {
       parsedInput: RenameWorkflowSchemaType;
     }): Promise<ActionReturn<keyof RenameWorkflowSchemaType>> => {
-      let log = new Logger();
-      log = log.with({ context: "renameWorkflowAction" });
+      let log = new Logger().with({ context: "renameWorkflowAction" });
 
       try {
         const supabase = await createSupabaseServerClient();

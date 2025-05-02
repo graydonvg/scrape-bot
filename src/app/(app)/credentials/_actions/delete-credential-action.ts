@@ -22,8 +22,7 @@ const deleteCredentialAction = actionClient
     }: {
       parsedInput: DeleteCredentialSchemaType;
     }): Promise<ActionReturn<keyof DeleteCredentialSchemaType>> => {
-      let log = new Logger();
-      log = log.with({ context: "deleteCredentialAction" });
+      let log = new Logger().with({ context: "deleteCredentialAction" });
 
       try {
         const supabase = await createSupabaseServerClient();

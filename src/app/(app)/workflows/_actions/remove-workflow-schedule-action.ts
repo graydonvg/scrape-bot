@@ -22,8 +22,7 @@ const removeWorkflowScheduleAction = actionClient
     }: {
       parsedInput: RemoveWorkflowScheduleSchemaType;
     }): Promise<ActionReturn> => {
-      let log = new Logger();
-      log = log.with({ context: "removeWorkflowScheduleAction" });
+      let log = new Logger().with({ context: "removeWorkflowScheduleAction" });
 
       try {
         const supabase = await createSupabaseServerClient();

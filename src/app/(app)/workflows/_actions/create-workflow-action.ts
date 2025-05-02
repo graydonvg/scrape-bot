@@ -26,8 +26,7 @@ const createWorkflowAction = actionClient
     }: {
       parsedInput: CreateWorkflowSchemaType;
     }): Promise<ActionReturn<keyof CreateWorkflowSchemaType>> => {
-      let log = new Logger();
-      log = log.with({ context: "createWorkflowAction" });
+      let log = new Logger().with({ context: "createWorkflowAction" });
 
       try {
         const supabase = await createSupabaseServerClient();

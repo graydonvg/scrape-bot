@@ -3,8 +3,7 @@ import { createSupabaseBrowserClient } from "@/lib/supabase/supabase-browser";
 import { Logger } from "next-axiom";
 
 export default async function getUserCredentialsClient() {
-  let log = new Logger();
-  log = log.with({ context: "getUserCredentialsClient" });
+  let log = new Logger().with({ context: "getUserCredentialsClient" });
 
   try {
     const supabase = createSupabaseBrowserClient();

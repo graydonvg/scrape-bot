@@ -9,8 +9,7 @@ import { periodToDateRange } from "@/lib/utils";
 import { Period } from "@/lib/types/analytics";
 
 export default async function getStatsCardsValues(selectedPeriod: Period) {
-  let log = new Logger();
-  log = log.with({ context: "getStatsCardsValues" });
+  let log = new Logger().with({ context: "getStatsCardsValues" });
 
   try {
     const supabase = await createSupabaseServerClient();

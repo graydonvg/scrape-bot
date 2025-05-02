@@ -22,8 +22,7 @@ const deleteWorkflowAction = actionClient
     }: {
       parsedInput: DeleteWorkflowSchemaType;
     }): Promise<ActionReturn> => {
-      let log = new Logger();
-      log = log.with({ context: "deleteWorkflowAction" });
+      let log = new Logger().with({ context: "deleteWorkflowAction" });
 
       try {
         const supabase = await createSupabaseServerClient();

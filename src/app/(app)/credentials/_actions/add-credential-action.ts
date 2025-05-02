@@ -23,8 +23,7 @@ const addCredentialAction = actionClient
     }: {
       parsedInput: AddCredentialSchemaType;
     }): Promise<ActionReturn<keyof AddCredentialSchemaType>> => {
-      let log = new Logger();
-      log = log.with({ context: "addCredentialAction" });
+      let log = new Logger().with({ context: "addCredentialAction" });
 
       try {
         const supabase = await createSupabaseServerClient();

@@ -25,8 +25,7 @@ const purchaseCreditsAction = actionClient
     }: {
       parsedInput: PurchaseCreditsSchemaType;
     }): Promise<ActionReturn> => {
-      let log = new Logger();
-      log = log.with({ context: "purchaseCreditsAction" });
+      let log = new Logger().with({ context: "purchaseCreditsAction" });
 
       try {
         const supabase = await createSupabaseServerClient();

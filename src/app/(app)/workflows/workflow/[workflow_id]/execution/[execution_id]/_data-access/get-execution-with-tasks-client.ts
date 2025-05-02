@@ -5,8 +5,7 @@ import { Logger } from "next-axiom";
 export default async function getWorkflowExecutionWithTasksClient(
   workflowExecutionId: string,
 ) {
-  let log = new Logger();
-  log = log.with({
+  let log = new Logger().with({
     context: "getWorkflowExecutionWithTasksClient",
     workflowExecutionId,
   });

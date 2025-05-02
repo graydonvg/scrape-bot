@@ -12,7 +12,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "glsavotvghmcohmwhmxw.supabase.co",
+        hostname: "sglwxnizbklgkoimhpkv.supabase.co",
         pathname: "/storage/v1/object/public/avatars/**",
       },
     ],

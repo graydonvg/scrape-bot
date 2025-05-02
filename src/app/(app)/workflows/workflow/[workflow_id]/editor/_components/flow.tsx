@@ -92,8 +92,6 @@ export default function Flow({ workflow }: Props) {
       log.error("Error parsing workflow definition", { error });
 
       toast.error(userErrorMessages.Unexpected);
-    } finally {
-      log.flush();
     }
   }, [
     workflow,

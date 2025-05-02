@@ -20,8 +20,7 @@ type Stats = {
 export default async function getWorkflowExecutionStats(
   selectedPeriod: Period,
 ) {
-  let log = new Logger();
-  log = log.with({ context: "getWorkflowExecutionStats" });
+  let log = new Logger().with({ context: "getWorkflowExecutionStats" });
 
   try {
     const supabase = await createSupabaseServerClient();

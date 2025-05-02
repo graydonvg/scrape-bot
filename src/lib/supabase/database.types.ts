@@ -182,26 +182,29 @@ export type Database = {
       };
       users: {
         Row: {
-          avatarUrl: string | null;
+          customAvatarUrl: string | null;
           email: string;
           firstName: string | null;
           lastName: string | null;
+          providerAvatarUrl: string | null;
           updatedAt: string;
           userId: string;
         };
         Insert: {
-          avatarUrl?: string | null;
+          customAvatarUrl?: string | null;
           email: string;
           firstName?: string | null;
           lastName?: string | null;
+          providerAvatarUrl?: string | null;
           updatedAt?: string;
           userId: string;
         };
         Update: {
-          avatarUrl?: string | null;
+          customAvatarUrl?: string | null;
           email?: string;
           firstName?: string | null;
           lastName?: string | null;
+          providerAvatarUrl?: string | null;
           updatedAt?: string;
           userId?: string;
         };

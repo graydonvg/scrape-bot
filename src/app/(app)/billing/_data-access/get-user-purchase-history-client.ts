@@ -15,8 +15,7 @@ export default async function getUserPurchaseHistoryClient({
   pagination,
   sorting,
 }: Params) {
-  let log = new Logger();
-  log = log.with({ context: "getUserPurchaseHistoryClient" });
+  let log = new Logger().with({ context: "getUserPurchaseHistoryClient" });
 
   try {
     const supabase = createSupabaseBrowserClient();

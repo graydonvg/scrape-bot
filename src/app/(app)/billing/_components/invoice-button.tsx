@@ -36,7 +36,6 @@ export default function InvoiceButton({ purchaseId }: Props) {
       logger.error(loggerErrorMessages.Unexpected, { error });
       toast.error(userErrorMessages.Unexpected);
     } finally {
-      logger.flush();
       setIsLoading(false);
     }
   }

@@ -17,8 +17,7 @@ const signUpAction = actionClient
     }: {
       parsedInput: SignUpSchemaType;
     }): Promise<ActionReturn<Array<keyof SignUpSchemaType>>> => {
-      let log = new Logger();
-      log = log.with({ context: "signUpAction" });
+      const log = new Logger().with({ context: "signUpAction" });
 
       try {
         const supabase = await createSupabaseServerClient();

@@ -9,8 +9,7 @@ import { redirect } from "next/navigation";
 export default async function getWorkflowExecutionWithTasksServer(
   workflowExecutionId: string,
 ) {
-  let log = new Logger();
-  log = log.with({
+  let log = new Logger().with({
     context: "getWorkflowExecutionWithTasksServer",
     workflowExecutionId,
   });

@@ -1,41 +1,50 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
+import useUserStore from "@/lib/store/user-store";
+import { UserDb } from "@/lib/types/user";
 import { useState } from "react";
 
 type Props = {
+  user: UserDb;
   userName: string;
-  email: string;
-  avatarUrl: string | null;
   avatarFallbackChars: string;
 };
 
 export default function UserMenuLabel({
+  user,
   userName,
   avatarFallbackChars,
-  email,
-  avatarUrl,
 }: Props) {
-  const [hasLoaded, setHasLoaded] = useState(false);
-  const [hasError, setHasError] = useState(false);
+  const { avatarPreviewUrl } = useUserStore();
+  const avatarUrl =
+    avatarPreviewUrl || user.customAvatarUrl || user.providerAvatarUrl || "";
+  const [isLoading, setIsLoading] = useState(Boolean(avatarUrl));
 
   return (
     <>
-      <Avatar className="size-8 rounded-md">
-        {avatarUrl && hasLoaded && !hasError ? (
-          <AvatarImage
-            src={avatarUrl}
-            alt={`${userName} avatar`}
-            onLoad={() => setHasLoaded(true)}
-            onError={() => setHasError(true)}
-          />
-        ) : (
-          <AvatarFallback className="rounded-md uppercase">
-            {avatarFallbackChars}
-          </AvatarFallback>
+      <div className="relative size-8 rounded-md">
+        {isLoading && (
+          <Skeleton className="bg-sidebar-accent absolute inset-0 z-0 size-8 rounded-md" />
         )}
-      </Avatar>
+        <Avatar className="z-10 size-8 rounded-md">
+          {avatarUrl.length > 0 ? (
+            <AvatarImage
+              src={avatarUrl}
+              alt={`${userName}'s avatar`}
+              onLoad={() => requestAnimationFrame(() => setIsLoading(false))}
+              onError={() => setIsLoading(false)}
+              fetchPriority="high"
+            />
+          ) : (
+            <AvatarFallback className="rounded-md uppercase">
+              {avatarFallbackChars}
+            </AvatarFallback>
+          )}
+        </Avatar>
+      </div>
       <div className="grid flex-1 text-left text-sm leading-tight">
         <span className="truncate font-semibold">{userName}</span>
-        <span className="truncate text-xs">{email}</span>
+        <span className="truncate text-xs">{user.email}</span>
       </div>
     </>
   );

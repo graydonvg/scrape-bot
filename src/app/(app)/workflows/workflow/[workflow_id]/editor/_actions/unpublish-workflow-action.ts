@@ -22,8 +22,7 @@ const unpublishWorkflowAction = actionClient
     }: {
       parsedInput: UnpublishWorkflowSchemaType;
     }): Promise<ActionReturn> => {
-      let log = new Logger();
-      log = log.with({ context: "unpublishWorkflowAction" });
+      let log = new Logger().with({ context: "unpublishWorkflowAction" });
 
       try {
         const supabase = await createSupabaseServerClient();

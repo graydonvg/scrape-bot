@@ -22,8 +22,7 @@ const duplicateWorkflowAction = actionClient
     }: {
       parsedInput: DuplicateWorkflowSchemaType;
     }): Promise<ActionReturn<keyof DuplicateWorkflowSchemaType>> => {
-      let log = new Logger();
-      log = log.with({ context: "duplicateWorkflowAction" });
+      let log = new Logger().with({ context: "duplicateWorkflowAction" });
 
       try {
         const supabase = await createSupabaseServerClient();
