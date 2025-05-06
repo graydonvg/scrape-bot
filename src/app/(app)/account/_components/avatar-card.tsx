@@ -19,6 +19,7 @@ import useUserStore from "@/lib/store/user-store";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAction } from "next-safe-action/hooks";
 import uploadAvatarAction from "../_actions/upload-avatar-action";
+import { ActionReturn } from "@/lib/types/action";
 
 const TOAST_ID = "upload-avatar";
 const MAX_FILE_SIZE_MB = 2;
@@ -39,13 +40,7 @@ export default function AvatarCard({ user }: Props) {
   );
   const { execute, isPending } = useAction(uploadAvatarAction, {
     onExecute: () => toast.loading("Uploading avatar...", { id: TOAST_ID }),
-    onSuccess: ({ data }) => {
-      if (!data?.success) {
-        return toast.error(data?.message, { id: TOAST_ID });
-      }
-
-      toast.success(data.message, { id: TOAST_ID });
-    },
+    onSuccess: ({ data }) => handleSuccess(data),
     onError: () => toast.error(userErrorMessages.Unexpected, { id: TOAST_ID }),
   });
 
@@ -111,7 +106,7 @@ export default function AvatarCard({ user }: Props) {
       </div>
       <CardFooter className="gap-6 border-t py-3">
         <p className="text-muted-foreground text-sm text-pretty">
-          {isPending ? "Uploading..." : " Maximum file size: 2MB."}
+          Maximum file size: 2MB.
         </p>
       </CardFooter>
     </Card>
@@ -139,5 +134,13 @@ export default function AvatarCard({ user }: Props) {
 
     setSelectedFile(file);
     execute({ avatar: file, currentFileExt });
+  }
+
+  function handleSuccess(data?: ActionReturn) {
+    if (!data?.success) {
+      return toast.error(data?.message, { id: TOAST_ID });
+    }
+
+    toast.success(data.message, { id: TOAST_ID });
   }
 }

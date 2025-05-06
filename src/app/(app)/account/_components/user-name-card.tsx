@@ -23,6 +23,12 @@ import { userNameSchema, UserNameSchemaType } from "@/lib/schemas/user";
 import CustomFormLabel from "@/components/custom-form-label";
 import ButtonWithSpinner from "@/components/button-with-spinner";
 import { SaveIcon } from "lucide-react";
+import updateUserNameAction from "../_actions/update-user-name-action";
+import { useAction } from "next-safe-action/hooks";
+import { toast } from "sonner";
+import { useEffect } from "react";
+import { ActionReturn } from "@/lib/types/action";
+import { userErrorMessages } from "@/lib/constants";
 
 type Props = {
   user: UserDb;
@@ -36,15 +42,18 @@ export default function UserNameCard({ user }: Props) {
       lastName: user.lastName ?? "",
     },
   });
-  // const { execute, isPending } = useAction(updateUserAccountDetailsAction, {
-  //   onExecute: () => toast.loading("Saving changes...", { id: user.email }),
-  //   onSuccess: ({ data }) => handleSuccess(data),
-  //   onError: ({ error: { validationErrors } }) => handleError(validationErrors),
-  // });
-  const allFields = form.watch(); // watch all fields
-  const fieldHasValue = Object.values(allFields).some(
-    (value) => value !== undefined && value !== "",
-  );
+  const { execute, isPending } = useAction(updateUserNameAction, {
+    onExecute: () => toast.loading("Saving changes...", { id: user.email }),
+    onSuccess: ({ data }) => handleSuccess(data),
+    onError: ({ error: { validationErrors } }) => handleError(validationErrors),
+  });
+
+  useEffect(() => {
+    // Dismiss the toast if the component unmounts before the upload completes
+    return () => {
+      toast.dismiss(user.email);
+    };
+  }, [user.email]);
 
   return (
     <Card>
@@ -61,7 +70,6 @@ export default function UserNameCard({ user }: Props) {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          {/* <form onSubmit={form.handleSubmit(execute)}> */}
           <form>
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
               <FormField
@@ -98,10 +106,59 @@ export default function UserNameCard({ user }: Props) {
         <p className="text-muted-foreground text-sm text-pretty">
           Please use 32 characters at maximum per field.
         </p>
-        <ButtonWithSpinner disabled={!fieldHasValue} startIcon={<SaveIcon />}>
+        <ButtonWithSpinner
+          onClick={form.handleSubmit(execute)}
+          loading={isPending}
+          disabled={
+            (form.getValues("firstName") === user.firstName &&
+              form.getValues("lastName") === user.lastName) ||
+            !form.formState.isValid
+          }
+          startIcon={<SaveIcon />}
+        >
           Save
         </ButtonWithSpinner>
       </CardFooter>
     </Card>
   );
+
+  function handleSuccess(data?: ActionReturn) {
+    if (!data?.success) {
+      return toast.error(data?.message, { id: user.email });
+    }
+
+    toast.success(data.message, { id: user.email });
+  }
+
+  function handleError(validationErrors?: {
+    formErrors: string[];
+    fieldErrors: {
+      firstName?: string[] | undefined;
+      lastName?: string[] | undefined;
+    };
+  }) {
+    if (validationErrors) {
+      const keys = Object.keys(validationErrors.fieldErrors) as Array<
+        keyof typeof validationErrors.fieldErrors
+      >;
+
+      keys.forEach((key) => {
+        form.setError(
+          key,
+          {
+            message:
+              validationErrors.fieldErrors[key]?.[0] ||
+              userErrorMessages.GenericFormValidation,
+          },
+          { shouldFocus: true },
+        );
+      });
+
+      return toast.error(userErrorMessages.GenericFormValidation, {
+        id: user.email,
+      });
+    }
+
+    toast.error(userErrorMessages.Unexpected, { id: user.email });
+  }
 }
