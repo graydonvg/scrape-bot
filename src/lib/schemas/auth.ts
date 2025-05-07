@@ -36,11 +36,13 @@ export const signUpSchema = z
     password: z
       .string()
       .trim()
-      .min(6, { message: "Password must be 6 or more characters" }),
+      .min(6, { message: "Password must be 6 or more characters" })
+      .max(72, { message: "Password cannot exceed 72 characters" }),
     confirmPassword: z
       .string()
       .trim()
-      .min(6, { message: "Password must be 6 or more characters" }),
+      .min(6, { message: "Password must be 6 or more characters" })
+      .max(72, { message: "Password cannot exceed 72 characters" }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     path: ["password"],

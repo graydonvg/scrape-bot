@@ -338,6 +338,10 @@ export type Database = {
         Args: { p_user_id: string; p_amount: number };
         Returns: boolean;
       };
+      verify_user_password: {
+        Args: { password: string };
+        Returns: boolean;
+      };
     };
     Enums: {
       LogLevel: "INFO" | "ERROR";

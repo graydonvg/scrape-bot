@@ -86,7 +86,7 @@ export default function AvatarCard({ user }: Props) {
                     fetchPriority="high"
                   />
                 ) : (
-                  <AvatarFallback className="uppercase">
+                  <AvatarFallback className="text-4xl uppercase">
                     {avatarFallbackChars}
                   </AvatarFallback>
                 )}

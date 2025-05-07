@@ -22,6 +22,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { userPasswordSchema, UserPasswordSchemaType } from "@/lib/schemas/user";
 import ButtonWithSpinner from "@/components/button-with-spinner";
 import { SaveIcon } from "lucide-react";
+import { toast } from "sonner";
+import { ActionReturn } from "@/lib/types/action";
+import { useAction } from "next-safe-action/hooks";
+import updatePasswordAction from "../_actions/update-password-action";
+import { userErrorMessages } from "@/lib/constants";
+import { useEffect } from "react";
+
+const TOAST_ID = "update-password";
 
 const defaultValues = {
   currentPassword: "",
@@ -34,15 +42,24 @@ export default function PasswordCard() {
     resolver: zodResolver(userPasswordSchema),
     defaultValues,
   });
-  // const { execute, isPending } = useAction(updateUserAccountDetailsAction, {
-  //   onExecute: () => toast.loading("Saving changes...", { id: user.email }),
-  //   onSuccess: ({ data }) => handleSuccess(data),
-  //   onError: ({ error: { validationErrors } }) => handleError(validationErrors),
-  // });
+  const { execute, isPending } = useAction(updatePasswordAction, {
+    onExecute: () => toast.loading("Updating password...", { id: TOAST_ID }),
+    onSuccess: ({ data }) => handleSuccess(data),
+    onError: ({ error: { validationErrors } }) => handleError(validationErrors),
+  });
   const allFields = form.watch(); // watch all fields
   const allFieldsFilled = Object.values(allFields).every(
     (value) => value.length > 5,
   );
+
+  const newPassword = form.watch("newPassword");
+  const confirmPassword = form.watch("confirmPassword");
+
+  useEffect(() => {
+    if (newPassword && confirmPassword && newPassword === confirmPassword) {
+      form.clearErrors(["newPassword", "confirmPassword"]);
+    }
+  }, [newPassword, confirmPassword, form]);
 
   return (
     <Card>
@@ -59,7 +76,6 @@ export default function PasswordCard() {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          {/* <form onSubmit={form.handleSubmit(execute)}> */}
           <form className="space-y-6">
             <FormField
               control={form.control}
@@ -117,12 +133,80 @@ export default function PasswordCard() {
       </CardContent>
       <CardFooter className="justify-between gap-6 border-t py-3">
         <p className="text-muted-foreground text-sm text-pretty">
-          Passwords must be at least 6 characters.
+          Password must be between 6 and 72 characters.
         </p>
-        <ButtonWithSpinner disabled={!allFieldsFilled} startIcon={<SaveIcon />}>
-          Save
+        <ButtonWithSpinner
+          onClick={form.handleSubmit(execute)}
+          loading={isPending}
+          disabled={!allFieldsFilled}
+          startIcon={<SaveIcon />}
+        >
+          Submit
         </ButtonWithSpinner>
       </CardFooter>
     </Card>
   );
+
+  function handleSuccess(
+    data?: ActionReturn<Array<keyof UserPasswordSchemaType>>,
+  ) {
+    if (data && !data.success) {
+      if (data.field) {
+        data.field.forEach((field) =>
+          form.setError(
+            field,
+            {
+              type: data.type,
+              message: data.message,
+            },
+            {
+              shouldFocus: true,
+            },
+          ),
+        );
+
+        return toast.error(userErrorMessages.GenericFormValidation, {
+          id: TOAST_ID,
+        });
+      }
+
+      return toast.error(data.message, { id: TOAST_ID });
+    }
+
+    form.reset();
+    toast.success("Password updated", { id: TOAST_ID });
+  }
+
+  function handleError(validationErrors?: {
+    formErrors: string[];
+    fieldErrors: {
+      currentPassword?: string[] | undefined;
+      newPassword?: string[] | undefined;
+      confirmPassword?: string[] | undefined;
+    };
+  }) {
+    if (validationErrors) {
+      const keys = Object.keys(validationErrors.fieldErrors) as Array<
+        keyof typeof validationErrors.fieldErrors
+      >;
+
+      keys.forEach((key) => {
+        form.setError(
+          key,
+          {
+            message:
+              validationErrors.fieldErrors[key]?.[0] ||
+              userErrorMessages.GenericFormValidation,
+          },
+          { shouldFocus: true },
+        );
+      });
+
+      return toast.error(userErrorMessages.GenericFormValidation, {
+        id: TOAST_ID,
+      });
+    }
+
+    toast.error(userErrorMessages.Unexpected, { id: TOAST_ID });
+  }
 }

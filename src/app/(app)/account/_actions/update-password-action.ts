@@ -3,24 +3,23 @@
 import createSupabaseServerClient from "@/lib/supabase/supabase-server";
 import { redirect } from "next/navigation";
 import { actionClient } from "@/lib/safe-action";
-import { revalidatePath } from "next/cache";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { Logger } from "next-axiom";
 import { loggerErrorMessages, userErrorMessages } from "@/lib/constants";
 import { ActionReturn } from "@/lib/types/action";
-import { userAccountSchema, UserAccountSchemaType } from "@/lib/schemas/user";
+import { userPasswordSchema, UserPasswordSchemaType } from "@/lib/schemas/user";
 
-const updateUserAccountDetailsAction = actionClient
-  .metadata({ actionName: "updateUserAccountDetailsAction" })
-  .schema(userAccountSchema)
+const updatePasswordAction = actionClient
+  .metadata({ actionName: "updatePasswordAction" })
+  .schema(userPasswordSchema)
   .action(
     async ({
       parsedInput: formData,
     }: {
-      parsedInput: UserAccountSchemaType;
-    }): Promise<ActionReturn<keyof UserAccountSchemaType>> => {
+      parsedInput: UserPasswordSchemaType;
+    }): Promise<ActionReturn<Array<keyof UserPasswordSchemaType>>> => {
       let log = new Logger().with({
-        context: "updateUserAccountDetailsAction",
+        context: "updatePasswordAction",
       });
 
       try {
@@ -36,15 +35,36 @@ const updateUserAccountDetailsAction = actionClient
 
         log = log.with({ userId: user.id });
 
-        const { error: updateUserError } = await supabase
-          .from("users")
-          .update({})
-          .eq("userId", user.id);
+        if (formData.newPassword !== formData.confirmPassword) {
+          return {
+            success: false,
+            field: ["newPassword", "confirmPassword"],
+            type: "validate",
+            message: "Passwords do not match",
+          };
+        }
 
-        if (updateUserError) {
-          log.error(loggerErrorMessages.Update, {
-            error: updateUserError,
-            formData,
+        const {
+          data: { session },
+          error: signinError,
+        } = await supabase.auth.signInWithPassword({
+          email: user.email ?? "",
+          password: formData.currentPassword,
+        });
+
+        if (signinError || !session) {
+          if (signinError?.code === "invalid_credentials") {
+            return {
+              success: false,
+              field: ["currentPassword"],
+              type: "validate",
+              message: "Incorrect current password",
+            };
+          }
+
+          log.error("Error verifying user password", {
+            error: signinError,
+            session,
           });
           return {
             success: false,
@@ -52,27 +72,21 @@ const updateUserAccountDetailsAction = actionClient
           };
         }
 
-        // const { data: passwordVerificationSuccess } = await supabase.rpc('verifyUserPassword', {
-        // 	password: passwordData.currentPassword,
-        // });
+        const { error: updatePasswordError } = await supabase.auth.updateUser({
+          password: formData.newPassword,
+        });
 
-        // if (!passwordVerificationSuccess) {
-        // 	const message = 'Incorrect current password';
+        if (updatePasswordError) {
+          log.error("Error updating password", {
+            error: updatePasswordError,
+          });
 
-        // 	log.warn(message);
+          return {
+            success: false,
+            message: userErrorMessages.Unexpected,
+          };
+        }
 
-        // 	return NextResponse.json(
-        // 		{
-        // 			success: false,
-        // 			message,
-        // 		},
-        // 		{ status: 400 }
-        // 	);
-        // }
-
-        // const { error: updateError } = await supabase.auth.updateUser({ password: passwordData.newPassword });
-
-        revalidatePath("/");
         return {
           success: true,
           message: "User data updated sucessfully",
@@ -91,4 +105,4 @@ const updateUserAccountDetailsAction = actionClient
     },
   );
 
-export default updateUserAccountDetailsAction;
+export default updatePasswordAction;
