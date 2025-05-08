@@ -126,14 +126,8 @@ export default function AvatarCard({ user }: Props) {
       );
     }
 
-    const currentFileExt = user.customAvatarUrl
-      ?.split("avatars/")
-      .pop()
-      ?.split(".")
-      .pop();
-
     setSelectedFile(file);
-    execute({ avatar: file, currentFileExt });
+    execute({ avatar: file, currentCustomAvatarUrl: user.customAvatarUrl });
   }
 
   function handleSuccess(data?: ActionReturn) {

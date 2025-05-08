@@ -36,20 +36,25 @@ const uploadAvatarAction = actionClient
 
         log = log.with({ userId: user.id });
 
-        const fileExt = formData.avatar.name.split(".").pop();
-        const filePath = `user-${user.id}.${fileExt}`;
+        const currentFileExt = formData.currentCustomAvatarUrl
+          ?.split("avatars/")
+          .pop()
+          ?.split(".")
+          .pop();
+        const newFileExt = formData.avatar.name.split(".").pop();
+        const filePath = `user-${user.id}.${newFileExt}`;
 
-        if (formData.currentFileExt && formData.currentFileExt !== fileExt) {
+        if (currentFileExt && currentFileExt !== newFileExt) {
           // File names include the user id and the file extension.
           // Files with the same name and extension will be replaced.
           // If the user uploads a file with a different extension,
           // delete the old file to prevent storing unused files.
-          const { error: removeError } = await supabase.storage
+          const { error: removeAvatarError } = await supabase.storage
             .from("avatars")
-            .remove([`user-${user.id}.${formData.currentFileExt}`]);
+            .remove([`user-${user.id}.${currentFileExt}`]);
 
-          if (removeError) {
-            log.error("Error removing avatar", { error: removeError });
+          if (removeAvatarError) {
+            log.error("Error removing avatar", { error: removeAvatarError });
 
             return {
               success: false,

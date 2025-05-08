@@ -61,6 +61,13 @@ export default function PasswordCard() {
     }
   }, [newPassword, confirmPassword, form]);
 
+  useEffect(() => {
+    // Dismiss the toast if the component unmounts before the upload completes
+    return () => {
+      toast.dismiss(TOAST_ID);
+    };
+  }, []);
+
   return (
     <Card>
       <CardHeader>

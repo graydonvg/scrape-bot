@@ -12,7 +12,11 @@ import DeleteUserAccountDialog from "./delete-user-account-dialog";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
-export default function DeleteAccountCard() {
+type Props = {
+  customAvatarUrl: string | null;
+};
+
+export default function DeleteAccountCard({ customAvatarUrl }: Props) {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   return (
@@ -47,6 +51,7 @@ export default function DeleteAccountCard() {
       <DeleteUserAccountDialog
         open={openDeleteDialog}
         setOpen={setOpenDeleteDialog}
+        customAvatarUrl={customAvatarUrl}
       />
     </>
   );

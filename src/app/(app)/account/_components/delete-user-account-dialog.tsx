@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -18,9 +18,9 @@ import { userErrorMessages } from "@/lib/constants";
 import CustomAlert from "@/components/custom-alert";
 import { Trash2Icon } from "lucide-react";
 import { ActionReturn } from "@/lib/types/action";
-import { useMutation } from "@tanstack/react-query";
-import { deleteUserAccountAction } from "../_actions/delete-user-account-action";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
+import { useAction } from "next-safe-action/hooks";
+import deleteUserAccountAction from "../_actions/delete-user-account-action";
 
 const TOAST_ID = "delete-user-account";
 const CONFIRM_TEXT = "delete my account";
@@ -28,20 +28,29 @@ const CONFIRM_TEXT = "delete my account";
 type Props = {
   open: boolean;
   setOpen: (open: boolean) => void;
+  customAvatarUrl: string | null;
 };
 
-export default function DeleteUserAccountDialog({ open, setOpen }: Props) {
+export default function DeleteUserAccountDialog({
+  open,
+  setOpen,
+  customAvatarUrl,
+}: Props) {
   const [confirmText, setConfirmText] = useState("");
-  const { isPending, mutate } = useMutation({
-    mutationFn: deleteUserAccountAction,
-    onMutate: () => toast.loading("Deleting account...", { id: TOAST_ID }),
-    onSuccess: (data) => handleSuccess(data),
-    onError: (error) => {
-      if (isRedirectError(error)) return toast.dismiss(TOAST_ID);
-
-      toast.error(userErrorMessages.Unexpected, { id: TOAST_ID });
-    },
+  const { execute, isPending } = useAction(deleteUserAccountAction, {
+    onExecute: () => toast.loading("Deleting account...", { id: TOAST_ID }),
+    onSuccess: ({ data }) => handleSuccess(data),
+    onError: ({ error }) => handleError(error),
   });
+
+  useEffect(() => {
+    // Dismiss the toast if the component unmounts before the upload completes
+    return () => {
+      toast.dismiss(TOAST_ID);
+    };
+  }, []);
+
+  console.log(customAvatarUrl);
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
@@ -94,7 +103,7 @@ export default function DeleteUserAccountDialog({ open, setOpen }: Props) {
             startIcon={<Trash2Icon size={16} />}
             onClick={(e) => {
               e.preventDefault();
-              mutate();
+              execute({ customAvatarUrl });
             }}
           >
             Delete account
@@ -108,5 +117,22 @@ export default function DeleteUserAccountDialog({ open, setOpen }: Props) {
     if (data && data.success === false) {
       toast.error(data.message, { id: TOAST_ID });
     }
+  }
+
+  function handleError(error: {
+    serverError?: string | undefined;
+    validationErrors?:
+      | {
+          formErrors: string[];
+          fieldErrors: {
+            customAvatarUrl?: string[] | undefined;
+          };
+        }
+      | undefined;
+    bindArgsValidationErrors?: readonly [] | undefined;
+  }) {
+    if (isRedirectError(error)) return toast.dismiss(TOAST_ID);
+
+    toast.error(userErrorMessages.Unexpected, { id: TOAST_ID });
   }
 }

@@ -17,7 +17,7 @@ export default async function AccountPage() {
           <AvatarCard user={userData} />
           <UserNameCard user={userData} />
           {userData.provider === "email" && <PasswordCard />}
-          <DeleteAccountCard />
+          <DeleteAccountCard customAvatarUrl={userData.customAvatarUrl} />
         </div>
       ) : (
         <CustomAlert

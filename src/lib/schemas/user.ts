@@ -1,8 +1,14 @@
 import { z } from "zod";
 
+export const deleteAccountSchema = z.object({
+  customAvatarUrl: z.string().url().nullable(),
+});
+
+export type DeleteAccountSchemaType = z.infer<typeof deleteAccountSchema>;
+
 export const userAvatarSchema = z.object({
   avatar: z.instanceof(File),
-  currentFileExt: z.string().optional(),
+  currentCustomAvatarUrl: z.string().url().nullable(),
 });
 
 export type UserAvatarSchemaType = z.infer<typeof userAvatarSchema>;
