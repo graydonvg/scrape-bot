@@ -50,8 +50,6 @@ export default function DeleteUserAccountDialog({
     };
   }, []);
 
-  console.log(customAvatarUrl);
-
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogContent className="gap-0 p-0">

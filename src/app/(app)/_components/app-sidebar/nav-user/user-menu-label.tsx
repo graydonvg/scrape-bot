@@ -27,19 +27,15 @@ export default function UserMenuLabel({
           <Skeleton className="bg-sidebar-accent absolute inset-0 z-0 size-8 rounded-md" />
         )}
         <Avatar className="z-10 size-8 rounded-md">
-          {avatarUrl.length > 0 ? (
-            <AvatarImage
-              src={avatarUrl}
-              alt={`${userName}'s avatar`}
-              onLoad={() => requestAnimationFrame(() => setIsLoading(false))}
-              onError={() => setIsLoading(false)}
-              fetchPriority="high"
-            />
-          ) : (
-            <AvatarFallback className="rounded-md uppercase">
-              {avatarFallbackChars}
-            </AvatarFallback>
-          )}
+          <AvatarImage
+            src={avatarUrl}
+            alt={`${userName}'s avatar`}
+            onLoad={() => setIsLoading(false)}
+            fetchPriority="high"
+          />
+          <AvatarFallback className="rounded-md uppercase">
+            {avatarFallbackChars}
+          </AvatarFallback>
         </Avatar>
       </div>
       <div className="grid flex-1 text-left text-sm leading-tight">

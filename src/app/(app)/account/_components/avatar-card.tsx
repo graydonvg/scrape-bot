@@ -77,19 +77,15 @@ export default function AvatarCard({ user }: Props) {
                 <Skeleton className="bg-muted absolute inset-0 z-0 size-24 rounded-full" />
               )}
               <Avatar className="z-10 size-24">
-                {avatarUrl.length > 0 ? (
-                  <AvatarImage
-                    src={avatarUrl}
-                    alt={`${userName}'s avatar`}
-                    onLoad={() => setIsLoadingAvatarImage(false)}
-                    onError={() => setIsLoadingAvatarImage(false)}
-                    fetchPriority="high"
-                  />
-                ) : (
-                  <AvatarFallback className="text-4xl uppercase">
-                    {avatarFallbackChars}
-                  </AvatarFallback>
-                )}
+                <AvatarImage
+                  src={avatarUrl}
+                  alt={`${userName}'s avatar`}
+                  onLoad={() => setIsLoadingAvatarImage(false)}
+                  fetchPriority="high"
+                />
+                <AvatarFallback className="text-4xl uppercase">
+                  {avatarFallbackChars}
+                </AvatarFallback>
               </Avatar>
             </div>
             {!isPending && (
