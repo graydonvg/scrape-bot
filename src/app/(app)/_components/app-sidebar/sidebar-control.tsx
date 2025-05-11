@@ -20,6 +20,7 @@ import {
   PanelLeftOpenIcon,
   SquareMousePointerIcon,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const items = [
   {
@@ -40,6 +41,7 @@ const items = [
 ];
 
 export default function SidebarControl() {
+  const router = useRouter();
   const { isMobile, sidebarBehaviour, setSidebarBehaviour } = useSidebar();
 
   if (isMobile) return null;
@@ -64,9 +66,16 @@ export default function SidebarControl() {
       >
         <DropdownMenuRadioGroup
           value={sidebarBehaviour}
-          onValueChange={(value) =>
-            setSidebarBehaviour(value as SidebarBehaviour)
-          }
+          onValueChange={(value) => {
+            setSidebarBehaviour(value as SidebarBehaviour);
+
+            // Sidebar state is stored in cookies
+            // Wait briefly before refreshing to allow the browser to register the new cookies before the refresh request is sent to the server
+
+            setTimeout(() => {
+              router.refresh();
+            }, 100);
+          }}
         >
           <DropdownMenuLabel>Sidebar control</DropdownMenuLabel>
           <DropdownMenuSeparator />
