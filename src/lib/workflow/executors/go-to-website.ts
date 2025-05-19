@@ -1,7 +1,10 @@
 import "server-only";
 
 import chromium from "@sparticuz/chromium-min";
-import puppeteerCore, { Browser as CoreBrowser } from "puppeteer-core";
+import puppeteerCore, {
+  Browser as CoreBrowser,
+  Page as CorePage,
+} from "puppeteer-core";
 import puppeteer, { Browser, Page } from "puppeteer";
 import { goToWebsiteTask } from "../tasks/entry-point";
 import { loggerErrorMessages, userErrorMessages } from "@/lib/constants";
@@ -33,7 +36,7 @@ export default async function goToWebsiteExecutor(
 
     executionContext.setBrowser(browser);
 
-    const page = (await browser.newPage()) as Page;
+    const page = (await browser.newPage()) as Page | CorePage;
     await page.goto(websiteUrl, { waitUntil: "networkidle0" });
 
     executionContext.logDb.INFO(taskId, `Visiting ${websiteUrl}`);
@@ -52,10 +55,11 @@ export default async function goToWebsiteExecutor(
 }
 
 const remoteExecutablePath =
-  "https://github.com/Sparticuz/chromium/releases/download/v133.0.0/chromium-v133.0.0-pack.tar";
-let browser: Browser | CoreBrowser;
+  "https://github.com/Sparticuz/chromium/releases/download/v121.0.0/chromium-v121.0.0-pack.tar";
 
 async function getBrowser() {
+  let browser: Browser | CoreBrowser;
+
   if (process.env.NODE_ENV === "production") {
     browser = await puppeteerCore.launch({
       args: chromium.args,

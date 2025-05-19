@@ -131,7 +131,7 @@ export default function ExecutionDetails({ initialData }: Props) {
     <div className="flex">
       <WorkflowExecutionSidebar workflowExecutionData={workflowExecutionData} />
       <div className="h-[calc(100vh-(--spacing(12)))] w-full overflow-y-auto">
-        {workflowExecutionStatus.isLoading && (
+        {workflowExecutionStatus.isLoading && !selectedTaskId && (
           <ExecutionStatusMessage
             title="Execution in progress"
             message="Please wait..."
