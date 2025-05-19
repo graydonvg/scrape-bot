@@ -1,6 +1,8 @@
 import "server-only";
 
-import puppeteer from "puppeteer";
+import chromium from "@sparticuz/chromium-min";
+import puppeteerCore, { Browser as CoreBrowser } from "puppeteer-core";
+import puppeteer, { Browser } from "puppeteer";
 import { goToWebsiteTask } from "../tasks/entry-point";
 import { loggerErrorMessages, userErrorMessages } from "@/lib/constants";
 import {
@@ -25,9 +27,7 @@ export default async function goToWebsiteExecutor(
 
     const websiteUrl = executionContext.getInput(TaskParamName.WebsiteUrl);
 
-    const browser = await puppeteer.launch({
-      headless: false, // false to open the browser window for testing
-    });
+    const browser = await getBrowser();
 
     executionContext.logDb.INFO(taskId, "Browser launched");
 
@@ -49,4 +49,24 @@ export default async function goToWebsiteExecutor(
     logger.error(loggerErrorMessages.Unexpected, { error });
     return { success: false, errorType: "internal" };
   }
+}
+
+const remoteExecutablePath =
+  "https://github.com/Sparticuz/chromium/releases/download/v121.0.0/chromium-v121.0.0-pack.tar";
+let browser: Browser | CoreBrowser;
+
+async function getBrowser() {
+  if (process.env.NODE_ENV === "production") {
+    browser = await puppeteerCore.launch({
+      args: chromium.args,
+      executablePath: await chromium.executablePath(remoteExecutablePath),
+      headless: chromium.headless,
+    });
+  } else {
+    browser = await puppeteer.launch({
+      headless: true,
+    });
+  }
+
+  return browser;
 }

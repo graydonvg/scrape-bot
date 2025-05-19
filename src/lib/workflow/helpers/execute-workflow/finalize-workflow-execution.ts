@@ -5,6 +5,7 @@ import { Database } from "@/lib/supabase/database.types";
 import { WorkflowExecutionStatusDb } from "@/lib/types/execution";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Logger } from "next-axiom";
+import createSupabaseService from "@/lib/supabase/supabase-service";
 
 export default async function finalizeWorkflowExecution(
   supabase: SupabaseClient<Database>,
@@ -19,6 +20,8 @@ export default async function finalizeWorkflowExecution(
   logger = logger.with({ function: "finalizeWorkflowExecution" });
 
   try {
+    const supabaseService = createSupabaseService();
+
     const workflowExecutionsPromise = supabase
       .from("workflowExecutions")
       .update({
@@ -44,11 +47,14 @@ export default async function finalizeWorkflowExecution(
     // If the condition is met, it deducts the total from reservedCredits and adds
     // p_credits_to_refund to availableCredits.
     // Finally, it returns an object indicating success.
-    const finalizeUserCreditsPromise = supabase.rpc("finalize_user_credits", {
-      p_user_id: userId,
-      p_credits_consumed: creditsConsumed,
-      p_credits_to_refund: totalCreditsToRefund,
-    });
+    const finalizeUserCreditsPromise = supabaseService.rpc(
+      "finalize_user_credits",
+      {
+        p_user_id: userId,
+        p_credits_consumed: creditsConsumed,
+        p_credits_to_refund: totalCreditsToRefund,
+      },
+    );
 
     const results = await Promise.allSettled([
       workflowExecutionsPromise,

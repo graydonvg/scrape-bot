@@ -18,6 +18,7 @@ import { TaskDb } from "@/lib/types/task";
 import { WorkflowNode } from "@/lib/types/workflow";
 import { calculateTotalCreditCostFromExecutionPlan } from "@/lib/utils";
 import { WorkflowExecutionPlan } from "@/lib/types/execution";
+import createSupabaseService from "@/lib/supabase/supabase-service";
 
 const executeWorkflowAction = actionClient
   .metadata({ actionName: "executeWorkflowAction" })
@@ -31,6 +32,7 @@ const executeWorkflowAction = actionClient
       let log = new Logger().with({ context: "executeWorkflowAction" });
 
       try {
+        const supabaseService = createSupabaseService();
         const supabase = await createSupabaseServerClient();
         const {
           data: { user },
@@ -131,7 +133,7 @@ const executeWorkflowAction = actionClient
         // If the entire process is successful, the user's credit balance will be finalized.
         // If a server error occurs, the user will be refunded.
         const { data: reserveCreditsSuccess, error: reserveCreditsError } =
-          await supabase.rpc("reserve_credits_for_workflow_execution", {
+          await supabaseService.rpc("reserve_credits_for_workflow_execution", {
             p_user_id: user.id,
             p_amount: totalCreditsRequired,
           });

@@ -2,7 +2,6 @@ import "server-only";
 
 import { loggerErrorMessages } from "@/lib/constants";
 import { Logger } from "next-axiom";
-import { revalidatePath } from "next/cache";
 import getUniquePhaseNumbers from "../get-unique-phase-numbers";
 import { groupTasksByPhaseNumber } from "../group-tasks";
 import { Edge } from "@xyflow/react";
@@ -115,8 +114,6 @@ export default async function executeWorkflow(
     );
 
     await cleanupPhaseContext(phaseContext, logger);
-
-    revalidatePath(`/workflows`);
   } catch (error) {
     // TODO: Handle error
     logger.error(loggerErrorMessages.Unexpected, { error });

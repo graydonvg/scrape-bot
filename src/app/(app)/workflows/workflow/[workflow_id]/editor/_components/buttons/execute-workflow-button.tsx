@@ -11,6 +11,7 @@ import { calculateTotalCreditCostFromExecutionPlan } from "@/lib/utils";
 import { Dispatch, SetStateAction } from "react";
 import useWorkflowsStore from "@/lib/store/workflows-store";
 import { ActionReturn } from "@/lib/types/action";
+import { useRouter } from "next/navigation";
 
 type Props = {
   workflowId: string;
@@ -23,6 +24,7 @@ export default function ExecuteWorkflowButton({
   isLoading,
   setIsLoading,
 }: Props) {
+  const router = useRouter();
   const { userCreditBalance } = useUserStore();
   const generateExecutionPlan = useWorkflowExecutionPlan();
   const { setSelectedTaskId } = useWorkflowsStore();
@@ -75,11 +77,13 @@ export default function ExecuteWorkflowButton({
     }
 
     setIsLoading(false);
+    router.refresh();
     toast.success("Execution started", { id: workflowId });
   }
 
   function handleError() {
     setIsLoading(false);
+    router.refresh();
     toast.error(userErrorMessages.Unexpected, { id: workflowId });
   }
 }
