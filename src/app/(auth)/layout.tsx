@@ -2,7 +2,7 @@ import Logo from "@/components/logo";
 import { BotIcon } from "lucide-react";
 import Image from "next/image";
 import { ReactNode, Suspense } from "react";
-import workflowImage from "../../../public/workflow.jpg";
+import workflowImage from "../../../public/scrapebot-workflow-grid.jpg";
 import { Separator } from "@/components/ui/separator";
 
 type Props = {
@@ -27,8 +27,10 @@ export default function AuthLayout({ children }: Props) {
           alt="workflow image"
           placeholder="blur"
           fill
-          className="pointer-events-none size-full scale-200 object-cover blur-xs brightness-25 grayscale-25 select-none"
+          priority
+          className="pointer-events-none size-full object-cover select-none"
         />
+        <div className="from-primary/20 absolute inset-0 z-40 bg-radial to-[hsl(20,14.3%,4.1%)]"></div>
         <div className="flex-center absolute inset-0 z-50 flex-col gap-4">
           <div className="text-sidebar-primary-foreground flex aspect-square size-16 items-center justify-center rounded-lg bg-linear-to-r from-blue-700 via-blue-600 to-blue-500">
             <BotIcon className="size-1/2" />
