@@ -46,7 +46,7 @@
     "nextjs-toploader": "^3.8.16",
     "openai": "^4.98.0",
     "puppeteer": "^24.8.2",
-    "puppeteer-core": "^24.8.2",
+    "puppeteer-core": "^24.3.1",
     "react": "^19.1.0",
     "react-countup": "^6.5.3",
     "react-dom": "^19.1.0",

@@ -34,7 +34,7 @@ export default async function goToWebsiteExecutor(
     executionContext.setBrowser(browser);
 
     const page = (await browser.newPage()) as Page;
-    await page.goto(websiteUrl);
+    await page.goto(websiteUrl, { waitUntil: "networkidle0" });
 
     executionContext.logDb.INFO(taskId, `Visiting ${websiteUrl}`);
 
@@ -51,6 +51,8 @@ export default async function goToWebsiteExecutor(
   }
 }
 
+const remoteExecutablePath =
+  "https://github.com/Sparticuz/chromium/releases/download/v133.0.0/chromium-v133.0.0-pack.tar";
 let browser: Browser | CoreBrowser;
 
 async function getBrowser() {
@@ -58,7 +60,7 @@ async function getBrowser() {
     browser = await puppeteerCore.launch({
       args: chromium.args,
       defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath(),
+      executablePath: await chromium.executablePath(remoteExecutablePath),
       headless: chromium.headless,
     });
   } else {
