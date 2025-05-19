@@ -1,11 +1,6 @@
 import "server-only";
 
-import chromium from "@sparticuz/chromium-min";
-import puppeteerCore, {
-  Browser as CoreBrowser,
-  Page as CorePage,
-} from "puppeteer-core";
-import puppeteer, { Browser, Page } from "puppeteer";
+import puppeteer from "puppeteer"; // Used only in dev
 import { goToWebsiteTask } from "../tasks/entry-point";
 import { loggerErrorMessages, userErrorMessages } from "@/lib/constants";
 import {
@@ -25,22 +20,19 @@ export default async function goToWebsiteExecutor(
 
   try {
     taskId = executionContext.getTaskId();
-
     if (!taskId) logger.error("Task ID undefined");
 
     const websiteUrl = executionContext.getInput(TaskParamName.WebsiteUrl);
 
     const browser = await getBrowser();
-
     executionContext.logDb.INFO(taskId, "Browser launched");
 
     executionContext.setBrowser(browser);
 
-    const page = (await browser.newPage()) as Page | CorePage;
+    const page = await browser.newPage();
     await page.goto(websiteUrl, { waitUntil: "networkidle0" });
 
     executionContext.logDb.INFO(taskId, `Visiting ${websiteUrl}`);
-
     executionContext.setPage(page);
 
     return { success: true };
@@ -55,24 +47,23 @@ export default async function goToWebsiteExecutor(
 }
 
 const remoteExecutablePath =
-  "https://github.com/Sparticuz/chromium/releases/download/v121.0.0/chromium-v121.0.0-pack.tar";
+  "https://github.com/Sparticuz/chromium/releases/download/v133/chromium-v133.0.0-pack.tar.xz";
 
 async function getBrowser() {
-  let browser: Browser | CoreBrowser;
-
   if (process.env.NODE_ENV === "production") {
-    browser = await puppeteerCore.launch({
+    const puppeteerCore = await import("puppeteer-core");
+    const { default: chromium } = await import("@sparticuz/chromium-min");
+
+    return puppeteerCore.default.launch({
       args: chromium.args,
       defaultViewport: chromium.defaultViewport,
       executablePath: await chromium.executablePath(remoteExecutablePath),
       headless: chromium.headless,
     });
   } else {
-    browser = await puppeteer.launch({
+    return puppeteer.launch({
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
       headless: true,
     });
   }
-
-  return browser;
 }
