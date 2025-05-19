@@ -7,6 +7,7 @@ import {
 } from "@/lib/types/execution";
 import { TaskParamName } from "@/lib/types/task";
 import { scrollToElementTask } from "../tasks/user-interaction";
+import { Page } from "puppeteer";
 
 export default async function scrollToElementExecutor(
   executionContext: ExecutionContext<typeof scrollToElementTask>,
@@ -33,22 +34,38 @@ export default async function scrollToElementExecutor(
       return { success: false, errorType: "internal" };
     }
 
-    const scrollResult = await executionContext
-      .getPage()
-      ?.evaluate((selector) => {
-        const element = document.querySelector(selector);
+    const page = executionContext?.getPage();
 
-        if (!element) {
-          return {
-            success: false,
-            errorType: "user",
-          } as ExecutorFunctionReturn;
-        }
+    const scrollResult =
+      page instanceof Page
+        ? await page?.evaluate((selector) => {
+            const element = document.querySelector(selector);
 
-        const top = element.getBoundingClientRect().top + window.scrollY;
+            if (!element) {
+              return {
+                success: false,
+                errorType: "user",
+              } as ExecutorFunctionReturn;
+            }
 
-        window.scrollTo({ top });
-      }, selector);
+            const top = element.getBoundingClientRect().top + window.scrollY;
+
+            window.scrollTo({ top });
+          }, selector)
+        : await page?.evaluate((selector) => {
+            const element = document.querySelector(selector);
+
+            if (!element) {
+              return {
+                success: false,
+                errorType: "user",
+              } as ExecutorFunctionReturn;
+            }
+
+            const top = element.getBoundingClientRect().top + window.scrollY;
+
+            window.scrollTo({ top });
+          }, selector);
 
     if (scrollResult && !scrollResult.success) {
       executionContext.logDb.ERROR(taskId, "Element not found");
