@@ -2,7 +2,7 @@ import "server-only";
 
 import chromium from "@sparticuz/chromium-min";
 import puppeteerCore, { Browser as CoreBrowser } from "puppeteer-core";
-import puppeteer, { Browser } from "puppeteer";
+import puppeteer, { Browser, Page } from "puppeteer";
 import { goToWebsiteTask } from "../tasks/entry-point";
 import { loggerErrorMessages, userErrorMessages } from "@/lib/constants";
 import {
@@ -33,7 +33,7 @@ export default async function goToWebsiteExecutor(
 
     executionContext.setBrowser(browser);
 
-    const page = await browser.newPage();
+    const page = (await browser.newPage()) as Page;
     await page.goto(websiteUrl);
 
     executionContext.logDb.INFO(taskId, `Visiting ${websiteUrl}`);

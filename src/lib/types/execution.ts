@@ -1,4 +1,4 @@
-import { Browser as CoreBrowser, Page as CorePage } from "puppeteer-core";
+import { Browser as CoreBrowser } from "puppeteer-core";
 import { Browser, Page } from "puppeteer";
 import { Database } from "../supabase/database.types";
 import { Task, TaskDb } from "./task";
@@ -50,7 +50,7 @@ export type PhaseResult = {
 };
 
 export type ExecutionPhaseContext = {
-  browser?: Browser;
+  browser?: Browser | CoreBrowser;
   page?: Page;
   userId: string;
   tasks: Record<
@@ -75,8 +75,8 @@ export type ExecutionContext<T extends Task> = {
   getBrowser: () => Browser | CoreBrowser | undefined;
   setBrowser: (browser: Browser | CoreBrowser) => void;
 
-  getPage: () => Page | CorePage | undefined;
-  setPage: (page: Page | CorePage) => void;
+  getPage: () => Page | undefined;
+  setPage: (page: Page) => void;
 
   logDb: LogCollector;
   logger: Logger;
