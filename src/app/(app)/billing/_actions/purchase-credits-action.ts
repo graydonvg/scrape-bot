@@ -58,8 +58,8 @@ const purchaseCreditsAction = actionClient
           invoice_creation: {
             enabled: true,
           },
-          success_url: siteConfig.siteUrl + "billing",
-          cancel_url: siteConfig.siteUrl + "billing",
+          success_url: siteConfig.siteUrl + "/billing",
+          cancel_url: siteConfig.siteUrl + "/billing",
           payment_intent_data: {
             metadata: {
               userId: user.id,
@@ -81,8 +81,8 @@ const purchaseCreditsAction = actionClient
         if (!session.url) {
           log.error("Failed to create stripe session", {
             sessionParams: {
-              success_url: siteConfig.siteUrl + "billing",
-              cancel_url: siteConfig.siteUrl + "billing",
+              success_url: siteConfig.siteUrl + "/billing",
+              cancel_url: siteConfig.siteUrl + "/billing",
               metadata: {
                 userId: user.id,
                 creditPackId: selectedCreditPack.id,
