@@ -1,6 +1,8 @@
 import "server-only";
 
-import puppeteer from "puppeteer"; // Used only in dev
+import puppeteer from "puppeteer";
+import puppeteerCore from "puppeteer-core";
+import chromium from "@sparticuz/chromium-min";
 import { goToWebsiteTask } from "../tasks/entry-point";
 import { loggerErrorMessages, userErrorMessages } from "@/lib/constants";
 import {
@@ -51,10 +53,7 @@ const remoteExecutablePath =
 
 async function getBrowser() {
   if (process.env.NODE_ENV === "production") {
-    const puppeteerCore = await import("puppeteer-core");
-    const { default: chromium } = await import("@sparticuz/chromium-min");
-
-    return puppeteerCore.default.launch({
+    return puppeteerCore.launch({
       args: chromium.args,
       defaultViewport: chromium.defaultViewport,
       executablePath: await chromium.executablePath(remoteExecutablePath),
