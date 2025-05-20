@@ -47,7 +47,7 @@ export default async function goToWebsiteExecutor(
 }
 
 const remoteExecutablePath =
-  "https://github.com/Sparticuz/chromium/releases/download/v133/chromium-v133.0.0-pack.tar.xz";
+  "https://github.com/Sparticuz/chromium/releases/download/v133.0.0/chromium-v133.0.0-pack.tar";
 
 async function getBrowser() {
   if (process.env.NODE_ENV === "production") {

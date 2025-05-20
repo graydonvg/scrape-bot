@@ -3,8 +3,7 @@
 import { withAxiom } from "next-axiom";
 
 const nextConfig = {
-  output: "standalone", // Required for external Node packages on Vercel
-  serverExternalPackages: ["puppeteer-core", "@sparticuz/chromium-min"],
+  serverExternalPackages: ["puppeteer-core"],
   images: {
     remotePatterns: [
       {
